@@ -16,3 +16,6 @@ Natural Structures/coordinates.json
 *.log
 **/logs/
 *.pkl
+
+# Data
+datasets/**
