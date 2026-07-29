@@ -6,10 +6,12 @@ prototype**/
 
 **/weight_logs/
 **/SAMPLES/
-
+.vscode
+.venv
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
 **.pyc
+
 **coordinates.json
 ./**/*.json
 Natural Structures/coordinates.json
