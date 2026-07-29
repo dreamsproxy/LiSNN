@@ -1,3 +1,9 @@
 [submodule "legacy/LiNN_snapshot"]
 	path = legacy/LiNN_snapshot
 	url = https://github.com/dreamsproxy/LiNN.git
+[submodule "legacy/BioEmulator_snapshot"]
+	path = legacy/BioEmulator_snapshot
+	url = https://github.com/dreamsproxy/BioEmulator.git
+[submodule "legacy/VolumetricSNN_snapshot"]
+	path = legacy/VolumetricSNN_snapshot
+	url = https://github.com/dreamsproxy/VolumetricSNN.git
