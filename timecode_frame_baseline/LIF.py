@@ -1,7 +1,6 @@
 import numpy as np
 from numba import njit
 
-
 @njit()
 def step(params, spike):
     params = params.astype(np.float64)
@@ -21,7 +20,6 @@ def step(params, spike):
         new_p = np.float64(1e-16)
 
     return np.float64(wp), np.float64(new_p)
-
 
 def parse_params(params: dict):
     potential = params["potential"]
