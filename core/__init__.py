@@ -1,16 +1,16 @@
-"""Language timecode implementation for LiSNN."""
+"""LiSNN v2: relative-time trajectory next-token prediction."""
 
 from .config import NetworkConfig
-from .model import EvaluationResult, LanguageTimecodeModel
-from .network import LanguageTimecodeNetwork, RecallResult
+from .model import EvaluationResult, LanguageTrajectoryModel
+from .network import LanguageTrajectoryNetwork, PredictionResult
 from .text import TextCorpus, TextTokenizer, Vocabulary
 
 __all__ = [
     "EvaluationResult",
-    "LanguageTimecodeModel",
-    "LanguageTimecodeNetwork",
+    "LanguageTrajectoryModel",
+    "LanguageTrajectoryNetwork",
     "NetworkConfig",
-    "RecallResult",
+    "PredictionResult",
     "TextCorpus",
     "TextTokenizer",
     "Vocabulary",
