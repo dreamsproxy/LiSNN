@@ -4,15 +4,15 @@ import argparse
 from pathlib import Path
 
 from .config import NetworkConfig
-from .model import LanguageTimecodeModel
-from .text import TextCorpus
+from .model import LanguageTrajectoryModel
+from .text import TextCorpus, TextTokenizer
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Train the LiSNN language timecode baseline and reconstruct the "
-            "training sequence from position codes."
+            "Train LiSNN v2 to predict the next token from a recent "
+            "relative-time token trajectory."
         )
     )
     parser.add_argument("--dataset-dir", default="datasets")
@@ -23,13 +23,21 @@ def build_parser() -> argparse.ArgumentParser:
         default="character",
     )
     parser.add_argument("--max-tokens", type=int, default=256)
-    parser.add_argument("--epochs", type=int, default=1)
-    parser.add_argument("--ticks-per-token", type=int, default=32)
-    parser.add_argument("--recall-ticks", type=int, default=128)
+    parser.add_argument("--context-length", type=int, default=8)
+    parser.add_argument("--epochs", type=int, default=3)
+    parser.add_argument("--ticks-per-token", type=int, default=8)
+    parser.add_argument("--prediction-ticks", type=int, default=16)
     parser.add_argument("--signal-scale", type=float, default=500.0)
+    parser.add_argument("--temperature", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--checkpoint", default="language_timecode_model.npz")
-    parser.add_argument("--output", default="language_timecode_recall.txt")
+    parser.add_argument("--prompt", default=None)
+    parser.add_argument("--generate-tokens", type=int, default=64)
+    parser.add_argument("--sample", action="store_true")
+    parser.add_argument("--checkpoint", default="language_trajectory_model.npz")
+    parser.add_argument(
+        "--output",
+        default="language_next_token_generation.txt",
+    )
     return parser
 
 
@@ -42,21 +50,23 @@ def main() -> None:
         pattern=args.pattern,
     )
     config = NetworkConfig(
+        context_length=args.context_length,
         ticks_per_token=args.ticks_per_token,
-        recall_ticks=args.recall_ticks,
+        prediction_ticks=args.prediction_ticks,
         signal_scale=args.signal_scale,
+        temperature=args.temperature,
         seed=args.seed,
     )
-    model = LanguageTimecodeModel(corpus, config)
-
+    model = LanguageTrajectoryModel(corpus, config)
     memory_mib = model.network.estimated_dense_memory_bytes / (1024 ** 2)
     print(
         f"Loaded {corpus.sequence_length} tokens from "
         f"{len(corpus.source_paths)} file(s); vocabulary={corpus.vocabulary.size}."
     )
     print(
-        f"Network neurons={model.network.num_neurons}; "
-        f"dense plasticity matrices approximately {memory_mib:.2f} MiB."
+        f"Context length={config.context_length}; "
+        f"neurons={model.network.num_neurons}; "
+        f"estimated dense state={memory_mib:.2f} MiB."
     )
 
     last_percent = -1
@@ -65,28 +75,37 @@ def main() -> None:
         nonlocal last_percent
         percent = int((completed / total) * 100)
         if percent != last_percent and (percent % 5 == 0 or completed == total):
-            print(f"Training: {completed}/{total} positions ({percent}%)")
+            print(f"Training: {completed}/{total} windows ({percent}%)")
             last_percent = percent
 
-    model.fit(
-        epochs=args.epochs,
-        ticks_per_token=args.ticks_per_token,
-        progress=progress,
-    )
-    evaluation = model.evaluate(num_ticks=args.recall_ticks)
-
-    Path(args.output).write_text(
-        evaluation.reconstructed_text,
-        encoding="utf-8",
-    )
-    model.save(args.checkpoint)
-
+    model.fit(epochs=args.epochs, progress=progress)
+    evaluation = model.evaluate(temperature=args.temperature)
     print(
-        f"Recall accuracy: {evaluation.correct}/{evaluation.total} "
+        f"Next-token accuracy: {evaluation.correct}/{evaluation.total} "
         f"({evaluation.accuracy:.3%})"
     )
-    print(f"Mean recall confidence: {evaluation.mean_confidence:.6f}")
-    print(f"Reconstructed text written to {args.output}")
+    print(f"Mean top-1 confidence: {evaluation.mean_confidence:.6f}")
+    print(f"Cross-entropy: {evaluation.cross_entropy:.6f}")
+    print(f"Perplexity: {evaluation.perplexity:.6f}")
+
+    if args.prompt is None:
+        prompt_ids = corpus.token_ids[
+            : min(config.context_length, corpus.sequence_length)
+        ]
+        prompt = TextTokenizer.detokenize(corpus.vocabulary.decode(prompt_ids))
+    else:
+        prompt = args.prompt
+    generated = model.generate(
+        prompt,
+        num_tokens=args.generate_tokens,
+        temperature=args.temperature,
+        sample=args.sample,
+        seed=args.seed,
+    )
+    Path(args.output).write_text(generated, encoding="utf-8")
+    model.save(args.checkpoint)
+    print(f"Prompt: {prompt!r}")
+    print(f"Generated text written to {args.output}")
     print(f"Checkpoint written to {args.checkpoint}")
 
 
