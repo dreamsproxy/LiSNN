@@ -1,0 +1,41 @@
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+from typing import Any
+
+
+@dataclass(frozen=True)
+class NetworkConfig:
+    """Configuration for the language timecode network."""
+
+    dt: float = 1.0
+    pre_alpha: float = 0.001
+    post_alpha: float = 0.002
+    ticks_per_token: int = 32
+    recall_ticks: int = 128
+    signal_scale: float = 500.0
+    clip_interval: int = 8
+    prune_interval: int = 4
+    prune_threshold: float = 1e-4
+    top_k_fraction: float = 0.25
+    error_threshold_steps: int = 10
+    seed: int = 0
+
+    def __post_init__(self) -> None:
+        if self.dt <= 0:
+            raise ValueError("dt must be positive")
+        if self.pre_alpha < 0 or self.post_alpha < 0:
+            raise ValueError("plasticity rates must be non-negative")
+        if self.ticks_per_token < 1 or self.recall_ticks < 1:
+            raise ValueError("tick counts must be at least 1")
+        if self.signal_scale <= 0:
+            raise ValueError("signal_scale must be positive")
+        if self.clip_interval < 1 or self.prune_interval < 1:
+            raise ValueError("intervals must be at least 1")
+        if not 0 < self.top_k_fraction <= 1:
+            raise ValueError("top_k_fraction must be in (0, 1]")
+        if self.error_threshold_steps < 1:
+            raise ValueError("error_threshold_steps must be at least 1")
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
