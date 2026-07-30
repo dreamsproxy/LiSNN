@@ -2,7 +2,7 @@ from pathlib import Path
 
 import numpy as np
 
-from core import LanguageTimecodeModel, NetworkConfig, TextCorpus, TextTokenizer
+from core.v1 import LanguageTimecodeModel, NetworkConfig, TextCorpus, TextTokenizer
 
 
 def small_config(seed: int = 7) -> NetworkConfig:
