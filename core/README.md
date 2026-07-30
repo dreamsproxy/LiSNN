@@ -1,68 +1,71 @@
-# Language timecode core
+# Language trajectory core (v2)
 
-This package rebuilds the preserved `timecode_frame_baseline` as a language-native associative memory.
-
-The direct mapping is:
+The root `core/` package is LiSNN's second language baseline:
 
 ```text
-video frame                    -> language token
-flattened image neuron field   -> vocabulary neuron field
-one-hot frame/time code        -> one-hot token-position timecode
-recalled 32 x 32 frame         -> recalled token sequence
+recent token-time trajectory -> probable next token
 ```
 
-For a corpus with `T` token positions and vocabulary size `V`, the network contains `V + T` neurons. The first `V` neurons represent token identity. The final `T` neurons represent absolute sequence positions. Training presents a token and its position code together for multiple recurrent ticks. Recall presents only a position code and decodes the strongest accumulated token-neuron activity.
-
-## What was preserved
-
-- Non-binary spike magnitudes.
-- Dense recurrent propagation.
-- Combined top-k STDP and Hebbian plasticity.
-- Recurrent state carried across repeated ticks and token positions.
-- Periodic clipping and pruning.
-- Timecode-only associative recall with accumulated spikes.
-
-## Intentional repairs
-
-The archived frame baseline contained several mechanical behaviors that obscured its intended mechanism. The rebuild keeps the learning architecture while repairing them:
-
-- Timecode neurons now integrate their external code through the same LIF dynamics as token neurons. In the archived loop they were assigned their threshold and then threshold-subtracted to zero.
-- LIF state preserves valid negative membrane potentials instead of replacing every negative value with `1e-16`.
-- Constant-vector normalization returns zeros instead of dividing by zero.
-- Error suppression uses the actual matching indices and suppresses them to zero.
-- The Hebbian trace starts at zero and updates only connections from active presynaptic neurons; the archived random Hebbian matrix injected unrelated associations before training.
-- Initial timecode connectivity is applied to presynaptic timecode columns, matching the matrix propagation convention.
-- STDP time constants broadcast along their intended pre/post axes.
-- Weight normalization handles zero-norm rows safely.
-- Pruning removes weights by absolute magnitude.
-
-These are semantic repairs of the intended timecode association, not a new learning objective.
-
-## Usage
-
-Place UTF-8 `.txt` files in `datasets/`, then run from the repository root:
+The verified absolute-position reconstruction baseline is frozen under `core/v1/` and remains runnable with:
 
 ```bash
-python -m core.main --dataset-dir datasets --max-tokens 256
+python -m core.v1.main --dataset-dir datasets --max-tokens 256
 ```
 
-Word-preserving tokenization is also available:
+## Architecture
 
-```bash
-python -m core.main --tokenizer word --max-tokens 256
-```
+For vocabulary size `V` and context length `C`, v2 creates:
 
-The command writes:
+- `V` token neurons.
+- `C` relative-time neurons, from oldest to newest context slot.
+- `V * C` conjunctive token-at-slot neurons.
+- one prediction-query neuron.
 
-- `language_timecode_recall.txt`: sequence reconstructed from timecodes only.
-- `language_timecode_model.npz`: complete model checkpoint.
-
-## Scalability boundary
-
-This first implementation intentionally retains the baseline's dense recurrent and Hebbian matrices. Memory therefore scales as `O((V + T)^2)`. Two float64 plasticity matrices require approximately:
+A context such as `A B A` is represented as an ordered trajectory:
 
 ```text
-16 * (V + T)^2 bytes
+A@slot(C-3) -> B@slot(C-2) -> A@slot(C-1) -> QUERY
 ```
 
-Use short corpus slices while validating behavior. Sparse connectivity, shared/relative timecodes, context-conditioned prediction, and free-running generation belong to the next stage after this parity baseline is measured.
+The recurrent field retains the non-binary LIF, dense propagation, STDP, Hebbian plasticity, clipping, pruning, and repeated simulation ticks inherited from v1.
+
+The next-token target is never injected into that recurrent field. Instead, the accumulated context trajectory is passed to a probabilistic readout. Its update is local in sign:
+
+- Hebbian strengthening for the target token.
+- Anti-Hebbian weakening for competing tokens.
+
+A softmax converts the resulting token logits into a probability distribution.
+
+## Training and evaluation
+
+```bash
+python -m core.main \
+    --dataset-dir datasets \
+    --max-tokens 256 \
+    --context-length 8 \
+    --epochs 3
+```
+
+The CLI reports teacher-forced next-token accuracy, mean top-1 confidence, cross-entropy, and perplexity. It then generates a continuation from either the first context window or an explicit prompt:
+
+```bash
+python -m core.main \
+    --dataset-dir datasets \
+    --prompt "The Seed" \
+    --generate-tokens 128
+```
+
+Use `--sample` to draw from the predicted distribution instead of greedy argmax decoding.
+
+Outputs:
+
+- `language_next_token_generation.txt`
+- `language_trajectory_model.npz`
+
+## Meaning of the version boundary
+
+`core/v1/` answers: "Which stored token belongs to this absolute position?"
+
+The root v2 answers: "Given these recent tokens and their relative ordering, which token is most probable next?"
+
+V2 no longer needs one neuron for every corpus position. Its time representation is reused across all windows. The current conjunctive binding bank still scales with `V * C`; sparse or distributed bindings are a later optimization, not silently mixed into this behavioral milestone.
