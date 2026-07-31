@@ -35,6 +35,18 @@ def build_parser() -> argparse.ArgumentParser:
             "input and have no direct token-readout connection."
         ),
     )
+    parser.add_argument(
+        "--ei_ratio",
+        "--ei-ratio",
+        dest="ei_ratio",
+        type=float,
+        default=0.5,
+        help=(
+            "Fraction of each recurrent population assigned inhibitory "
+            "polarity. For example, 0.5 gives approximately 50%% inhibitory "
+            "and 50%% excitatory neurons."
+        ),
+    )
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--ticks-per-token", type=int, default=8)
     parser.add_argument("--prediction-ticks", type=int, default=16)
@@ -44,7 +56,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--prompt", default=None)
     parser.add_argument("--generate-tokens", type=int, default=64)
     parser.add_argument("--sample", action="store_true")
-    parser.add_argument("--checkpoint", default="language_trajectory_model.npz")
+    parser.add_argument(
+        "--checkpoint",
+        default="language_trajectory_model.npz",
+    )
     parser.add_argument(
         "--output",
         default="language_next_token_generation.txt",
@@ -63,6 +78,7 @@ def main() -> None:
     config = NetworkConfig(
         context_length=args.context_length,
         hidden_neurons=args.hidden_neurons,
+        ei_ratio=args.ei_ratio,
         ticks_per_token=args.ticks_per_token,
         prediction_ticks=args.prediction_ticks,
         signal_scale=args.signal_scale,
@@ -70,22 +86,39 @@ def main() -> None:
         seed=args.seed,
     )
     model = LanguageTrajectoryModel(corpus, config)
-    memory_mib = model.network.estimated_dense_memory_bytes / (1024 ** 2)
+    network = model.network
+    weights = network.weights
+    memory_mib = network.estimated_dense_memory_bytes / (1024 ** 2)
+
     print(
         f"Loaded {corpus.sequence_length} tokens from "
-        f"{len(corpus.source_paths)} file(s); vocabulary={corpus.vocabulary.size}."
+        f"{len(corpus.source_paths)} file(s); "
+        f"vocabulary={corpus.vocabulary.size}."
     )
     print(
         f"Context length={config.context_length}; "
         f"hidden neurons={config.hidden_neurons}; "
-        f"neurons={model.network.num_neurons}; "
+        f"neurons={network.num_neurons}; "
         f"estimated dense state={memory_mib:.2f} MiB."
     )
     print(
-        f"Fixed neuron types: inhibitory={model.network.weights.inhibitory_count} "
-        f"({model.network.weights.inhibitory_count / model.network.num_neurons:.1%}), "
-        f"excitatory={model.network.weights.excitatory_count} "
-        f"({model.network.weights.excitatory_count / model.network.num_neurons:.1%})."
+        f"Requested inhibitory ratio={config.ei_ratio:.3f}; "
+        f"I/O inhibitory={weights.io_inhibitory_count}/"
+        f"{weights.io_neuron_count} "
+        f"({weights.io_inhibitory_count / weights.io_neuron_count:.1%})."
+    )
+    if weights.hidden_neuron_count:
+        print(
+            f"Hidden inhibitory={weights.hidden_inhibitory_count}/"
+            f"{weights.hidden_neuron_count} "
+            f"({weights.hidden_inhibitory_count / weights.hidden_neuron_count:.1%})."
+        )
+    print(
+        f"Fixed neuron types total: "
+        f"inhibitory={weights.inhibitory_count} "
+        f"({weights.inhibitory_count / network.num_neurons:.1%}), "
+        f"excitatory={weights.excitatory_count} "
+        f"({weights.excitatory_count / network.num_neurons:.1%})."
     )
 
     last_percent = -1
@@ -93,17 +126,25 @@ def main() -> None:
     def progress(completed: int, total: int) -> None:
         nonlocal last_percent
         percent = int((completed / total) * 100)
-        if percent != last_percent and (percent % 5 == 0 or completed == total):
-            print(f"Training: {completed}/{total} windows ({percent}%)")
+        if percent != last_percent and (
+            percent % 5 == 0 or completed == total
+        ):
+            print(
+                f"Training: {completed}/{total} windows "
+                f"({percent}%)"
+            )
             last_percent = percent
 
     model.fit(epochs=args.epochs, progress=progress)
     evaluation = model.evaluate(temperature=args.temperature)
     print(
-        f"Next-token accuracy: {evaluation.correct}/{evaluation.total} "
-        f"({evaluation.accuracy:.3%})"
+        f"Next-token accuracy: {evaluation.correct}/"
+        f"{evaluation.total} ({evaluation.accuracy:.3%})"
     )
-    print(f"Mean top-1 confidence: {evaluation.mean_confidence:.6f}")
+    print(
+        f"Mean top-1 confidence: "
+        f"{evaluation.mean_confidence:.6f}"
+    )
     print(f"Cross-entropy: {evaluation.cross_entropy:.6f}")
     print(f"Perplexity: {evaluation.perplexity:.6f}")
 
@@ -111,7 +152,9 @@ def main() -> None:
         prompt_ids = corpus.token_ids[
             : min(config.context_length, corpus.sequence_length)
         ]
-        prompt = TextTokenizer.detokenize(corpus.vocabulary.decode(prompt_ids))
+        prompt = TextTokenizer.detokenize(
+            corpus.vocabulary.decode(prompt_ids)
+        )
     else:
         prompt = args.prompt
     generated = model.generate(
