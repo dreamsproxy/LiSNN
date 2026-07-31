@@ -51,14 +51,55 @@ Their effect on prediction must therefore pass through recurrent changes in the 
 
 ## Fixed inhibitory/excitatory neuron types
 
-At initialization, approximately 80% of all recurrent neurons are assigned inhibitory type and 20% excitatory type. The assignment is deterministic for a given seed and is stored in checkpoints.
+The inhibitory share is controlled by `--ei_ratio` or `--ei-ratio`:
+
+```bash
+python -m core.main --ei_ratio 0.5
+```
+
+`--ei_ratio 0.5` means approximately 50% inhibitory and 50% excitatory neurons. The default is `0.5`. The ratio is applied separately to the I/O population and hidden population so changing the hidden count does not perturb the requested I/O split.
 
 The recurrent matrix follows the propagation convention `signals = W @ spikes`, so each matrix column contains the outgoing synapses of one presynaptic neuron:
 
 - excitatory-neuron columns are constrained to non-negative weights;
 - inhibitory-neuron columns are constrained to non-positive weights.
 
-STDP, Hebbian updates, clipping, normalization, and pruning preserve that sign constraint. A neuron cannot change type during training.
+STDP, Hebbian updates, clipping, normalization, and pruning preserve that sign constraint. A neuron cannot change type during training, and the assignments are stored in checkpoints.
+
+## Controlled hidden-population ablations
+
+I/O and hidden populations use independent deterministic random streams. For a fixed corpus, context length, seed, and E/I ratio, changing only `hidden_neurons` preserves the initial:
+
+- I/O neuron-type assignments;
+- I/O LIF parameters and thresholds;
+- I/O time constants;
+- I/O-to-I/O recurrent weight block.
+
+The H0 and H8 runs therefore differ only by the added hidden population and the recurrent blocks involving it. After training begins, their I/O weights may diverge because the H8 hidden cells alter recurrent activity; that divergence is the effect being measured.
+
+Example controlled pair:
+
+```bash
+python -m core.main \
+    --dataset-dir datasets \
+    --max-tokens 256 \
+    --context-length 8 \
+    --hidden_neurons 0 \
+    --ei_ratio 0.5 \
+    --epochs 10 \
+    --checkpoint trajectory-ei50-h0.npz \
+    --output generation-ei50-h0.txt
+
+python -m core.main \
+    --dataset-dir datasets \
+    --max-tokens 256 \
+    --context-length 8 \
+    --hidden_neurons 8 \
+    --ei_ratio 0.5 \
+    --epochs 10 \
+    --checkpoint trajectory-ei50-h8.npz \
+    --output generation-ei50-h8.txt
+```
 
 ## Next-token readout
 
@@ -79,10 +120,11 @@ python -m core.main \
     --max-tokens 256 \
     --context-length 8 \
     --hidden_neurons 64 \
+    --ei_ratio 0.5 \
     --epochs 3
 ```
 
-The CLI reports the hidden population, total neuron count, dense-state estimate, fixed inhibitory/excitatory counts, teacher-forced next-token accuracy, mean top-1 confidence, cross-entropy, and perplexity.
+The CLI reports the requested inhibitory ratio, separate I/O and hidden inhibitory counts, total neuron count, dense-state estimate, teacher-forced next-token accuracy, mean top-1 confidence, cross-entropy, and perplexity.
 
 It then generates a continuation from either the first context window or an explicit prompt:
 
