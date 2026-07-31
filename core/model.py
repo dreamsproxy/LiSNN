@@ -46,7 +46,11 @@ class LanguageTrajectoryModel:
         return TextTokenizer(self.corpus.tokenizer_mode)
 
     def fit(self, *, epochs: int = 1, progress=None) -> None:
-        self.network.fit(self.corpus.token_ids, epochs=epochs, progress=progress)
+        self.network.fit(
+            self.corpus.token_ids,
+            epochs=epochs,
+            progress=progress,
+        )
 
     def predict_token_ids(
         self,
@@ -67,22 +71,38 @@ class LanguageTrajectoryModel:
     ) -> PredictionResult:
         tokens = self.tokenizer.tokenize(context_text)
         token_ids = self.vocabulary.encode(tokens)
-        return self.predict_token_ids(token_ids, temperature=temperature)
+        return self.predict_token_ids(
+            token_ids,
+            temperature=temperature,
+        )
 
-    def evaluate(self, *, temperature: float | None = None) -> EvaluationResult:
+    def evaluate(
+        self,
+        *,
+        temperature: float | None = None,
+    ) -> EvaluationResult:
         sequence = self.corpus.token_ids
         predictions: list[int] = []
         confidences: list[float] = []
         losses: list[float] = []
         correct = 0
         for target_position in range(1, sequence.size):
-            start = max(0, target_position - self.network.context_length)
+            start = max(
+                0,
+                target_position - self.network.context_length,
+            )
             context = sequence[start:target_position]
-            result = self.predict_token_ids(context, temperature=temperature)
+            result = self.predict_token_ids(
+                context,
+                temperature=temperature,
+            )
             target = int(sequence[target_position])
             predictions.append(result.token_id)
             confidences.append(result.confidence)
-            probability = max(float(result.probabilities[target]), 1e-12)
+            probability = max(
+                float(result.probabilities[target]),
+                1e-12,
+            )
             losses.append(-np.log(probability))
             correct += int(result.token_id == target)
         total = sequence.size - 1
@@ -93,8 +113,13 @@ class LanguageTrajectoryModel:
             total=total,
             mean_confidence=float(np.mean(confidences)),
             cross_entropy=cross_entropy,
-            perplexity=float(np.exp(min(cross_entropy, 700.0))),
-            predicted_token_ids=np.asarray(predictions, dtype=np.int64),
+            perplexity=float(
+                np.exp(min(cross_entropy, 700.0))
+            ),
+            predicted_token_ids=np.asarray(
+                predictions,
+                dtype=np.int64,
+            ),
         )
 
     def generate(
@@ -110,25 +135,37 @@ class LanguageTrajectoryModel:
             raise ValueError("num_tokens must be non-negative")
         prompt_tokens = self.tokenizer.tokenize(prompt_text)
         if not prompt_tokens:
-            raise ValueError("prompt_text must contain at least one token")
-        generated_ids = self.vocabulary.encode(prompt_tokens).tolist()
+            raise ValueError(
+                "prompt_text must contain at least one token"
+            )
+        generated_ids = self.vocabulary.encode(
+            prompt_tokens
+        ).tolist()
         rng = np.random.default_rng(
             self.network.config.seed if seed is None else seed
         )
         for _ in range(num_tokens):
-            result = self.predict_token_ids(generated_ids, temperature=temperature)
+            result = self.predict_token_ids(
+                generated_ids,
+                temperature=temperature,
+            )
             if sample:
                 next_id = int(
-                    rng.choice(self.vocabulary.size, p=result.probabilities)
+                    rng.choice(
+                        self.vocabulary.size,
+                        p=result.probabilities,
+                    )
                 )
             else:
                 next_id = result.token_id
             generated_ids.append(next_id)
-        return TextTokenizer.detokenize(self.vocabulary.decode(generated_ids))
+        return TextTokenizer.detokenize(
+            self.vocabulary.decode(generated_ids)
+        )
 
     def save(self, path: str | Path) -> None:
         metadata = {
-            "version": 2.1,
+            "version": 2.2,
             "config": self.network.config.to_dict(),
             "tokenizer_mode": self.corpus.tokenizer_mode,
             "vocabulary": list(self.vocabulary.tokens),
@@ -154,19 +191,38 @@ class LanguageTrajectoryModel:
         )
 
     @classmethod
-    def load(cls, path: str | Path) -> "LanguageTrajectoryModel":
+    def load(
+        cls,
+        path: str | Path,
+    ) -> "LanguageTrajectoryModel":
         with np.load(Path(path), allow_pickle=False) as checkpoint:
-            metadata = json.loads(str(checkpoint["metadata"].item()))
-            vocabulary = Vocabulary(tuple(metadata["vocabulary"]))
+            metadata = json.loads(
+                str(checkpoint["metadata"].item())
+            )
+            config_data = dict(metadata["config"])
+            if "ei_ratio" not in config_data:
+                config_data["ei_ratio"] = config_data.pop(
+                    "inhibitory_fraction",
+                    0.8,
+                )
+
+            vocabulary = Vocabulary(
+                tuple(metadata["vocabulary"])
+            )
             token_ids = checkpoint["token_ids"].astype(np.int64)
             corpus = TextCorpus(
                 tokens=tuple(vocabulary.decode(token_ids)),
                 token_ids=token_ids,
                 vocabulary=vocabulary,
-                source_paths=tuple(metadata.get("source_paths", ())),
+                source_paths=tuple(
+                    metadata.get("source_paths", ())
+                ),
                 tokenizer_mode=metadata["tokenizer_mode"],
             )
-            model = cls(corpus, NetworkConfig(**metadata["config"]))
+            model = cls(
+                corpus,
+                NetworkConfig(**config_data),
+            )
             model.network.neurons[...] = checkpoint["neurons"]
             model.network.thresholds[...] = checkpoint["thresholds"]
             model.network.pre_tau[...] = checkpoint["pre_tau"]
@@ -182,8 +238,12 @@ class LanguageTrajectoryModel:
                     "neuron_types"
                 ].astype(np.int8)
             model.network.weights._enforce_neuron_types()
-            model.network.readout_weights[...] = checkpoint["readout_weights"]
-            model.network.readout_bias[...] = checkpoint["readout_bias"]
+            model.network.readout_weights[...] = checkpoint[
+                "readout_weights"
+            ]
+            model.network.readout_bias[...] = checkpoint[
+                "readout_bias"
+            ]
             model.network.global_step_tick = int(
                 checkpoint["global_step_tick"].item()
             )
