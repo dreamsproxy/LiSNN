@@ -22,7 +22,7 @@ class NetworkConfig:
     readout_decay: float = 1e-5
     temperature: float = 1.0
     recency_decay: float = 0.9
-    inhibitory_fraction: float = 0.8
+    ei_ratio: float = 0.5
     hidden_threshold_offset: float = 2.0
     hidden_tau_scale: float = 0.9
     clip_interval: int = 8
@@ -55,8 +55,8 @@ class NetworkConfig:
             raise ValueError("temperature must be positive")
         if not 0 < self.recency_decay <= 1:
             raise ValueError("recency_decay must be in (0, 1]")
-        if not 0 <= self.inhibitory_fraction <= 1:
-            raise ValueError("inhibitory_fraction must be in [0, 1]")
+        if not 0 <= self.ei_ratio <= 1:
+            raise ValueError("ei_ratio must be in [0, 1]")
         if self.hidden_threshold_offset < 0:
             raise ValueError("hidden_threshold_offset must be non-negative")
         if not 0 < self.hidden_tau_scale <= 1:
@@ -67,6 +67,12 @@ class NetworkConfig:
             raise ValueError("top_k_fraction must be in (0, 1]")
         if self.error_threshold_steps < 1:
             raise ValueError("error_threshold_steps must be at least 1")
+
+    @property
+    def inhibitory_fraction(self) -> float:
+        """Compatibility alias for the inhibitory share of the E/I split."""
+
+        return self.ei_ratio
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
