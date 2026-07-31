@@ -54,7 +54,10 @@ class LanguageTrajectoryModel:
         *,
         temperature: float | None = None,
     ) -> PredictionResult:
-        return self.network.predict_next(context_token_ids, temperature=temperature)
+        return self.network.predict_next(
+            context_token_ids,
+            temperature=temperature,
+        )
 
     def predict_text(
         self,
@@ -125,7 +128,7 @@ class LanguageTrajectoryModel:
 
     def save(self, path: str | Path) -> None:
         metadata = {
-            "version": 2,
+            "version": 2.1,
             "config": self.network.config.to_dict(),
             "tokenizer_mode": self.corpus.tokenizer_mode,
             "vocabulary": list(self.vocabulary.tokens),
@@ -141,6 +144,7 @@ class LanguageTrajectoryModel:
             post_tau=self.network.post_tau,
             recurrent_weights=self.network.weights.weights,
             hebb_weights=self.network.weights.hebb_weights,
+            neuron_types=self.network.weights.neuron_types,
             readout_weights=self.network.readout_weights,
             readout_bias=self.network.readout_bias,
             global_step_tick=np.asarray(
@@ -167,8 +171,17 @@ class LanguageTrajectoryModel:
             model.network.thresholds[...] = checkpoint["thresholds"]
             model.network.pre_tau[...] = checkpoint["pre_tau"]
             model.network.post_tau[...] = checkpoint["post_tau"]
-            model.network.weights.weights[...] = checkpoint["recurrent_weights"]
-            model.network.weights.hebb_weights[...] = checkpoint["hebb_weights"]
+            model.network.weights.weights[...] = checkpoint[
+                "recurrent_weights"
+            ]
+            model.network.weights.hebb_weights[...] = checkpoint[
+                "hebb_weights"
+            ]
+            if "neuron_types" in checkpoint.files:
+                model.network.weights.neuron_types[...] = checkpoint[
+                    "neuron_types"
+                ].astype(np.int8)
+            model.network.weights._enforce_neuron_types()
             model.network.readout_weights[...] = checkpoint["readout_weights"]
             model.network.readout_bias[...] = checkpoint["readout_bias"]
             model.network.global_step_tick = int(
