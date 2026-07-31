@@ -6,7 +6,7 @@ from typing import Callable, Sequence
 import numpy as np
 
 from .config import NetworkConfig
-from .lif import initialize_population, step_population
+from .lif import TAU, V_THRESHOLD, initialize_population, step_population
 from .plasticity import PlasticityMatrix
 
 ProgressCallback = Callable[[int, int], None]
@@ -32,17 +32,10 @@ class PredictionResult:
 
 
 class LanguageTrajectoryNetwork:
-    """Predicts a token from a recent relative-time token trajectory.
+    """Predict a token from a recent relative-time token trajectory.
 
-    Neuron layout:
-
-    - vocabulary token neurons
-    - relative context-slot neurons
-    - conjunctive token-at-slot neurons
-    - one prediction-query neuron
-
-    The target token is never injected into the recurrent network. A separate
-    Hebbian/anti-Hebbian readout learns from the context trajectory feature.
+    Hidden neurons have no direct external input and no direct readout path.
+    They participate only through dense recurrent coupling with the I/O field.
     """
 
     def __init__(
@@ -55,6 +48,7 @@ class LanguageTrajectoryNetwork:
         self.config = config or NetworkConfig()
         self.vocabulary_size = int(vocabulary_size)
         self.context_length = self.config.context_length
+        self.hidden_neurons = self.config.hidden_neurons
 
         token_end = self.vocabulary_size
         time_end = token_end + self.context_length
@@ -63,7 +57,12 @@ class LanguageTrajectoryNetwork:
         self.time_slice = slice(token_end, time_end)
         self.binding_slice = slice(time_end, binding_end)
         self.query_index = binding_end
-        self.num_neurons = binding_end + 1
+        self.io_neuron_count = self.query_index + 1
+        self.hidden_slice = slice(
+            self.io_neuron_count,
+            self.io_neuron_count + self.hidden_neurons,
+        )
+        self.num_neurons = self.hidden_slice.stop
 
         self.rng = np.random.default_rng(self.config.seed)
         self.weights = PlasticityMatrix(
@@ -71,32 +70,52 @@ class LanguageTrajectoryNetwork:
             self.config.pre_alpha,
             self.config.post_alpha,
             self.rng,
+            inhibitory_fraction=self.config.inhibitory_fraction,
         )
         self.neurons, self.thresholds, tau = initialize_population(
             self.num_neurons,
             self.config.dt,
             self.rng,
-            fixed_tail=1,
         )
+
+        self.neurons[self.query_index] = np.asarray(
+            [-65.0, self.config.dt, 20.0, -65.0, -70.0, -55.0],
+            dtype=np.float64,
+        )
+        self.thresholds[self.query_index] = -55.0
+        tau[self.query_index] = 20.0
+
+        if self.hidden_neurons:
+            self.thresholds[self.hidden_slice] -= (
+                self.config.hidden_threshold_offset
+            )
+            self.neurons[self.hidden_slice, V_THRESHOLD] = self.thresholds[
+                self.hidden_slice
+            ]
+            tau[self.hidden_slice] *= self.config.hidden_tau_scale
+            self.neurons[self.hidden_slice, TAU] = tau[self.hidden_slice]
+
         self.pre_tau = tau.copy()
         self.post_tau = tau.copy()
         self.pre_spikes = np.zeros(self.num_neurons, dtype=np.float64)
         self.post_spikes = np.zeros(self.num_neurons, dtype=np.float64)
         self.global_step_tick = 0
 
+        # Hidden neurons cannot connect directly to the output classifier.
         self.readout_weights = np.zeros(
-            (self.vocabulary_size, self.num_neurons),
+            (self.vocabulary_size, self.io_neuron_count),
             dtype=np.float64,
         )
         self.readout_bias = np.zeros(self.vocabulary_size, dtype=np.float64)
 
-        driver_slice = slice(self.time_slice.start, self.num_neurons)
-        self.weights.weights[:, driver_slice] = 0.5
+        # Strong driver columns apply only to I/O driver neurons, not hidden cells.
+        driver_slice = slice(self.time_slice.start, self.io_neuron_count)
+        self.weights.set_column_magnitudes(driver_slice, 0.5)
 
     @property
     def estimated_dense_memory_bytes(self) -> int:
         recurrent = 2 * self.num_neurons * self.num_neurons * 8
-        readout = self.vocabulary_size * self.num_neurons * 8
+        readout = self.vocabulary_size * self.io_neuron_count * 8
         return recurrent + readout
 
     def binding_index(self, token_id: int, slot: int) -> int:
@@ -137,7 +156,10 @@ class LanguageTrajectoryNetwork:
             self.thresholds,
         )
         if train_recurrent:
-            top_k = max(1, int(round(self.num_neurons * self.config.top_k_fraction)))
+            top_k = max(
+                1,
+                int(round(self.num_neurons * self.config.top_k_fraction)),
+            )
             clip = self.global_step_tick % self.config.clip_interval != 0
             self.weights.update_combined(
                 self.pre_spikes,
@@ -196,16 +218,21 @@ class LanguageTrajectoryNetwork:
             )
             accumulated += self.post_spikes
 
-        norm = float(np.linalg.norm(accumulated))
+        # Only I/O activity is visible to the classifier. Hidden activity can
+        # alter it solely through recurrent propagation.
+        io_feature = accumulated[: self.io_neuron_count]
+        norm = float(np.linalg.norm(io_feature))
         if not np.isfinite(norm) or norm <= 1e-12:
-            return np.zeros_like(accumulated)
-        return accumulated / norm
+            return np.zeros_like(io_feature)
+        return io_feature / norm
 
     def _readout(
         self,
         feature: np.ndarray,
         temperature: float | None = None,
     ) -> tuple[np.ndarray, np.ndarray]:
+        if feature.shape != (self.io_neuron_count,):
+            raise ValueError("feature has the wrong shape")
         logits = self.readout_weights @ feature + self.readout_bias
         probabilities = stable_softmax(
             logits,
@@ -213,7 +240,11 @@ class LanguageTrajectoryNetwork:
         )
         return logits, probabilities
 
-    def _update_readout(self, feature: np.ndarray, target_token_id: int) -> None:
+    def _update_readout(
+        self,
+        feature: np.ndarray,
+        target_token_id: int,
+    ) -> None:
         _, probabilities = self._readout(feature)
         target = np.zeros(self.vocabulary_size, dtype=np.float64)
         target[target_token_id] = 1.0
@@ -244,14 +275,15 @@ class LanguageTrajectoryNetwork:
         if epochs < 1:
             raise ValueError("epochs must be at least 1")
 
-        windows_per_epoch = sequence.size - 1
-        total = epochs * windows_per_epoch
+        total = epochs * (sequence.size - 1)
         completed = 0
         for _ in range(epochs):
             for target_position in range(1, sequence.size):
                 start = max(0, target_position - self.context_length)
-                context = sequence[start:target_position]
-                feature = self.encode_context(context, train_recurrent=True)
+                feature = self.encode_context(
+                    sequence[start:target_position],
+                    train_recurrent=True,
+                )
                 self._update_readout(feature, int(sequence[target_position]))
                 completed += 1
                 if completed % self.config.prune_interval == 0:
