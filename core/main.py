@@ -24,6 +24,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--max-tokens", type=int, default=256)
     parser.add_argument("--context-length", type=int, default=8)
+    parser.add_argument(
+        "--hidden_neurons",
+        "--hidden-neurons",
+        dest="hidden_neurons",
+        type=int,
+        default=0,
+        help=(
+            "Recurrent-only hidden neurons. They receive no direct external "
+            "input and have no direct token-readout connection."
+        ),
+    )
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--ticks-per-token", type=int, default=8)
     parser.add_argument("--prediction-ticks", type=int, default=16)
@@ -51,6 +62,7 @@ def main() -> None:
     )
     config = NetworkConfig(
         context_length=args.context_length,
+        hidden_neurons=args.hidden_neurons,
         ticks_per_token=args.ticks_per_token,
         prediction_ticks=args.prediction_ticks,
         signal_scale=args.signal_scale,
@@ -65,8 +77,15 @@ def main() -> None:
     )
     print(
         f"Context length={config.context_length}; "
+        f"hidden neurons={config.hidden_neurons}; "
         f"neurons={model.network.num_neurons}; "
         f"estimated dense state={memory_mib:.2f} MiB."
+    )
+    print(
+        f"Fixed neuron types: inhibitory={model.network.weights.inhibitory_count} "
+        f"({model.network.weights.inhibitory_count / model.network.num_neurons:.1%}), "
+        f"excitatory={model.network.weights.excitatory_count} "
+        f"({model.network.weights.excitatory_count / model.network.num_neurons:.1%})."
     )
 
     last_percent = -1
