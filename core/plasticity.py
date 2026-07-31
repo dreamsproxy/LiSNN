@@ -15,7 +15,15 @@ class WeightStats:
 
 
 class PlasticityMatrix:
-    """Dense recurrent matrix with combined STDP and Hebbian plasticity."""
+    """Dense recurrent matrix with immutable Dale-style neuron polarity.
+
+    Matrix columns are presynaptic neurons because propagation is W @ spikes.
+    Every outgoing weight from an excitatory neuron is therefore non-negative,
+    while every outgoing weight from an inhibitory neuron is non-positive.
+    """
+
+    EXCITATORY = np.int8(1)
+    INHIBITORY = np.int8(-1)
 
     def __init__(
         self,
@@ -23,33 +31,46 @@ class PlasticityMatrix:
         pre_alpha: float,
         post_alpha: float,
         rng: np.random.Generator,
+        inhibitory_fraction: float = 0.8,
     ) -> None:
         if num_neurons < 1:
             raise ValueError("num_neurons must be positive")
+        if not 0 <= inhibitory_fraction <= 1:
+            raise ValueError("inhibitory_fraction must be in [0, 1]")
         self.num_neurons = int(num_neurons)
         self.a_pre = np.float64(pre_alpha)
         self.a_post = np.float64(post_alpha)
 
+        self.neuron_types = np.full(
+            self.num_neurons,
+            self.EXCITATORY,
+            dtype=np.int8,
+        )
+        inhibitory_count = int(round(self.num_neurons * inhibitory_fraction))
+        if inhibitory_count:
+            inhibitory_indices = rng.choice(
+                self.num_neurons,
+                size=inhibitory_count,
+                replace=False,
+            )
+            self.neuron_types[inhibitory_indices] = self.INHIBITORY
+
         limit = np.sqrt(6.0 / (2.0 * self.num_neurons))
-        self.weights = rng.uniform(
-            -limit,
+        magnitudes = rng.uniform(
+            1e-8,
             limit,
             (self.num_neurons, self.num_neurons),
         ).astype(np.float64)
-        # A Hebbian trace is accumulated evidence, so it starts at zero.
-        # The archived baseline randomized this matrix, which injected an
-        # unrelated dense association before the first training example.
-        self.hebb_weights = np.zeros(
-            (self.num_neurons, self.num_neurons),
-            dtype=np.float64,
-        )
+        self.weights = magnitudes * self.neuron_types[None, :]
+        self.hebb_weights = np.zeros_like(self.weights)
 
-    @staticmethod
-    def compute_spikes(
-        potentials: np.ndarray,
-        thresholds: np.ndarray,
-    ) -> np.ndarray:
-        return np.maximum(0.0, potentials - thresholds)
+    @property
+    def inhibitory_count(self) -> int:
+        return int(np.sum(self.neuron_types == self.INHIBITORY))
+
+    @property
+    def excitatory_count(self) -> int:
+        return int(np.sum(self.neuron_types == self.EXCITATORY))
 
     @property
     def stats(self) -> WeightStats:
@@ -59,6 +80,37 @@ class PlasticityMatrix:
             minimum=float(self.weights.min()),
             maximum=float(self.weights.max()),
             nonzero_fraction=float(np.count_nonzero(self.weights) / self.weights.size),
+        )
+
+    def set_column_magnitudes(
+        self,
+        columns: slice | np.ndarray,
+        magnitude: float,
+    ) -> None:
+        if magnitude < 0:
+            raise ValueError("magnitude must be non-negative")
+        self.weights[:, columns] = (
+            magnitude * self.neuron_types[columns][None, :]
+        )
+
+    def _enforce_neuron_types(self) -> None:
+        excitatory = self.neuron_types == self.EXCITATORY
+        inhibitory = ~excitatory
+        self.weights[:, excitatory] = np.maximum(
+            self.weights[:, excitatory],
+            0.0,
+        )
+        self.weights[:, inhibitory] = np.minimum(
+            self.weights[:, inhibitory],
+            0.0,
+        )
+        self.hebb_weights[:, excitatory] = np.maximum(
+            self.hebb_weights[:, excitatory],
+            0.0,
+        )
+        self.hebb_weights[:, inhibitory] = np.minimum(
+            self.hebb_weights[:, inhibitory],
+            0.0,
         )
 
     def _stdp_update(
@@ -79,19 +131,26 @@ class PlasticityMatrix:
             * pre_spikes[None, :]
             * np.exp(delta / tau_post[:, None])
         )
-        return np.where(delta > 0.0, potentiation, depression)
+        unsigned_update = np.where(delta > 0.0, potentiation, depression)
+        return unsigned_update * self.neuron_types[None, :]
 
     def _hebb_update(
         self,
         pre_spikes: np.ndarray,
         post_spikes: np.ndarray,
     ) -> None:
-        active_pre = pre_spikes > 0.0
-        if not np.any(active_pre):
+        active_pre_indices = np.flatnonzero(pre_spikes > 0.0)
+        if not active_pre_indices.size:
             return
-        active_post = post_spikes > 0.0
-        self.hebb_weights[np.ix_(active_post, active_pre)] += self.a_post
-        self.hebb_weights[np.ix_(~active_post, active_pre)] -= self.a_pre
+        post_update = np.where(
+            post_spikes > 0.0,
+            self.a_post,
+            -self.a_pre,
+        )
+        self.hebb_weights[:, active_pre_indices] += (
+            post_update[:, None]
+            * self.neuron_types[active_pre_indices][None, :]
+        )
 
     def update_combined(
         self,
@@ -121,13 +180,16 @@ class PlasticityMatrix:
         )
         self._hebb_update(pre_spikes, restricted_post)
         self.weights = 0.5 * (self.weights + self.hebb_weights)
+        self._enforce_neuron_types()
 
         if clip:
-            self.weights = np.clip(self.weights, 1e-8, 1.0)
+            self.weights = np.clip(self.weights, -1.0, 1.0)
+            self._enforce_neuron_types()
 
         norms = np.linalg.norm(self.weights, axis=1, keepdims=True)
         safe_norms = np.where(norms > 0.0, norms, 1.0)
         self.weights /= safe_norms
+        self._enforce_neuron_types()
 
     def propagate(self, spikes: np.ndarray, method: str = "sum") -> np.ndarray:
         if spikes.shape != (self.num_neurons,):
