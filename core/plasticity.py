@@ -17,9 +17,13 @@ class WeightStats:
 class PlasticityMatrix:
     """Dense recurrent matrix with immutable Dale-style neuron polarity.
 
-    Matrix columns are presynaptic neurons because propagation is W @ spikes.
-    Every outgoing weight from an excitatory neuron is therefore non-negative,
-    while every outgoing weight from an inhibitory neuron is non-positive.
+    Matrix columns are presynaptic neurons because propagation is ``W @ spikes``.
+    Every outgoing weight from an excitatory neuron is non-negative, while every
+    outgoing weight from an inhibitory neuron is non-positive.
+
+    I/O and hidden populations use independent deterministic random streams.
+    Changing ``hidden_neurons`` therefore does not resample I/O neuron types or
+    the initial I/O-to-I/O weight block.
     """
 
     EXCITATORY = np.int8(1)
@@ -30,39 +34,132 @@ class PlasticityMatrix:
         num_neurons: int,
         pre_alpha: float,
         post_alpha: float,
-        rng: np.random.Generator,
-        inhibitory_fraction: float = 0.8,
+        *,
+        io_neuron_count: int,
+        seed: int,
+        inhibitory_fraction: float = 0.5,
     ) -> None:
         if num_neurons < 1:
             raise ValueError("num_neurons must be positive")
+        if io_neuron_count < 1 or io_neuron_count > num_neurons:
+            raise ValueError("io_neuron_count must be in [1, num_neurons]")
         if not 0 <= inhibitory_fraction <= 1:
             raise ValueError("inhibitory_fraction must be in [0, 1]")
+
         self.num_neurons = int(num_neurons)
+        self.io_neuron_count = int(io_neuron_count)
+        self.hidden_neuron_count = self.num_neurons - self.io_neuron_count
         self.a_pre = np.float64(pre_alpha)
         self.a_post = np.float64(post_alpha)
 
-        self.neuron_types = np.full(
-            self.num_neurons,
-            self.EXCITATORY,
+        io_type_rng = np.random.default_rng(
+            np.random.SeedSequence([seed, 101])
+        )
+        hidden_type_rng = np.random.default_rng(
+            np.random.SeedSequence([seed, 102])
+        )
+        io_types = self._sample_types(
+            self.io_neuron_count,
+            inhibitory_fraction,
+            io_type_rng,
+        )
+        hidden_types = self._sample_types(
+            self.hidden_neuron_count,
+            inhibitory_fraction,
+            hidden_type_rng,
+        )
+        self.neuron_types = np.concatenate((io_types, hidden_types)).astype(
+            np.int8,
+            copy=False,
+        )
+
+        self.weights = np.empty(
+            (self.num_neurons, self.num_neurons),
+            dtype=np.float64,
+        )
+        self._initialize_blockwise_weights(seed)
+        self.hebb_weights = np.zeros_like(self.weights)
+        self._enforce_neuron_types()
+
+    @classmethod
+    def _sample_types(
+        cls,
+        population_size: int,
+        inhibitory_fraction: float,
+        rng: np.random.Generator,
+    ) -> np.ndarray:
+        types = np.full(
+            population_size,
+            cls.EXCITATORY,
             dtype=np.int8,
         )
-        inhibitory_count = int(round(self.num_neurons * inhibitory_fraction))
+        if population_size == 0:
+            return types
+
+        # Round halves upward so a 0.5 ratio gives the closest intuitive split
+        # for odd-sized populations rather than Python's banker rounding.
+        inhibitory_count = int(
+            np.floor(population_size * inhibitory_fraction + 0.5)
+        )
+        inhibitory_count = min(
+            max(inhibitory_count, 0),
+            population_size,
+        )
         if inhibitory_count:
             inhibitory_indices = rng.choice(
-                self.num_neurons,
+                population_size,
                 size=inhibitory_count,
                 replace=False,
             )
-            self.neuron_types[inhibitory_indices] = self.INHIBITORY
+            types[inhibitory_indices] = cls.INHIBITORY
+        return types
 
-        limit = np.sqrt(6.0 / (2.0 * self.num_neurons))
-        magnitudes = rng.uniform(
+    @staticmethod
+    def _xavier_limit(fan_in: int, fan_out: int) -> float:
+        return float(np.sqrt(6.0 / max(fan_in + fan_out, 1)))
+
+    def _initialize_blockwise_weights(self, seed: int) -> None:
+        """Initialize stable I/O and independently sampled hidden blocks."""
+
+        io = self.io_neuron_count
+        hidden = self.hidden_neuron_count
+
+        io_rng = np.random.default_rng(
+            np.random.SeedSequence([seed, 201])
+        )
+        io_limit = self._xavier_limit(io, io)
+        self.weights[:io, :io] = io_rng.uniform(
             1e-8,
-            limit,
-            (self.num_neurons, self.num_neurons),
-        ).astype(np.float64)
-        self.weights = magnitudes * self.neuron_types[None, :]
-        self.hebb_weights = np.zeros_like(self.weights)
+            io_limit,
+            (io, io),
+        )
+
+        if hidden:
+            cross_rng = np.random.default_rng(
+                np.random.SeedSequence([seed, 202])
+            )
+            hidden_rng = np.random.default_rng(
+                np.random.SeedSequence([seed, 203])
+            )
+            cross_limit = self._xavier_limit(io, hidden)
+            hidden_limit = self._xavier_limit(hidden, hidden)
+            self.weights[:io, io:] = cross_rng.uniform(
+                1e-8,
+                cross_limit,
+                (io, hidden),
+            )
+            self.weights[io:, :io] = cross_rng.uniform(
+                1e-8,
+                cross_limit,
+                (hidden, io),
+            )
+            self.weights[io:, io:] = hidden_rng.uniform(
+                1e-8,
+                hidden_limit,
+                (hidden, hidden),
+            )
+
+        self.weights *= self.neuron_types[None, :]
 
     @property
     def inhibitory_count(self) -> int:
@@ -73,13 +170,41 @@ class PlasticityMatrix:
         return int(np.sum(self.neuron_types == self.EXCITATORY))
 
     @property
+    def io_inhibitory_count(self) -> int:
+        return int(
+            np.sum(
+                self.neuron_types[: self.io_neuron_count]
+                == self.INHIBITORY
+            )
+        )
+
+    @property
+    def io_excitatory_count(self) -> int:
+        return self.io_neuron_count - self.io_inhibitory_count
+
+    @property
+    def hidden_inhibitory_count(self) -> int:
+        return int(
+            np.sum(
+                self.neuron_types[self.io_neuron_count :]
+                == self.INHIBITORY
+            )
+        )
+
+    @property
+    def hidden_excitatory_count(self) -> int:
+        return self.hidden_neuron_count - self.hidden_inhibitory_count
+
+    @property
     def stats(self) -> WeightStats:
         return WeightStats(
             mean=float(self.weights.mean()),
             std=float(self.weights.std()),
             minimum=float(self.weights.min()),
             maximum=float(self.weights.max()),
-            nonzero_fraction=float(np.count_nonzero(self.weights) / self.weights.size),
+            nonzero_fraction=float(
+                np.count_nonzero(self.weights) / self.weights.size
+            ),
         )
 
     def set_column_magnitudes(
@@ -131,7 +256,11 @@ class PlasticityMatrix:
             * pre_spikes[None, :]
             * np.exp(delta / tau_post[:, None])
         )
-        unsigned_update = np.where(delta > 0.0, potentiation, depression)
+        unsigned_update = np.where(
+            delta > 0.0,
+            potentiation,
+            depression,
+        )
         return unsigned_update * self.neuron_types[None, :]
 
     def _hebb_update(
@@ -191,7 +320,11 @@ class PlasticityMatrix:
         self.weights /= safe_norms
         self._enforce_neuron_types()
 
-    def propagate(self, spikes: np.ndarray, method: str = "sum") -> np.ndarray:
+    def propagate(
+        self,
+        spikes: np.ndarray,
+        method: str = "sum",
+    ) -> np.ndarray:
         if spikes.shape != (self.num_neurons,):
             raise ValueError("spikes has the wrong shape")
         signals = self.weights @ spikes
@@ -201,7 +334,11 @@ class PlasticityMatrix:
             return signals / self.num_neurons
         if method == "weighted":
             row_sums = self.weights.sum(axis=1)
-            safe_sums = np.where(np.abs(row_sums) > 1e-8, row_sums, 1.0)
+            safe_sums = np.where(
+                np.abs(row_sums) > 1e-8,
+                row_sums,
+                1.0,
+            )
             return signals / safe_sums
         raise ValueError("method must be 'sum', 'mean', or 'weighted'")
 
