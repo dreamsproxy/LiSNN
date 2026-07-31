@@ -12,7 +12,10 @@ from .plasticity import PlasticityMatrix
 ProgressCallback = Callable[[int, int], None]
 
 
-def stable_softmax(logits: np.ndarray, temperature: float = 1.0) -> np.ndarray:
+def stable_softmax(
+    logits: np.ndarray,
+    temperature: float = 1.0,
+) -> np.ndarray:
     scaled = np.asarray(logits, dtype=np.float64) / temperature
     scaled = scaled - np.max(scaled)
     exponentials = np.exp(np.clip(scaled, -700.0, 700.0))
@@ -36,6 +39,10 @@ class LanguageTrajectoryNetwork:
 
     Hidden neurons have no direct external input and no direct readout path.
     They participate only through dense recurrent coupling with the I/O field.
+
+    I/O and hidden populations are initialized from independent deterministic
+    random streams. For a fixed seed, changing ``hidden_neurons`` leaves all
+    initial I/O neuron types, LIF parameters, and I/O-to-I/O weights unchanged.
     """
 
     def __init__(
@@ -64,19 +71,44 @@ class LanguageTrajectoryNetwork:
         )
         self.num_neurons = self.hidden_slice.stop
 
-        self.rng = np.random.default_rng(self.config.seed)
         self.weights = PlasticityMatrix(
             self.num_neurons,
             self.config.pre_alpha,
             self.config.post_alpha,
-            self.rng,
-            inhibitory_fraction=self.config.inhibitory_fraction,
+            io_neuron_count=self.io_neuron_count,
+            seed=self.config.seed,
+            inhibitory_fraction=self.config.ei_ratio,
         )
-        self.neurons, self.thresholds, tau = initialize_population(
-            self.num_neurons,
+
+        io_rng = np.random.default_rng(
+            np.random.SeedSequence([self.config.seed, 301])
+        )
+        io_neurons, io_thresholds, io_tau = initialize_population(
+            self.io_neuron_count,
             self.config.dt,
-            self.rng,
+            io_rng,
         )
+
+        if self.hidden_neurons:
+            hidden_rng = np.random.default_rng(
+                np.random.SeedSequence([self.config.seed, 302])
+            )
+            hidden_neurons, hidden_thresholds, hidden_tau = (
+                initialize_population(
+                    self.hidden_neurons,
+                    self.config.dt,
+                    hidden_rng,
+                )
+            )
+            self.neurons = np.vstack((io_neurons, hidden_neurons))
+            self.thresholds = np.concatenate(
+                (io_thresholds, hidden_thresholds)
+            )
+            tau = np.concatenate((io_tau, hidden_tau))
+        else:
+            self.neurons = io_neurons
+            self.thresholds = io_thresholds
+            tau = io_tau
 
         self.neurons[self.query_index] = np.asarray(
             [-65.0, self.config.dt, 20.0, -65.0, -70.0, -55.0],
@@ -106,9 +138,13 @@ class LanguageTrajectoryNetwork:
             (self.vocabulary_size, self.io_neuron_count),
             dtype=np.float64,
         )
-        self.readout_bias = np.zeros(self.vocabulary_size, dtype=np.float64)
+        self.readout_bias = np.zeros(
+            self.vocabulary_size,
+            dtype=np.float64,
+        )
 
-        # Strong driver columns apply only to I/O driver neurons, not hidden cells.
+        # Strong driver columns apply only to I/O driver neurons, not hidden
+        # cells. Their Dale sign remains fixed by the presynaptic neuron type.
         driver_slice = slice(self.time_slice.start, self.io_neuron_count)
         self.weights.set_column_magnitudes(driver_slice, 0.5)
 
@@ -123,7 +159,11 @@ class LanguageTrajectoryNetwork:
             raise ValueError(f"token_id out of range: {token_id}")
         if slot < 0 or slot >= self.context_length:
             raise ValueError(f"slot out of range: {slot}")
-        return self.binding_slice.start + slot * self.vocabulary_size + token_id
+        return (
+            self.binding_slice.start
+            + slot * self.vocabulary_size
+            + token_id
+        )
 
     def reset_dynamic_state(self) -> None:
         self.pre_spikes.fill(0.0)
@@ -131,7 +171,11 @@ class LanguageTrajectoryNetwork:
         self.neurons[:, 0] = self.neurons[:, 3] + 2.71
         self.neurons[self.query_index, 0] = -65.0
 
-    def _context_input(self, token_id: int, slot: int) -> np.ndarray:
+    def _context_input(
+        self,
+        token_id: int,
+        slot: int,
+    ) -> np.ndarray:
         distance_from_newest = self.context_length - 1 - slot
         scale = self.config.signal_scale * (
             self.config.recency_decay ** distance_from_newest
@@ -147,7 +191,12 @@ class LanguageTrajectoryNetwork:
         external[self.query_index] = self.config.signal_scale
         return external
 
-    def step(self, input_signals: np.ndarray, *, train_recurrent: bool) -> np.ndarray:
+    def step(
+        self,
+        input_signals: np.ndarray,
+        *,
+        train_recurrent: bool,
+    ) -> np.ndarray:
         if input_signals.shape != (self.num_neurons,):
             raise ValueError("input_signals has the wrong shape")
         self.post_spikes = step_population(
@@ -158,9 +207,16 @@ class LanguageTrajectoryNetwork:
         if train_recurrent:
             top_k = max(
                 1,
-                int(round(self.num_neurons * self.config.top_k_fraction)),
+                int(
+                    round(
+                        self.num_neurons
+                        * self.config.top_k_fraction
+                    )
+                ),
             )
-            clip = self.global_step_tick % self.config.clip_interval != 0
+            clip = (
+                self.global_step_tick % self.config.clip_interval != 0
+            )
             self.weights.update_combined(
                 self.pre_spikes,
                 self.post_spikes,
@@ -170,7 +226,10 @@ class LanguageTrajectoryNetwork:
                 top_k=top_k,
             )
             self.global_step_tick += 1
-        signals = self.weights.propagate(self.post_spikes, method="mean")
+        signals = self.weights.propagate(
+            self.post_spikes,
+            method="mean",
+        )
         self.pre_spikes = self.post_spikes.copy()
         return signals
 
@@ -183,32 +242,47 @@ class LanguageTrajectoryNetwork:
         context = np.asarray(context_token_ids, dtype=np.int64)
         if context.ndim != 1 or context.size < 1:
             raise ValueError("context must contain at least one token")
-        if np.any(context < 0) or np.any(context >= self.vocabulary_size):
+        if np.any(context < 0) or np.any(
+            context >= self.vocabulary_size
+        ):
             raise ValueError("context contains an out-of-range token id")
         context = context[-self.context_length :]
         start_slot = self.context_length - context.size
 
         self.reset_dynamic_state()
-        recurrent_signal = np.zeros(self.num_neurons, dtype=np.float64)
-        accumulated = np.zeros(self.num_neurons, dtype=np.float64)
+        recurrent_signal = np.zeros(
+            self.num_neurons,
+            dtype=np.float64,
+        )
+        accumulated = np.zeros(
+            self.num_neurons,
+            dtype=np.float64,
+        )
 
         for offset, token_id in enumerate(context):
             slot = start_slot + offset
             external = self._context_input(int(token_id), slot)
             for tick in range(self.config.ticks_per_token):
-                drive = external + self.config.recurrent_scale * recurrent_signal
+                drive = (
+                    external
+                    + self.config.recurrent_scale * recurrent_signal
+                )
                 recurrent_signal = self.step(
                     drive,
                     train_recurrent=(
                         train_recurrent
-                        and tick == self.config.ticks_per_token - 1
+                        and tick
+                        == self.config.ticks_per_token - 1
                     ),
                 )
                 accumulated += self.post_spikes
 
         query = self._query_input()
         for tick in range(self.config.prediction_ticks):
-            drive = query + self.config.recurrent_scale * recurrent_signal
+            drive = (
+                query
+                + self.config.recurrent_scale * recurrent_signal
+            )
             recurrent_signal = self.step(
                 drive,
                 train_recurrent=(
@@ -236,7 +310,9 @@ class LanguageTrajectoryNetwork:
         logits = self.readout_weights @ feature + self.readout_bias
         probabilities = stable_softmax(
             logits,
-            self.config.temperature if temperature is None else temperature,
+            self.config.temperature
+            if temperature is None
+            else temperature,
         )
         return logits, probabilities
 
@@ -270,7 +346,9 @@ class LanguageTrajectoryNetwork:
         sequence = np.asarray(token_ids, dtype=np.int64)
         if sequence.ndim != 1 or sequence.size < 2:
             raise ValueError("token_ids must contain at least two tokens")
-        if np.any(sequence < 0) or np.any(sequence >= self.vocabulary_size):
+        if np.any(sequence < 0) or np.any(
+            sequence >= self.vocabulary_size
+        ):
             raise ValueError("token_ids contains an out-of-range token id")
         if epochs < 1:
             raise ValueError("epochs must be at least 1")
@@ -279,15 +357,23 @@ class LanguageTrajectoryNetwork:
         completed = 0
         for _ in range(epochs):
             for target_position in range(1, sequence.size):
-                start = max(0, target_position - self.context_length)
+                start = max(
+                    0,
+                    target_position - self.context_length,
+                )
                 feature = self.encode_context(
                     sequence[start:target_position],
                     train_recurrent=True,
                 )
-                self._update_readout(feature, int(sequence[target_position]))
+                self._update_readout(
+                    feature,
+                    int(sequence[target_position]),
+                )
                 completed += 1
                 if completed % self.config.prune_interval == 0:
-                    self.weights.prune(self.config.prune_threshold)
+                    self.weights.prune(
+                        self.config.prune_threshold
+                    )
                 if progress is not None:
                     progress(completed, total)
 
@@ -298,7 +384,10 @@ class LanguageTrajectoryNetwork:
         temperature: float | None = None,
     ) -> PredictionResult:
         context = np.asarray(context_token_ids, dtype=np.int64)
-        feature = self.encode_context(context, train_recurrent=False)
+        feature = self.encode_context(
+            context,
+            train_recurrent=False,
+        )
         logits, probabilities = self._readout(feature, temperature)
         token_id = int(np.argmax(probabilities))
         return PredictionResult(
@@ -306,5 +395,7 @@ class LanguageTrajectoryNetwork:
             confidence=float(probabilities[token_id]),
             probabilities=probabilities,
             logits=logits,
-            context_token_ids=context[-self.context_length :].copy(),
+            context_token_ids=context[
+                -self.context_length :
+            ].copy(),
         )
