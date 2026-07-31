@@ -12,6 +12,7 @@ class NetworkConfig:
     pre_alpha: float = 0.001
     post_alpha: float = 0.002
     context_length: int = 8
+    hidden_neurons: int = 0
     ticks_per_token: int = 8
     prediction_ticks: int = 16
     signal_scale: float = 500.0
@@ -21,6 +22,9 @@ class NetworkConfig:
     readout_decay: float = 1e-5
     temperature: float = 1.0
     recency_decay: float = 0.9
+    inhibitory_fraction: float = 0.8
+    hidden_threshold_offset: float = 2.0
+    hidden_tau_scale: float = 0.9
     clip_interval: int = 8
     prune_interval: int = 64
     prune_threshold: float = 1e-4
@@ -35,6 +39,8 @@ class NetworkConfig:
             raise ValueError("plasticity rates must be non-negative")
         if self.context_length < 1:
             raise ValueError("context_length must be at least 1")
+        if self.hidden_neurons < 0:
+            raise ValueError("hidden_neurons must be non-negative")
         if self.ticks_per_token < 1 or self.prediction_ticks < 1:
             raise ValueError("tick counts must be at least 1")
         if self.signal_scale <= 0:
@@ -49,6 +55,12 @@ class NetworkConfig:
             raise ValueError("temperature must be positive")
         if not 0 < self.recency_decay <= 1:
             raise ValueError("recency_decay must be in (0, 1]")
+        if not 0 <= self.inhibitory_fraction <= 1:
+            raise ValueError("inhibitory_fraction must be in [0, 1]")
+        if self.hidden_threshold_offset < 0:
+            raise ValueError("hidden_threshold_offset must be non-negative")
+        if not 0 < self.hidden_tau_scale <= 1:
+            raise ValueError("hidden_tau_scale must be in (0, 1]")
         if self.clip_interval < 1 or self.prune_interval < 1:
             raise ValueError("intervals must be at least 1")
         if not 0 < self.top_k_fraction <= 1:
