@@ -28,7 +28,7 @@ jobs:
         shell: bash
         run: |
           set +e
-          python3 -m unittest discover -s tests -v > test-output.txt 2>&1
+          python3 -m unittest discover -s tests -v > test-output.txt 2>&1 
           status=$?
           cat test-output.txt
           exit $status
