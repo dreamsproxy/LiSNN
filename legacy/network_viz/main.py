@@ -7,7 +7,7 @@ Run:
     python3 main.py
 """
 
-from planning_graph.app import main
+from legacy.network_viz.planning_graph.app import main
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import numpy as np
 
-from core.v2 import LanguageTrajectoryModel, NetworkConfig, TextCorpus
+from legacy.core.v2.v2 import LanguageTrajectoryModel, NetworkConfig, TextCorpus
 
 
 def small_config(seed: int = 7) -> NetworkConfig:
