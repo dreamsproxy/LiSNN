@@ -1,37 +1,126 @@
-**Project Outline: Omnidirectional LIF and AdExLIF Neurons in a Liquid Spiking Neural Network**
+# LiSNN
 
-**1. Introduction:**
-   - Brief overview of Liquid Spiking Neural Networks (LSNN) and their applications.
-   - Introduction to the integration of Omnidirectional Leaky Integrate-and-Fire (LIF) and Adaptive Exponential Integrate-and-Fire (AdExLIF) neurons for enhanced functionality.
+LiSNN is an experimental liquid spiking neural-network substrate focused on
+closed-loop learning, heterogeneous neuron populations, and biologically
+inspired local dynamics.
 
-**2. Neuronal Model Integration:**
-   - Explanation of the incorporation of Omnidirectional LIF neurons for a broader receptive field.
-   - Implementation of AdExLIF neurons for capturing complex spatiotemporal dynamics.
-   - Description of the self-optimization mechanism inspired by biological principles.
+The active architecture was reset in September 2026 to support experiments
+inspired by closed-loop biological-computing work such as DishBrain. Previous
+LiSNN/LiNN/BioEmulator experiments are intentionally frozen under `legacy/`.
 
-**3. Self-Optimizing:**
-   - Elaboration on the concept of self-optimization within the neural network.
-   - Discussion on how the model can adapt and evolve its connectivity based on learning experiences.
-   - Theoretical foundation for the model's ability to optimize for patterns associated with positive reinforcement, metaphorically referred to as "love."
+## Current development boundary
 
-**4. Use Cases:**
-   - **Real-time Temporal-Spatial Data Processing:**
-     - Detailed exploration of the application in processing dynamic spatiotemporal information in real-time.
-     - Examples of use in scenarios like video analysis, sensor networks, and dynamic environment monitoring.
-   - **Pattern Recognition and Anomaly Detection:**
-     - Utilization of the LSNN for recognizing patterns in complex data streams.
-     - Potential applications in cybersecurity, identifying anomalies in real-world systems.
+The active implementation currently provides:
 
-**5. Technical Challenges and Solutions:**
-   - Addressing computational complexities associated with implementing Omnidirectional LIF and AdExLIF neurons.
-   - Strategies for managing self-optimization to avoid convergence issues.
+- a shared `float32` neuron population matrix with shape `(N, 43)`;
+- vectorized NumPy neuron kernels;
+- deterministic or physiologically randomized parameter initialization;
+- homogeneous and heterogeneous neuron-population construction;
+- contiguous neuron-type slices for future vectorized network stepping;
+- population smoke testing and forced post-spike state verification.
 
-**6. Future Directions:**
-   - Exploration of scalability for larger neural networks.
-   - Investigation into applications beyond real-time temporal-spatial data processing.
+Synaptic weights, connectivity, propagation, plasticity, and closed-loop
+feedback learning are deliberately not part of the network constructor yet.
 
-**7. Conclusion:**
-   - Recapitulation of the project's objectives and potential impact.
-   - Emphasis on the versatility of LSNN with Omnidirectional LIF and AdExLIF neurons in addressing complex real-world problems.
+## Supported neuron models
 
-*Note: This project aims to contribute to the field of neuromorphic computing, particularly in the realm of spiking neural networks, offering potential breakthroughs in real-time data processing and self-optimization.*
+- LIF
+- Adaptive LIF
+- Izhikevich
+- AdEx
+- GLIF3
+- GLIF4
+- GLIF5
+- CAdEx
+- experimental CAdEx-GLIF hybrid
+
+## Package layout
+
+```text
+lisnn/
+  neurons/
+    layout.py       # shared neuron-matrix ABI
+    models.py       # vectorized neuron-step import surface
+    population.py   # typed population construction
+    registry.py     # NeuronType + step registry
+  network/
+    spec.py         # homogeneous/mixed population specification
+    core.py         # SNN constructor/container
+  debugging/
+    __init__.py     # debugging API
+  types.py          # shared NumPy/type aliases
+```
+
+The original root modules remain compatibility facades or implementation
+surfaces so existing experiments do not need to change immediately.
+
+## Network construction
+
+```python
+import Network
+
+model = Network.create_nn(
+    population=8,
+    neuron_type="GLIF5",
+    randomize_params=True,
+    seed=1,
+)
+```
+
+Mixed populations use explicit counts and a required default type. Unassigned
+neurons are assigned to the default group:
+
+```python
+model = Network.create_nn(
+    population=8,
+    neuron_type={
+        "default": "LIF",
+        "GLIF5": 2,
+        "AdEx": 3,
+    },
+    randomize_params=True,
+    seed=1,
+)
+```
+
+The same API can be used through the package directly:
+
+```python
+from lisnn import NeuronType, create_nn
+
+model = create_nn(
+    population=8,
+    neuron_type=NeuronType.GLIF5,
+)
+```
+
+## Population debugging
+
+```python
+import debugging as debug
+
+debug.population_smoke_test(
+    neuron_count=8,
+    n_steps=8,
+    watch_spikes=True,
+    verbose=True,
+)
+```
+
+The smoke test checks alternating-input integration and explicitly exercises
+threshold crossing, spike/reset behavior, refractory state, and model-specific
+post-spike state transitions.
+
+## Design invariant
+
+Neuron objects are not instantiated individually. The neuronal substrate stays
+vectorized:
+
+```text
+population -> float32 ndarray[N, 43]
+neuron type -> contiguous population slice
+step kernel -> vectorized operation over that slice
+```
+
+This invariant should be preserved as connectivity, synapses, plasticity, and
+closed-loop feedback are added.
