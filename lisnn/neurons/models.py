@@ -1,6 +1,6 @@
 """Canonical imports for LiSNN vectorized neuron step kernels."""
 
-from NeuronModels import (
+from lisnn.neurons.kernels import (
     adaptive_lif_step,
     adex_step,
     cadex_glif_step,
