@@ -12,8 +12,7 @@ from collections import OrderedDict
 import numpy as np
 from numpy.typing import NDArray
 
-import NeuronModels as nm
-
+from lisnn.neurons import kernels as nm
 from lisnn.neurons.registry import NeuronType
 from lisnn.network.spec import NeuronPopulationSpec, TypeCounts, parse_population_spec
 from lisnn.spatial import SpatialSpec, SpatialVolume, create_spatial_volume
@@ -106,7 +105,7 @@ class SNN:
 
         # Spatial geometry is deliberately independent of neuron dynamics.
         # Reusing the public seed creates deterministic placement through an
-        # independent RNG without consuming NeuronModels' parameter RNG state.
+        # independent RNG without consuming neuron-parameter RNG state.
         self.space = create_spatial_volume(
             population,
             spatial,
