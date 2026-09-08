@@ -39,6 +39,8 @@ def _as_index_vector(name: str, values: ArrayLike) -> SynapseIndexArray:
     raw = np.asarray(values)
     if raw.ndim != 1:
         raise ValueError(f"{name} must be a 1D array")
+    if raw.size == 0:
+        return np.empty(0, dtype=np.int32)
     if not np.issubdtype(raw.dtype, np.integer):
         raise TypeError(f"{name} must contain integer neuron indices")
 
@@ -219,21 +221,25 @@ def create_fixed_out_degree(
     )
     post = np.empty(edge_count, dtype=np.int32)
 
-    all_targets = np.arange(population, dtype=np.int32)
     cursor = 0
     for presynaptic in range(population):
         if allow_self:
-            candidates = all_targets
+            selected = rng.choice(
+                population,
+                size=synapses_per_neuron,
+                replace=False,
+            ).astype(np.int32, copy=False)
         else:
-            candidates = np.concatenate(
-                (all_targets[:presynaptic], all_targets[presynaptic + 1 :])
-            )
+            # Sample from [0, population-2] and remap values at/above the
+            # presynaptic index upward by one. This excludes self without
+            # allocating an N-sized candidate vector for every neuron.
+            selected = rng.choice(
+                population - 1,
+                size=synapses_per_neuron,
+                replace=False,
+            ).astype(np.int32, copy=False)
+            selected += (selected >= presynaptic).astype(np.int32)
 
-        selected = rng.choice(
-            candidates,
-            size=synapses_per_neuron,
-            replace=False,
-        ).astype(np.int32, copy=False)
         selected.sort()
 
         next_cursor = cursor + synapses_per_neuron
