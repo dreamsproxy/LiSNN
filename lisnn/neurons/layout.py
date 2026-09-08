@@ -1,12 +1,12 @@
 """Shared neuron-matrix ABI.
 
 These indices define the stable column layout of every LiSNN neuron population.
-The numerical implementation currently lives in ``NeuronModels``; this module
+The numerical implementation lives in ``lisnn.neurons.kernels``; this module
 provides the canonical import location for layout consumers such as networks,
 plasticity, serialization, visualization, and debugging.
 """
 
-from NeuronModels import (
+from lisnn.neurons.kernels import (
     ADAPT,
     ADEX,
     ALIF,
