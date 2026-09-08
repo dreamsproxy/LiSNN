@@ -6,8 +6,7 @@ from enum import Enum
 from types import MappingProxyType
 from typing import Final
 
-import NeuronModels as nm
-
+from lisnn.neurons import kernels as nm
 from lisnn.types import NeuronStep
 
 
@@ -65,9 +64,7 @@ def normalize_neuron_type(neuron_type: str | NeuronType) -> NeuronType:
     if not isinstance(neuron_type, str):
         raise TypeError("neuron type must be a string or NeuronType")
 
-    key = (
-        neuron_type.strip().lower().replace("-", "_").replace(" ", "")
-    )
+    key = neuron_type.strip().lower().replace("-", "_").replace(" ", "")
 
     try:
         return _NEURON_TYPE_ALIASES[key]
