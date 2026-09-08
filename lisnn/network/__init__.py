@@ -2,6 +2,7 @@
 
 from lisnn.network.core import SNN, create_nn, create_snn
 from lisnn.network.spec import NeuronPopulationSpec, TypeCounts, parse_population_spec
+from lisnn.spatial import SpatialConfig, SpatialSpec, SpatialVolume
 
 __all__ = [
     "SNN",
@@ -10,4 +11,7 @@ __all__ = [
     "NeuronPopulationSpec",
     "TypeCounts",
     "parse_population_spec",
+    "SpatialConfig",
+    "SpatialSpec",
+    "SpatialVolume",
 ]
