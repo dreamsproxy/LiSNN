@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-import NeuronModels as nm
-
+from lisnn.neurons import kernels as nm
 from lisnn.types import NeuronPopulation, Seed
 
 
