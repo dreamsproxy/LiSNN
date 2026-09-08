@@ -15,11 +15,10 @@ InputCurrent: TypeAlias = float | np.float32 | NDArray[np.float32]
 SpikeVector: TypeAlias = NDArray[np.float32]
 Seed: TypeAlias = int | None
 
-NeuronTypeLike: TypeAlias = str | "NeuronType"
-PopulationSpec: TypeAlias = (
-    NeuronTypeLike
-    | Mapping[str | "NeuronType", int | NeuronTypeLike]
-)
+# NeuronType is a str subclass, so public specs remain string-compatible while
+# internal modules can narrow values to the enum.
+NeuronTypeLike: TypeAlias = str
+PopulationSpec: TypeAlias = str | Mapping[str, int | str]
 
 NeuronStep: TypeAlias = Callable[
     [NeuronPopulation, InputCurrent, float | np.float32],
