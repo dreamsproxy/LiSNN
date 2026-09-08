@@ -1,11 +1,6 @@
-"""Public neuron API for LiSNN.
+"""Public neuron API for LiSNN."""
 
-The current numerical kernels remain in the compatibility module
-``NeuronModels`` while the stable typed registry and package-level imports are
-introduced here. This keeps existing experiments working during the cleanup.
-"""
-
-from NeuronModels import (
+from lisnn.neurons.layout import (
     ADAPT,
     ASC_1,
     ASC_2,
@@ -14,6 +9,8 @@ from NeuronModels import (
     THETA_S,
     THETA_V,
     V,
+)
+from lisnn.neurons.models import (
     adaptive_lif_step,
     adex_step,
     cadex_glif_step,
@@ -21,9 +18,11 @@ from NeuronModels import (
     glif3_step,
     glif4_step,
     glif5_step,
-    initialize_population_parameters,
     izhikevich_step,
     lif_step,
+)
+from lisnn.neurons.population import (
+    initialize_population_parameters,
     new_population,
 )
 from lisnn.neurons.registry import (
