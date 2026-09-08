@@ -1,11 +1,13 @@
 """Backward-compatible debugging import surface.
 
-Preferred usage:
-
-    import debugging as debug
-    debug.population_smoke_test(...)
+Preferred canonical usage is ``from lisnn import debugging`` or
+``from lisnn.debugging import ...``. Existing ``import debugging as debug``
+continues to work.
 """
 
-from lisnn.debugging import population_smoke_test
+from lisnn.debugging import population_smoke_test, synapse_smoke_test
 
-__all__ = ["population_smoke_test"]
+__all__ = [
+    "population_smoke_test",
+    "synapse_smoke_test",
+]
