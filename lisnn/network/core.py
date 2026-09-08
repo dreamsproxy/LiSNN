@@ -1,8 +1,8 @@
 """Core LiSNN network container.
 
-This module intentionally stops at neuron-population construction. Synaptic
-weights, connectivity, propagation, plasticity, and network stepping belong to
-later network modules.
+This module currently owns neuron-population construction and optional spatial
+placement. Synaptic weights, connectivity, propagation, plasticity, and network
+stepping belong to later network modules.
 """
 
 from __future__ import annotations
@@ -16,11 +16,12 @@ import NeuronModels as nm
 
 from lisnn.neurons.registry import NeuronType
 from lisnn.network.spec import NeuronPopulationSpec, TypeCounts, parse_population_spec
+from lisnn.spatial import SpatialSpec, SpatialVolume, create_spatial_volume
 from lisnn.types import NeuronPopulation, Seed
 
 
 class SNN:
-    """Initialized LiSNN neuron population and its model-group metadata."""
+    """Initialized LiSNN neuron population and its construction metadata."""
 
     population_size: int
     randomize_params: bool
@@ -32,6 +33,7 @@ class SNN:
     neurons: NeuronPopulation
     type_slices: OrderedDict[NeuronType, slice]
     neuron_types: NDArray[np.str_]
+    space: SpatialVolume | None
 
     def __init__(
         self,
@@ -39,9 +41,10 @@ class SNN:
         neuron_type: NeuronPopulationSpec = NeuronType.LIF,
         fill: float | np.float32 = np.float32(0.0),
         randomize_params: bool = False,
+        spatial: SpatialSpec = None,
         seed: Seed = None,
     ) -> None:
-        """Construct neuron state and contiguous model groups.
+        """Construct neuron state, contiguous model groups, and optional space.
 
         PSEUDOCODE:
             validate population size
@@ -49,6 +52,10 @@ class SNN:
             create shared float32 neuron matrix
             assign one contiguous slice to every neuron type
             initialize model-specific dynamic state
+            optionally create a geometry-only SpatialVolume
+
+        ``spatial=None`` preserves the non-spatial behavior of earlier LiSNN
+        construction APIs.
         """
 
         if not isinstance(population, (int, np.integer)):
@@ -97,6 +104,15 @@ class SNN:
 
         self._initialize_model_states()
 
+        # Spatial geometry is deliberately independent of neuron dynamics.
+        # Reusing the public seed creates deterministic placement through an
+        # independent RNG without consuming NeuronModels' parameter RNG state.
+        self.space = create_spatial_volume(
+            population,
+            spatial,
+            seed=seed,
+        )
+
     def _initialize_model_states(self) -> None:
         """Initialize dynamic states whose neutral value is model-specific."""
 
@@ -116,11 +132,13 @@ class SNN:
             f"{model_type.value}={count}"
             for model_type, count in self.type_counts.items()
         )
+        spatial_description = "none" if self.space is None else repr(self.space)
         return (
             "SNN("
             f"population={self.population_size}, "
             f"neurons=[{population_description}], "
-            f"randomize_params={self.randomize_params}"
+            f"randomize_params={self.randomize_params}, "
+            f"space={spatial_description}"
             ")"
         )
 
@@ -130,6 +148,7 @@ def create_nn(
     neuron_type: NeuronPopulationSpec = NeuronType.LIF,
     fill: float | np.float32 = np.float32(0.0),
     randomize_params: bool = False,
+    spatial: SpatialSpec = None,
     seed: Seed = None,
 ) -> SNN:
     """Create an initialized SNN without synaptic connectivity or weights."""
@@ -139,6 +158,7 @@ def create_nn(
         neuron_type=neuron_type,
         fill=fill,
         randomize_params=randomize_params,
+        spatial=spatial,
         seed=seed,
     )
 
