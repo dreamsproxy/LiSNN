@@ -1,11 +1,7 @@
-"""Backward-compatible debugging import surface.
+"""Run every active smoke suite: python debug.py [--verbose]."""
 
-Canonical smoke/debug implementations live in ``lisnn.debugging``.
-"""
+from lisnn.debugging.runner import main
 
-from lisnn.debugging import population_smoke_test, synapse_smoke_test
 
-__all__ = [
-    "population_smoke_test",
-    "synapse_smoke_test",
-]
+if __name__ == "__main__":
+    raise SystemExit(main())
