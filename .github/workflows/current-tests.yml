@@ -29,3 +29,15 @@ jobs:
 
       - name: Run active tests
         run: python -m pytest -q
+
+
+      - name: Run all active smoke tests
+        run: python debug.py --log-dir logs/ci-smoke
+
+      - name: Upload smoke diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-diagnostics
+          path: logs/ci-smoke/
+          if-no-files-found: ignore

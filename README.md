@@ -19,8 +19,9 @@ The active implementation currently provides:
 - contiguous neuron-type slices for future vectorized network stepping;
 - population smoke testing and forced post-spike state verification.
 
-Synaptic weights, connectivity, propagation, plasticity, and closed-loop
-feedback learning are deliberately not part of the network constructor yet.
+Sparse synaptic topology and unsigned efficacy are available separately through
+`lisnn.synapses`. Propagation, plasticity, and closed-loop feedback learning
+are not implemented yet.
 
 ## Supported neuron models
 
@@ -51,19 +52,23 @@ lisnn/
     spec.py         # homogeneous/mixed population specification
     core.py         # SNN constructor/container
   debugging/
-    __init__.py     # debugging API
+    runner.py       # all-suite runner and CLI
+    *_smoke.py      # independently callable diagnostics
+  synapses/
+    core.py         # sparse topology and unsigned efficacy
+  spatial/          # optional placement and morphology shell
   types.py          # shared NumPy/type aliases
 ```
 
-The original root modules remain compatibility facades or implementation
-surfaces so existing experiments do not need to change immediately.
+Root `main.py` demonstrates construction; root `debug.py` runs the smoke suite.
+Implementations and import APIs live exclusively under `lisnn/`.
 
 ## Network construction
 
 ```python
-import Network
+from lisnn import network
 
-model = Network.create_nn(
+model = network.create_nn(
     population=8,
     neuron_type="GLIF5",
     randomize_params=True,
@@ -75,7 +80,7 @@ Mixed populations use explicit counts and a required default type. Unassigned
 neurons are assigned to the default group:
 
 ```python
-model = Network.create_nn(
+model = network.create_nn(
     population=8,
     neuron_type={
         "default": "LIF",
@@ -101,7 +106,7 @@ model = create_nn(
 ## Population debugging
 
 ```python
-import debugging as debug
+from lisnn import debugging as debug
 
 debug.population_smoke_test(
     neuron_count=8,
@@ -114,6 +119,41 @@ debug.population_smoke_test(
 The smoke test checks alternating-input integration and explicitly exercises
 threshold crossing, spike/reset behavior, refractory state, and model-specific
 post-spike state transitions.
+
+## Run all smoke tests
+
+```bash
+python debug.py
+python debug.py --verbose
+python debug.py --only units indices
+python -m lisnn.debugging --list
+```
+
+The default command runs seven active suites with a progress bar, reports PASS
+or FAIL for each, and writes detailed JSON reports plus the neuron trace log
+under a timestamped `logs/` directory. Use `--log-dir PATH` for a fixed report
+location (existing files for those suites are replaced). Exit status is 0 when
+all selected suites pass and 1 on failure. An exception in one suite is recorded
+with its traceback and the remaining suites still run.
+
+See [debugging documentation](lisnn/debugging/README.md) for callable APIs and
+how to register more smoke tests. These checks cover the active implementation;
+they do not establish correctness of future propagation/plasticity or validate
+biological learning. The full regression suite remains `python -m pytest -q`.
+
+## Import migration
+
+The redundant root wrappers have been removed. Update active external callers:
+
+| Previous import | Canonical replacement |
+| --- | --- |
+| `import Network` | `from lisnn import network` |
+| `import NeuronModels as nm` | `from lisnn.neurons import kernels as nm` |
+| `import debugging as debug` or `import debug` | `from lisnn import debugging as debug` |
+
+Use `network.create_nn(...)` in place of `Network.create_nn(...)`.
+`debug.py` is now an executable entrypoint, not an API re-export. The frozen
+`legacy/` tree retains its historical imports and is outside this migration.
 
 ## Design invariant
 

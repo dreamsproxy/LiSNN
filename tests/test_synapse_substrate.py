@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-import Network
+from lisnn import network
 from lisnn.synapses import SynapseEdges, create_fixed_out_degree, create_synapses
 
 
@@ -157,7 +157,7 @@ def test_fixed_out_degree_supports_zero_and_maximum_degree() -> None:
 
 
 def test_synapse_substrate_is_neuron_model_independent() -> None:
-    model = Network.create_nn(
+    model = network.create_nn(
         population=8,
         neuron_type={
             "default": "LIF",
@@ -178,3 +178,4 @@ def test_synapse_substrate_is_neuron_model_independent() -> None:
     assert edges.edge_count == model.population_size * 3
     assert edges.pre_idx.max() < model.population_size
     assert edges.post_idx.max() < model.population_size
+
