@@ -1,8 +1,8 @@
 """Core LiSNN network container.
 
 This module currently owns neuron-population construction and optional spatial
-placement. Synaptic weights, connectivity, propagation, plasticity, and network
-stepping belong to later network modules.
+placement. Fixed-weight stepping is composed separately in `runtime.py`;
+connectivity belongs to `lisnn.synapses`, and plasticity remains future work.
 """
 
 from __future__ import annotations
@@ -163,3 +163,4 @@ def create_nn(
 
 
 create_snn = create_nn
+

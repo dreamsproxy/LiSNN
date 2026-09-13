@@ -19,8 +19,11 @@ The active implementation currently provides:
 - contiguous neuron-type slices for future vectorized network stepping;
 - population smoke testing and forced post-spike state verification.
 
-Synaptic weights, connectivity, propagation, plasticity, and closed-loop
-feedback learning are deliberately not part of the network constructor yet.
+Sparse synapses and fixed integrated-current propagation are available as
+independent modules. `FixedWeightRuntime` composes heterogeneous kernels with
+causal spike buffers and separate pA current channels. Plasticity and task-driven
+closed-loop learning are not implemented yet. See the
+[propagation contract and Izhikevich adapters](lisnn/synapses/PROPAGATION.md).
 
 ## Supported neuron models
 
@@ -128,3 +131,16 @@ step kernel -> vectorized operation over that slice
 
 This invariant should be preserved as connectivity, synapses, plasticity, and
 closed-loop feedback are added.
+
+
+## Fixed-weight propagation
+
+```bash
+python -m examples.fixed_weight_propagation
+python -m lisnn.debugging.propagation_smoke
+```
+
+The example prints a hand-checkable three-tick pathway. The independently
+callable smoke test covers causal timing, integrated impulses and shared-unit
+Izhikevich observations. Propagation uses binary events and unsigned efficacy;
+all runtime current channels are pA and membrane voltages are mV.

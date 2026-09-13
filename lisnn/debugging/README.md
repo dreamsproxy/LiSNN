@@ -8,3 +8,10 @@ Canonical smoke/debug utilities live here. Root-level `debug.py` and `debugging.
 - `synapse_smoke_test(...)`: M2.1 sparse synapse substrate validation.
 
 Future M2 propagation/plasticity debuggers should be added as separate modules under this package rather than expanding one monolithic root debug file.
+
+
+## Fixed-weight propagation
+
+Run `python -m lisnn.debugging.propagation_smoke`, or call
+`propagation_smoke_test()` from `lisnn.debugging.propagation_smoke`.
+Use `python -m examples.fixed_weight_propagation` for the full numerical trace.
