@@ -6,11 +6,11 @@ plasticity until those network layers are implemented.
 
 import numpy as np
 
-import Network
+from lisnn import network
 
 
 def main() -> None:
-    homogeneous = Network.create_nn(
+    homogeneous = network.create_nn(
         population=8,
         neuron_type="GLIF5",
         fill=np.float32(0.0),
@@ -23,7 +23,7 @@ def main() -> None:
     print(homogeneous.type_slices)
     print(homogeneous.homogeneous)
 
-    mixed = Network.create_nn(
+    mixed = network.create_nn(
         population=8,
         neuron_type={
             "default": "LIF",
@@ -43,3 +43,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
