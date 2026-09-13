@@ -29,7 +29,7 @@ PlacementMode: TypeAlias = Literal["uniform", "explicit"]
 
 
 class SpatialConfig(TypedDict, total=False):
-    """Dictionary form accepted by ``Network.create_nn(spatial=...)``."""
+    """Dictionary form accepted by ``lisnn.network.create_nn(spatial=...)``."""
 
     size: Required[Vector3]
     origin: NotRequired[Vector3]
@@ -218,3 +218,4 @@ def create_spatial_volume(
         boundary=boundary,
         placement=placement,
     )
+
