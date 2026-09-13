@@ -24,6 +24,10 @@ feedback learning are deliberately not part of the network constructor yet.
 
 ## Supported neuron models
 
+See [neuron units and timestep contract](lisnn/neurons/UNITS.md) for electrical
+units, the resistance conversion correction, Izhikevich's native input scale,
+and a hand-checkable example (`python -m examples.foundation_contracts`).
+
 - LIF
 - Adaptive LIF
 - Izhikevich

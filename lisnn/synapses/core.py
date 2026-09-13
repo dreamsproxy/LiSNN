@@ -35,7 +35,9 @@ def _validate_population(population: int) -> int:
     return population
 
 
-def _as_index_vector(name: str, values: ArrayLike) -> SynapseIndexArray:
+def _as_index_vector(
+    name: str, values: ArrayLike, population: int,
+) -> SynapseIndexArray:
     raw = np.asarray(values)
     if raw.ndim != 1:
         raise ValueError(f"{name} must be a 1D array")
@@ -43,6 +45,11 @@ def _as_index_vector(name: str, values: ArrayLike) -> SynapseIndexArray:
         return np.empty(0, dtype=np.int32)
     if not np.issubdtype(raw.dtype, np.integer):
         raise TypeError(f"{name} must contain integer neuron indices")
+
+    # Check the original signed/unsigned values, before int32 can wrap them.
+    # The validated population is itself within the int32 capacity.
+    if np.any(raw < 0) or np.any(raw >= population):
+        raise IndexError(f"{name} contains neuron indices outside the population")
 
     return raw.astype(np.int32, copy=False)
 
@@ -93,8 +100,8 @@ class SynapseEdges:
 
     def __post_init__(self) -> None:
         self.population_size = _validate_population(self.population_size)
-        self.pre_idx = _as_index_vector("pre_idx", self.pre_idx)
-        self.post_idx = _as_index_vector("post_idx", self.post_idx)
+        self.pre_idx = _as_index_vector("pre_idx", self.pre_idx, self.population_size)
+        self.post_idx = _as_index_vector("post_idx", self.post_idx, self.population_size)
 
         if self.pre_idx.shape != self.post_idx.shape:
             raise ValueError("pre_idx and post_idx must have identical shape")
@@ -105,11 +112,6 @@ class SynapseEdges:
 
         if self.pre_idx.size == 0:
             return
-
-        if np.any(self.pre_idx < 0) or np.any(self.pre_idx >= self.population_size):
-            raise IndexError("pre_idx contains neuron indices outside the population")
-        if np.any(self.post_idx < 0) or np.any(self.post_idx >= self.population_size):
-            raise IndexError("post_idx contains neuron indices outside the population")
 
         if not self.allow_self and np.any(self.pre_idx == self.post_idx):
             raise ValueError("autapses are disabled; set allow_self=True to permit them")
@@ -149,8 +151,8 @@ def create_synapses(
     """Create a validated sparse synapse set from explicit directed edges."""
 
     population = _validate_population(population)
-    pre = _as_index_vector("pre_idx", pre_idx)
-    post = _as_index_vector("post_idx", post_idx)
+    pre = _as_index_vector("pre_idx", pre_idx, population)
+    post = _as_index_vector("post_idx", post_idx, population)
 
     if pre.shape != post.shape:
         raise ValueError("pre_idx and post_idx must have identical shape")

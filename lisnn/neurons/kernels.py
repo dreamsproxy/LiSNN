@@ -19,6 +19,9 @@ All step functions:
     3. return float32 spike events of shape (n_neurons,),
     4. use Forward Euler integration for continuous differential equations.
 
+Electrical units and timestep behavior are specified in UNITS.md alongside
+this module. Izhikevich retains its native phenomenological input scale.
+
 Models:
     LIF
     AdaptiveLIF
@@ -35,6 +38,7 @@ import numpy as np
 
 
 DTYPE = np.float32
+MOHM_TO_GOHM = DTYPE(1e-3)
 
 
 # =============================================================================
@@ -281,13 +285,9 @@ SLICES = {
 #
 # Dynamic state values are initialized separately.
 #
-# Units follow each underlying model's native/common conventions:
-#     voltage      -> mV
-#     time         -> ms
-#     capacitance  -> model-compatible membrane units
-#     conductance  -> model-compatible conductance units
-#     current      -> model-compatible current units
-#
+# Electrical units: mV, ms, pA, pF, nS, MOhm (see UNITS.md).
+# Convert R_M from MOhm to GOhm before dividing mV to obtain pA.
+# Izhikevich input/recovery use its native phenomenological scale.
 
 PARAMETER_DEFAULTS = {
     # -------------------------------------------------------------------------
@@ -760,6 +760,20 @@ def _check_population(neurons):
         )
 
 
+def _validate_dt(dt):
+    """Return a finite positive scalar timestep representable in float32 ms."""
+    raw = np.asarray(dt)
+    if raw.ndim != 0:
+        raise ValueError("dt must be a scalar")
+    if raw.dtype.kind not in "iuf":
+        raise TypeError("dt must be a real numeric scalar")
+    with np.errstate(over="ignore", under="ignore", invalid="ignore"):
+        value = DTYPE(raw)
+    if not np.isfinite(value) or value <= 0:
+        raise ValueError("dt must be finite and positive in float32 milliseconds")
+    return value
+
+
 def _input_vector(input_current, n_neurons):
     """
     Convert scalar or N-element input into float32 vector.
@@ -772,24 +786,20 @@ def _input_vector(input_current, n_neurons):
         return float32 input
     """
 
-    current = np.asarray(
-        input_current,
-        dtype=DTYPE,
-    )
-
-    if current.ndim == 0:
-        return np.full(
-            n_neurons,
-            current,
-            dtype=DTYPE,
-        )
-
-    if current.shape != (n_neurons,):
+    raw = np.asarray(input_current)
+    if raw.ndim != 0 and raw.shape != (n_neurons,):
         raise ValueError(
             f"input_current must be scalar or shape "
-            f"({n_neurons},), got {current.shape}"
+            f"({n_neurons},), got {raw.shape}"
         )
-
+    if raw.dtype.kind not in "iuf":
+        raise TypeError("input_current must contain real numeric values")
+    with np.errstate(over="ignore", invalid="ignore"):
+        current = raw.astype(DTYPE, copy=False)
+    if not np.all(np.isfinite(current)):
+        raise ValueError("input_current must contain only finite float32 values")
+    if current.ndim == 0:
+        return np.full(n_neurons, current, dtype=DTYPE)
     return current
 
 
@@ -848,7 +858,7 @@ def lif_step(
 
         C_m dV/dt =
             I
-            - (V - E_L) / R_m
+            - 1000 * (V - E_L) / R_m
 
     SPIKE:
 
@@ -868,7 +878,7 @@ def lif_step(
 
         dV <- (
             current
-            - (V - E_L) / R_m
+            - 1000 * (V - E_L) / R_m
         ) / C_m
 
         V_candidate <- V + dt*dV
@@ -893,7 +903,7 @@ def lif_step(
 
     _check_population(neurons)
 
-    dt = DTYPE(dt)
+    dt = _validate_dt(dt)
 
     current = _input_vector(
         input_current,
@@ -913,7 +923,7 @@ def lif_step(
             v
             - neurons[:, E_L]
         )
-        / neurons[:, R_M]
+        / (neurons[:, R_M] * MOHM_TO_GOHM)
     ) / neurons[:, C_M]
 
     v_candidate = (
@@ -971,7 +981,7 @@ def adaptive_lif_step(
 
         C_m dV/dt =
             I
-            - (V - E_L) / R_m
+            - 1000 * (V - E_L) / R_m
 
         dA/dt =
             -A / TAU_ADAPT
@@ -1008,7 +1018,7 @@ def adaptive_lif_step(
 
         dV <- (
             current
-            - (V-E_L)/R_m
+            - 1000*(V-E_L)/R_m
         ) / C_m
 
         V_candidate <- V + dt*dV
@@ -1034,7 +1044,7 @@ def adaptive_lif_step(
 
     _check_population(neurons)
 
-    dt = DTYPE(dt)
+    dt = _validate_dt(dt)
 
     current = _input_vector(
         input_current,
@@ -1069,7 +1079,7 @@ def adaptive_lif_step(
             v
             - neurons[:, E_L]
         )
-        / neurons[:, R_M]
+        / (neurons[:, R_M] * MOHM_TO_GOHM)
     ) / neurons[:, C_M]
 
     v_candidate = (
@@ -1209,7 +1219,7 @@ def izhikevich_step(
 
     _check_population(neurons)
 
-    dt = DTYPE(dt)
+    dt = _validate_dt(dt)
 
     current = _input_vector(
         input_current,
@@ -1381,7 +1391,7 @@ def adex_step(
 
     _check_population(neurons)
 
-    dt = DTYPE(dt)
+    dt = _validate_dt(dt)
 
     current = _input_vector(
         input_current,
@@ -1506,7 +1516,7 @@ def _glif_voltage_derivative(
             external_current
             + ASC_1
             + ASC_2
-            - (V-E_L)/R
+            - 1000*(V-E_L)/R
         ) / C
 
         return dV
@@ -1523,7 +1533,7 @@ def _glif_voltage_derivative(
             neurons[:, V]
             - neurons[:, E_L]
         )
-        / neurons[:, R_M]
+        / (neurons[:, R_M] * MOHM_TO_GOHM)
 
     ) / neurons[:, C_M]
 
@@ -1675,7 +1685,7 @@ def glif3_step(
                 I_e
                 + ASC_1
                 + ASC_2
-                - (V-E_L)/R
+                - 1000*(V-E_L)/R
             ) / C
 
 
@@ -1744,7 +1754,7 @@ def glif3_step(
 
     _check_population(neurons)
 
-    dt = DTYPE(dt)
+    dt = _validate_dt(dt)
 
     current = _input_vector(
         input_current,
@@ -1849,7 +1859,7 @@ def glif4_step(
                 I_e
                 + ASC_1
                 + ASC_2
-                - (V-E_L)/R
+                - 1000*(V-E_L)/R
             ) / C
 
 
@@ -1954,7 +1964,7 @@ def glif4_step(
 
     _check_population(neurons)
 
-    dt = DTYPE(dt)
+    dt = _validate_dt(dt)
 
     current = _input_vector(
         input_current,
@@ -2103,7 +2113,7 @@ def glif5_step(
                 I_e
                 + ASC_1
                 + ASC_2
-                - (V-E_L)/R
+                - 1000*(V-E_L)/R
             ) / C
 
 
@@ -2230,7 +2240,7 @@ def glif5_step(
 
     _check_population(neurons)
 
-    dt = DTYPE(dt)
+    dt = _validate_dt(dt)
 
     current = _input_vector(
         input_current,
@@ -2485,7 +2495,7 @@ def cadex_step(
 
     _check_population(neurons)
 
-    dt = DTYPE(dt)
+    dt = _validate_dt(dt)
 
     current = _input_vector(
         input_current,
@@ -2923,7 +2933,7 @@ def cadex_glif_step(
 
     _check_population(neurons)
 
-    dt = DTYPE(dt)
+    dt = _validate_dt(dt)
 
     current = _input_vector(
         input_current,
