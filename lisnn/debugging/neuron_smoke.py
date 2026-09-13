@@ -2,7 +2,7 @@ import numpy as np
 from pathlib import Path
 from datetime import datetime
 
-import NeuronModels as nm
+from lisnn.neurons import kernels as nm
 
 
 # =============================================================================
