@@ -1,6 +1,7 @@
 """Causal fixed-weight composition over contiguous neuron-family slices."""
 
-from dataclasses import dataclass
+from copy import deepcopy
+from dataclasses import dataclass, replace
 
 import numpy as np
 
@@ -8,6 +9,7 @@ from lisnn.network.core import SNN
 from lisnn.neurons import kernels as k
 from lisnn.neurons.adapters import current_to_izhikevich, izhikevich_to_current, observe_izhikevich
 from lisnn.neurons.registry import NeuronType, get_step_function
+from lisnn.plasticity.voltage import VoltageSTDP
 from lisnn.synapses.core import SynapseEdges
 from lisnn.synapses.propagation import PropagationResult, binary_spikes, propagate, validated_edges
 from lisnn.validation import scalar32, vector32
@@ -30,6 +32,10 @@ class TickResult:
     izhikevich_indices: np.ndarray
     izhikevich_before: dict
     izhikevich_after: dict
+    plasticity_update: object | None = None
+    weights_before: np.ndarray | None = None
+    weights_after: np.ndarray | None = None
+    trace_state: object | None = None
 
 
 class FixedWeightRuntime:
@@ -74,6 +80,10 @@ class FixedWeightRuntime:
     @property
     def previous_spikes(self):
         return self._previous.copy()
+
+    @property
+    def weights(self):
+        return self._edges.weight.copy()
 
     def _validate_pool(self):
         k._check_population(self.pool)
@@ -150,3 +160,64 @@ class FixedWeightRuntime:
         self.tick += 1
         self.time_ms += float(dt)
         return result
+
+
+class AdaptiveRuntime:
+    """Advance a fixed-weight tick, then commit one selected learner for t+1.
+
+    Work on full copies to keep neuron state, queued feedback, traces and edge
+    weights unchanged if either integration or plasticity update fails.
+    """
+
+    def __init__(self, fixed_runtime, learner):
+        if not isinstance(fixed_runtime, FixedWeightRuntime):
+            raise TypeError("fixed_runtime must be FixedWeightRuntime")
+        self._runtime = deepcopy(fixed_runtime)
+        self._learner = deepcopy(learner)
+        if self._learner.population_size != self._runtime.population_size:
+            raise ValueError("learner and runtime population sizes must match")
+        if not np.array_equal(self._learner.current_edges().pre_idx, self._runtime._edges.pre_idx) or not np.array_equal(self._learner.current_edges().post_idx, self._runtime._edges.post_idx) or not np.array_equal(self._learner.weights, self._runtime._edges.weight):
+            raise ValueError("learner must start from the runtime's exact edge snapshot")
+
+    @property
+    def pool(self):
+        return self._runtime.pool.copy()
+
+    @property
+    def population_size(self):
+        return self._runtime.population_size
+
+    @property
+    def weights(self):
+        return self._learner.weights
+
+    @property
+    def tick(self):
+        return self._runtime.tick
+
+    def schedule_feedback(self, tick, current_pA):
+        self._runtime.schedule_feedback(tick, current_pA)
+
+    def snapshot(self):
+        return deepcopy(self)
+
+    def step(self, external_current=0, feedback_current=0):
+        runtime = deepcopy(self._runtime)
+        learner = deepcopy(self._learner)
+        result = runtime.step(external_current, feedback_current)
+        if isinstance(learner, VoltageSTDP):
+            update = learner.step(result.current_spikes, result.plasticity_voltage_mV, result.dt_ms)
+            traces = learner.traces
+        else:
+            update = learner.step(result.current_spikes, result.dt_ms)
+            traces = learner.traces if hasattr(learner, "traces") else (
+                learner.pre_trace, learner.post_trace)
+        next_edges = learner.current_edges()
+        for array in (next_edges.pre_idx, next_edges.post_idx, next_edges.weight):
+            array.flags.writeable = False
+        runtime._edges = next_edges
+        self._runtime = runtime
+        self._learner = learner
+        return replace(result, plasticity_update=update,
+                       weights_before=update.weights_before.copy(),
+                       weights_after=update.weights_after.copy(), trace_state=traces)
