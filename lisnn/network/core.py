@@ -8,6 +8,7 @@ connectivity belongs to `lisnn.synapses`, and plasticity remains future work.
 from __future__ import annotations
 
 from collections import OrderedDict
+from copy import deepcopy
 
 import numpy as np
 from numpy.typing import NDArray
@@ -111,6 +112,64 @@ class SNN:
             spatial,
             seed=seed,
         )
+        self._runtime = None
+        self._initial_runtime = None
+
+    def configure_runtime(self, edges, *, dt, impulse_scale, plasticity="off",
+                          plasticity_params=None):
+        """Configure an independent recurrent runner with exactly one learner.
+
+        All inputs, pool state and edge weights are snapshotted at setup. The
+        original construction pool remains the reference initial condition.
+        """
+        from lisnn.network.runtime import AdaptiveRuntime, FixedWeightRuntime
+        from lisnn.plasticity import PairSTDP, TripletSTDP, VoltageSTDP
+
+        if plasticity not in ("off", "pair", "triplet", "voltage"):
+            raise ValueError("plasticity must be off, pair, triplet or voltage")
+        if plasticity_params is not None and not isinstance(plasticity_params, dict):
+            raise TypeError("plasticity_params must be a dictionary")
+        if plasticity == "off" and plasticity_params:
+            raise ValueError("plasticity-off does not accept learning parameters")
+        fixed = FixedWeightRuntime(self, edges, dt=dt, impulse_scale=impulse_scale)
+        if plasticity == "off":
+            runtime = fixed
+        else:
+            params = dict(plasticity_params or {})
+            if plasticity == "voltage":
+                params.setdefault("initial_voltage_mV", fixed.pool[:, nm.V].copy())
+            factory = {"pair": PairSTDP, "triplet": TripletSTDP, "voltage": VoltageSTDP}[plasticity]
+            runtime = AdaptiveRuntime(fixed, factory(fixed._edges, **params))
+        self._runtime = runtime
+        self._initial_runtime = deepcopy(runtime)
+        return self
+
+    @property
+    def runtime(self):
+        if self._runtime is None:
+            raise RuntimeError("configure_runtime must be called before stepping")
+        return self._runtime
+
+    def step(self, external_current=0, feedback_current=0):
+        """One causal tick, returning current channels, observations and update."""
+        return self.runtime.step(external_current, feedback_current)
+
+    def snapshot_runtime(self):
+        """Capture neuron, synapse, learning-trace, clock and feedback state."""
+        return deepcopy(self.runtime)
+
+    def restore_runtime(self, snapshot):
+        if self._runtime is None or not isinstance(snapshot, type(self._runtime)):
+            raise ValueError("snapshot must match a configured runtime type")
+        if snapshot.population_size != self.population_size:
+            raise ValueError("snapshot population size must match")
+        self._runtime = deepcopy(snapshot)
+
+    def reset_runtime(self):
+        """Return to the snapshot taken when configure_runtime was called."""
+        if self._initial_runtime is None:
+            raise RuntimeError("configure_runtime must be called before reset")
+        self._runtime = deepcopy(self._initial_runtime)
 
     def _initialize_model_states(self) -> None:
         """Initialize dynamic states whose neutral value is model-specific."""
@@ -163,4 +222,3 @@ def create_nn(
 
 
 create_snn = create_nn
-
