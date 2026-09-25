@@ -26,6 +26,7 @@ dependency is needed: smoke implementations use NumPy and the standard library.
 | `network` | `network_smoke_test` | Model construction, initialization, reproducibility and mixed contiguous slices |
 | `spatial` | `spatial_smoke_test` | Position layout/bounds, explicit positions, independent RNG and empty morphology shell |
 | `propagation` | `propagation_smoke_test` | Causal two-hop delivery, duplicate impulse accumulation, mixed-family pA observations |
+| `plasticity_observation` | `plasticity_observation_smoke_test` | Pre-reset voltage across nine families, mixed CVA observation and bounded event traces |
 
 ```python
 from lisnn.debugging import units_smoke_test, run_all_smoke_tests

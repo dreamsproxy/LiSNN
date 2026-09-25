@@ -14,6 +14,7 @@ from lisnn.debugging.network_smoke import network_smoke_test, spatial_smoke_test
 from lisnn.debugging.neuron_smoke import population_smoke_test
 from lisnn.debugging.synapse_smoke import synapse_smoke_test
 from lisnn.debugging.propagation_smoke import propagation_smoke_test
+from lisnn.debugging.plasticity_observation_smoke import plasticity_observation_smoke_test
 
 
 def _population(log_dir, verbose):
@@ -36,6 +37,7 @@ SMOKE_TESTS = {
     "network": _suite(network_smoke_test),
     "spatial": _suite(spatial_smoke_test),
     "propagation": _suite(propagation_smoke_test),
+    "plasticity_observation": _suite(plasticity_observation_smoke_test),
 }
 
 
