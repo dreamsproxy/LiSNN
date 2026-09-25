@@ -182,7 +182,7 @@ class StreamScheduler:
         self.max_frames = int(max_frames)
         self._frames = defaultdict(list)
 
-    def schedule(self, frame, delivery_tick, *, observed_tick=-1):
+    def schedule(self, frame, delivery_tick, *, observed_tick=-1, metadata=None):
         if not isinstance(frame, StreamFrame):
             raise TypeError("scheduled value must be a StreamFrame")
         if any(isinstance(x, bool) or not isinstance(x, (int, np.integer)) for x in (delivery_tick, observed_tick)) or delivery_tick <= observed_tick or delivery_tick < 0:
@@ -191,7 +191,7 @@ class StreamScheduler:
             raise ValueError("internal frame must declare its observed source tick")
         if sum(map(len, self._frames.values())) >= self.max_frames:
             raise CapacityError(f"frame queue full: required 1 more slot; available 0 of {self.max_frames}")
-        self._frames[int(delivery_tick)].append(frame)
+        self._frames[int(delivery_tick)].append(frame if metadata is None else (frame, metadata))
 
     def consume(self, tick):
         if isinstance(tick, bool) or not isinstance(tick, (int, np.integer)) or tick < 0:
