@@ -108,12 +108,14 @@ class FixedWeightRuntime:
             combined = self._feedback.get(int(tick), np.zeros_like(value)) + value
         self._feedback[int(tick)] = combined
 
-    def step(self, external_current=0, feedback_current=0):
+    def step(self, external_current=0, feedback_current=0, *, plasticity_enabled=True):
         """Advance one tick; invalid inputs/numerical failures leave runtime intact.
 
         Feedback passed here must already be available before this call. There
         are no within-tick callbacks. New spikes only propagate on the next call.
         """
+        if not isinstance(plasticity_enabled, (bool, np.bool_)):
+            raise TypeError("plasticity_enabled must be boolean")
         self._validate_pool()
         dt = scalar32('dt', self.dt, positive=True)
         external = vector32('external_current', external_current, self.population_size)
@@ -201,7 +203,9 @@ class AdaptiveRuntime:
     def snapshot(self):
         return deepcopy(self)
 
-    def step(self, external_current=0, feedback_current=0):
+    def step(self, external_current=0, feedback_current=0, *, plasticity_enabled=True):
+        if not isinstance(plasticity_enabled, (bool, np.bool_)):
+            raise TypeError("plasticity_enabled must be boolean")
         runtime = deepcopy(self._runtime)
         learner = deepcopy(self._learner)
         result = runtime.step(external_current, feedback_current)
@@ -212,6 +216,12 @@ class AdaptiveRuntime:
             update = learner.step(result.current_spikes, result.dt_ms)
             traces = learner.traces if hasattr(learner, "traces") else (
                 learner.pre_trace, learner.post_trace)
+        if not plasticity_enabled:
+            # Evolve trace history during evaluation/sleep, but freeze efficacy.
+            frozen = self._learner.weights
+            learner._weights = frozen.copy()
+            update = replace(update, applied_change=np.zeros_like(update.applied_change),
+                             weights_after=frozen.copy())
         next_edges = learner.current_edges()
         for array in (next_edges.pre_idx, next_edges.post_idx, next_edges.weight):
             array.flags.writeable = False
