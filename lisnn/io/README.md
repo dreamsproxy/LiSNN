@@ -37,3 +37,38 @@ semantic modality from shape, decode tasks, stimulate receptors implicitly,
 or assign InputNeuron/OutputNeuron biological classes. The runtime continues
 to accept direct per-neuron pA vectors without using this package. Run
 `python debug.py --only io_contracts` for a small deterministic check.
+
+## External routing and outcome feedback (#71)
+
+`StreamRuntime(configured_snn, transducers={port_name: Transducer(port), ...})`
+maps declared sample timestamps to the configured `dt` on an exact-tick grid
+(within float32 representation tolerance). Off-grid timestamps require
+experiment-side resampling; no implicit floor, nearest-sample choice, or
+interpolation happens. `schedule_frame` maps a one-sample frame or validates
+and schedules each sample of a time-series frame atomically, with declared
+sample-period and channel-axis semantics. Ports remain source-specific.
+
+At each `StreamRuntime.step(direct_current)` the ordered due frames become
+per-neuron pA currents, summed with the direct current and passed to the
+ordinary `SNN.step`. Modulatory frames may enter the feedback-current channel
+only when destination/effect allow it. `RoutedTick` includes the neural result
+and per-frame `Delivery` logs: source, port, kind, modality, delivery tick,
+original timestamp, mapping/outcome mode, count of stimulated neurons and
+sum of absolute pA. Failed stepping restores due frames to the queue.
+
+`FeedbackPolicy` lives at this experiment-facing boundary. It supports
+contingent success stimulation, seeded unpredictable error/no-response
+perturbation, no-feedback control, random independent success selection,
+predeclared yoked currents and inverted contingency. Its `schedule` method
+uses `StreamRuntime.schedule_feedback` and requires a delay of at least one
+tick from the observed outcome. An outcome is an experiment-defined boolean;
+there is no task target/error in the neuron, synapse, or learner. Pass a
+separate internal port even when its neuron membership overlaps an external
+sensory port. A snapshot copies network state, queue and delivery logs;
+for controlled experiments also snapshot the separate feedback policy's RNG
+state (e.g. with `copy.deepcopy`).
+
+`python -m examples.stream_routing` demonstrates two-channel microphone
+samples, two-site visual current, binary sparse events, and a subsequent
+closed-loop perturbation without a hardware dependency. A fixed frame
+schedule replays deterministically from the same initial network snapshot.
