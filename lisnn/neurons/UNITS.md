@@ -65,8 +65,13 @@ It does not divide `I` by capacitance. Time remains ms and voltage mV, but
 input `I`, recovery `u` (`ADAPT`), and `IZH_D` use the equation's native scale
 (additive voltage-rate terms), not the pA convention of the electrical models.
 `IZH_A` and `IZH_B` carry the scaling implicit in those native equations.
-A pA-to-native-input mapping must be explicit before physical current is shared
-with Izhikevich populations. No such adapter is introduced here.
+The fixed-weight runtime now explicitly converts total pA input through
+`I_native = I_pA / C_M_pF`. For Izhikevich, `C_M` is a reference input/output
+calibration capacitance, not a claim of a physical capacitance in the original
+phenomenological model. Equivalent current observations multiply native rates
+by `C_M`; voltage remains mV and spikes remain binary events. See the
+[propagation/runtime contract](../synapses/PROPAGATION.md). Independently called
+Izhikevich kernels still receive native inputs.
 
 ## A kernel call advances one interval
 
@@ -131,7 +136,8 @@ python -m pytest -q
 
 ## Reserved for the propagation discussion
 
-Efficacy-to-current gain, excitation/inhibition representation, synaptic pulse
-shape and duration, inter-neuron tick scheduling, channel ownership, queues,
-buffer aliasing, learning-rule ordering, and pre-reset observations remain open.
-The sparse efficacy values are not assigned pA units by this document.
+Issue #18 now defines fixed integrated impulses, positive synaptic effects,
+one-tick causal scheduling, channel ownership and feedback queues in the
+[propagation/runtime contract](../synapses/PROPAGATION.md). Weights remain
+unsigned efficacy, not pA. Receptor polarity, learning-rule ordering and
+pre-reset plasticity observations remain future work.

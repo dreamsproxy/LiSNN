@@ -9,7 +9,12 @@ from lisnn.synapses.core import (
     create_synapses,
 )
 
+from lisnn.synapses.propagation import propagate, PropagationResult
+
 __all__ = [
+    "propagate",
+    "PropagationResult",
+
     "SynapseEdges",
     "SynapseIndexArray",
     "SynapseWeightArray",
@@ -17,3 +22,4 @@ __all__ = [
     "create_synapses",
     "create_fixed_out_degree",
 ]
+

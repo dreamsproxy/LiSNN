@@ -25,6 +25,7 @@ dependency is needed: smoke implementations use NumPy and the standard library.
 | `inputs` | `input_smoke_test` | Invalid timestep/current rejection before mutation in all nine kernels; valid broadcasting |
 | `network` | `network_smoke_test` | Model construction, initialization, reproducibility and mixed contiguous slices |
 | `spatial` | `spatial_smoke_test` | Position layout/bounds, explicit positions, independent RNG and empty morphology shell |
+| `propagation` | `propagation_smoke_test` | Causal two-hop delivery, duplicate impulse accumulation, mixed-family pA observations |
 
 ```python
 from lisnn.debugging import units_smoke_test, run_all_smoke_tests
@@ -63,3 +64,6 @@ public callable in `__init__.py`, then register it in `runner.SMOKE_TESTS`.
 Adapters receive `(log_dir, verbose)`; `_suite` adapts a callable needing only
 `verbose`. Do not import pytest or a root compatibility wrapper from this
 package. Add meaningful regression coverage for new failure modes.
+
+The propagation suite can also run alone with `python -m lisnn.debugging.propagation_smoke`.
+`python -m examples.fixed_weight_propagation` prints its full three-tick numerical trace.

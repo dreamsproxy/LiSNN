@@ -14,7 +14,7 @@ from lisnn.debugging import runner
 def test_all_smoke_suites(tmp_path):
     result = runner.run_all_smoke_tests(tmp_path, progress=False)
     assert result["passed"] is True, result["failed"]
-    assert result["total"] == 7
+    assert result["total"] == 8
     saved = json.loads((tmp_path / "summary.json").read_text())
     assert saved["passed"] is True
     assert set(saved["results"]) == set(runner.SMOKE_TESTS)

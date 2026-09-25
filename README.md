@@ -19,9 +19,11 @@ The active implementation currently provides:
 - contiguous neuron-type slices for future vectorized network stepping;
 - population smoke testing and forced post-spike state verification.
 
-Sparse synaptic topology and unsigned efficacy are available separately through
-`lisnn.synapses`. Propagation, plasticity, and closed-loop feedback learning
-are not implemented yet.
+Sparse synapses and fixed integrated-current propagation are available as
+independent modules. `FixedWeightRuntime` composes heterogeneous kernels with
+causal spike buffers and separate pA current channels. Plasticity and task-driven
+closed-loop learning are not implemented yet. See the
+[propagation contract and Izhikevich adapters](lisnn/synapses/PROPAGATION.md).
 
 ## Supported neuron models
 
@@ -51,17 +53,18 @@ lisnn/
   network/
     spec.py         # homogeneous/mixed population specification
     core.py         # SNN constructor/container
-  debugging/
-    runner.py       # all-suite runner and CLI
-    *_smoke.py      # independently callable diagnostics
+    runtime.py      # causal fixed-weight stepping
   synapses/
     core.py         # sparse topology and unsigned efficacy
-  spatial/          # optional placement and morphology shell
+    propagation.py  # independent integrated-current propagation
+  debugging/
+    runner.py       # full smoke-suite CLI
+    *_smoke.py      # independently callable diagnostics
   types.py          # shared NumPy/type aliases
 ```
 
-Root `main.py` demonstrates construction; root `debug.py` runs the smoke suite.
-Implementations and import APIs live exclusively under `lisnn/`.
+Root `main.py` demonstrates construction; root `debug.py` runs every active
+smoke test. Implementation and import APIs live under `lisnn/`.
 
 ## Network construction
 
@@ -120,40 +123,33 @@ The smoke test checks alternating-input integration and explicitly exercises
 threshold crossing, spike/reset behavior, refractory state, and model-specific
 post-spike state transitions.
 
-## Run all smoke tests
+## Full smoke suite
 
 ```bash
 python debug.py
 python debug.py --verbose
-python debug.py --only units indices
+python debug.py --only propagation
 python -m lisnn.debugging --list
 ```
 
-The default command runs seven active suites with a progress bar, reports PASS
-or FAIL for each, and writes detailed JSON reports plus the neuron trace log
-under a timestamped `logs/` directory. Use `--log-dir PATH` for a fixed report
-location (existing files for those suites are replaced). Exit status is 0 when
-all selected suites pass and 1 on failure. An exception in one suite is recorded
-with its traceback and the remaining suites still run.
-
-See [debugging documentation](lisnn/debugging/README.md) for callable APIs and
-how to register more smoke tests. These checks cover the active implementation;
-they do not establish correctness of future propagation/plasticity or validate
-biological learning. The full regression suite remains `python -m pytest -q`.
+The default command runs all eight active suites and shows progress and PASS/FAIL
+for each. It writes suite diagnostics and an aggregate JSON report into a
+timestamped `logs/` directory; use `--log-dir PATH` to choose one. The process
+returns a failing exit code when any suite fails. See the
+[debugging guide](lisnn/debugging/README.md) for callable functions and reports.
+The full regression suite remains `python -m pytest -q`.
 
 ## Import migration
 
-The redundant root wrappers have been removed. Update active external callers:
-
-| Previous import | Canonical replacement |
+| Old root import | Canonical replacement |
 | --- | --- |
 | `import Network` | `from lisnn import network` |
 | `import NeuronModels as nm` | `from lisnn.neurons import kernels as nm` |
 | `import debugging as debug` or `import debug` | `from lisnn import debugging as debug` |
 
-Use `network.create_nn(...)` in place of `Network.create_nn(...)`.
-`debug.py` is now an executable entrypoint, not an API re-export. The frozen
-`legacy/` tree retains its historical imports and is outside this migration.
+`debug.py` is now the executable smoke-test entrypoint. Root `Network.py`,
+`NeuronModels.py` and `debugging.py` are removed. External callers using those
+names must update their imports. The frozen `legacy/` tree remains untouched.
 
 ## Design invariant
 
@@ -168,3 +164,16 @@ step kernel -> vectorized operation over that slice
 
 This invariant should be preserved as connectivity, synapses, plasticity, and
 closed-loop feedback are added.
+
+
+## Fixed-weight propagation
+
+```bash
+python -m examples.fixed_weight_propagation
+python -m lisnn.debugging.propagation_smoke
+```
+
+The example prints a hand-checkable three-tick pathway. The independently
+callable smoke test covers causal timing, integrated impulses and shared-unit
+Izhikevich observations. Propagation uses binary events and unsigned efficacy;
+all runtime current channels are pA and membrane voltages are mV.
