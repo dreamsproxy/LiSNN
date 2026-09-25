@@ -172,7 +172,7 @@ def test_failed_later_slice_does_not_partially_advance(monkeypatch):
     real = module.get_step_function
     def dispatch(kind):
         if kind == NeuronType.LIF:
-            def fail(*args):
+            def fail(*args, **kwargs):
                 raise FloatingPointError('injected later-slice failure')
             return fail
         return real(kind)

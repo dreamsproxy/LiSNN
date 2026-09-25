@@ -19,6 +19,9 @@ All step functions:
     3. return float32 spike events of shape (n_neurons,),
     4. use Forward Euler integration for continuous differential equations.
 
+Set `return_observation=True` to obtain a separate pre-reset voltage snapshot
+alongside spike events without changing the legacy spike-only return value.
+
 Electrical units and timestep behavior are specified in UNITS.md alongside
 this module. Izhikevich retains its native phenomenological input scale.
 
@@ -33,6 +36,8 @@ Models:
     CAdEx
     CAdEx-GLIF5 experimental hybrid
 """
+
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -842,6 +847,21 @@ def _spike_vector(mask):
     )
 
 
+@dataclass(frozen=True)
+class NeuronObservation:
+    """Independent spike and integrated pre-reset voltage snapshots."""
+
+    spikes: np.ndarray
+    plasticity_voltage_mV: np.ndarray
+
+
+def _step_result(spikes, voltage, return_observation):
+    events = _spike_vector(spikes)
+    if not return_observation:
+        return events
+    return NeuronObservation(events.copy(), np.asarray(voltage, dtype=DTYPE).copy())
+
+
 # =============================================================================
 # LIF
 # =============================================================================
@@ -850,6 +870,8 @@ def lif_step(
     neurons,
     input_current,
     dt,
+    *,
+    return_observation=False,
 ):
     """
     Vectorized Leaky Integrate-and-Fire.
@@ -959,7 +981,7 @@ def lif_step(
 
     neurons[:, V] = v_next
 
-    return _spike_vector(spikes)
+    return _step_result(spikes, np.where(active, v_candidate, v_next), return_observation)
 
 
 # =============================================================================
@@ -970,6 +992,8 @@ def adaptive_lif_step(
     neurons,
     input_current,
     dt,
+    *,
+    return_observation=False,
 ):
     """
     Vectorized Adaptive LIF.
@@ -1123,7 +1147,7 @@ def adaptive_lif_step(
     neurons[:, V] = v_next
     neurons[:, ADAPT] = adapt_next
 
-    return _spike_vector(spikes)
+    return _step_result(spikes, np.where(active, v_candidate, v_next), return_observation)
 
 
 # =============================================================================
@@ -1134,6 +1158,8 @@ def izhikevich_step(
     neurons,
     input_current,
     dt,
+    *,
+    return_observation=False,
 ):
     """
     Vectorized canonical Izhikevich neuron.
@@ -1268,6 +1294,8 @@ def izhikevich_step(
         >= neurons[:, V_DETECT]
     )
 
+    plasticity_voltage = v_next.copy()
+
     v_next[spikes] = (
         neurons[
             spikes,
@@ -1285,7 +1313,7 @@ def izhikevich_step(
     neurons[:, V] = v_next
     neurons[:, ADAPT] = u_next
 
-    return _spike_vector(spikes)
+    return _step_result(spikes, plasticity_voltage, return_observation)
 
 
 # =============================================================================
@@ -1296,6 +1324,8 @@ def adex_step(
     neurons,
     input_current,
     dt,
+    *,
+    return_observation=False,
 ):
     """
     Vectorized Adaptive Exponential Integrate-and-Fire.
@@ -1496,7 +1526,7 @@ def adex_step(
     neurons[:, V] = v_next
     neurons[:, ADAPT] = w_next
 
-    return _spike_vector(spikes)
+    return _step_result(spikes, np.where(active, v_candidate, v_next), return_observation)
 
 
 # =============================================================================
@@ -1665,6 +1695,8 @@ def glif3_step(
     neurons,
     input_current,
     dt,
+    *,
+    return_observation=False,
 ):
     """
     Vectorized Allen GLIF3 / LIF_ASC.
@@ -1824,7 +1856,7 @@ def glif3_step(
     neurons[:, ASC_1] = asc1_next
     neurons[:, ASC_2] = asc2_next
 
-    return _spike_vector(spikes)
+    return _step_result(spikes, np.where(active, v_candidate, v_next), return_observation)
 
 
 # =============================================================================
@@ -1835,6 +1867,8 @@ def glif4_step(
     neurons,
     input_current,
     dt,
+    *,
+    return_observation=False,
 ):
     """
     Vectorized Allen GLIF4 / LIF_R_ASC.
@@ -2076,7 +2110,7 @@ def glif4_step(
     neurons[:, ASC_1] = asc1_next
     neurons[:, ASC_2] = asc2_next
 
-    return _spike_vector(spikes)
+    return _step_result(spikes, np.where(active, v_candidate, v_next), return_observation)
 
 
 # =============================================================================
@@ -2087,6 +2121,8 @@ def glif5_step(
     neurons,
     input_current,
     dt,
+    *,
+    return_observation=False,
 ):
     """
     Vectorized Allen GLIF5 / LIF_R_ASC_A.
@@ -2370,7 +2406,7 @@ def glif5_step(
     neurons[:, ASC_2] = asc2_next
     neurons[:, THETA_V] = theta_v_next
 
-    return _spike_vector(spikes)
+    return _step_result(spikes, np.where(active, v_candidate, v_next), return_observation)
 
 
 # =============================================================================
@@ -2381,6 +2417,8 @@ def cadex_step(
     neurons,
     input_current,
     dt,
+    *,
+    return_observation=False,
 ):
     """
     Vectorized canonical Conductance-Based Adaptive Exponential
@@ -2616,7 +2654,7 @@ def cadex_step(
     neurons[:, V] = v_next
     neurons[:, ADAPT] = g_a_next
 
-    return _spike_vector(spikes)
+    return _step_result(spikes, np.where(active, v_candidate, v_next), return_observation)
 
 
 # =============================================================================
@@ -2627,6 +2665,8 @@ def cadex_glif_step(
     neurons,
     input_current,
     dt,
+    *,
+    return_observation=False,
 ):
     """
     Experimental full CAdEx + GLIF5 hybrid.
@@ -3216,7 +3256,7 @@ def cadex_glif_step(
     neurons[:, THETA_V] = theta_v_next
 
 
-    return _spike_vector(spikes)
+    return _step_result(spikes, np.where(active, v_candidate, v_next), return_observation)
 
 
 # Alias matching the spelling used in the initial design discussion.

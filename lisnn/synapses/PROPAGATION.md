@@ -83,9 +83,11 @@ failure, including failures in a later model slice.
 
 `TickResult` contains independent snapshots of previous/current spikes,
 propagation details, all current channels, voltage before integration and after
-reset, plus Izhikevich observations indexed by global neuron indices. Its
+reset, integrated `plasticity_voltage_mV` before spike reset, plus Izhikevich
+observations indexed by global neuron indices. Its
 `time_ms` is the interval start and `dt_ms` its width. Returned-array edits do not
-modify the simulator. These are not pre-reset voltage traces for STDP.
+modify the simulator. Persistent pre-reset traces are maintained separately
+by `PlasticityTraces` when requested by a caller.
 
 ## Izhikevich input and output adapter
 
