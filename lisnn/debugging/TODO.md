@@ -5,5 +5,5 @@
 
 - Completed #18: `propagation_smoke_test` runs as part of the full eight-suite runner.
 - Completed #19: `plasticity_observation_smoke_test` runs as part of the full runner.
-- Completed #20: Pair rule smoke suite. Add Triplet/Voltage rule suites as M2 progresses.
+- Completed #20 and #21: Pair and Triplet rule smoke suites. Add Voltage rule suite as M2 progresses.
 - Keep each debugger independently callable and keep pytest regression wrappers small.

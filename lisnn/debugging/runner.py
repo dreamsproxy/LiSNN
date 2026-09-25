@@ -16,6 +16,7 @@ from lisnn.debugging.synapse_smoke import synapse_smoke_test
 from lisnn.debugging.propagation_smoke import propagation_smoke_test
 from lisnn.debugging.plasticity_observation_smoke import plasticity_observation_smoke_test
 from lisnn.debugging.pair_smoke import pair_smoke_test
+from lisnn.debugging.triplet_smoke import triplet_smoke_test
 
 
 def _population(log_dir, verbose):
@@ -40,6 +41,7 @@ SMOKE_TESTS = {
     "propagation": _suite(propagation_smoke_test),
     "plasticity_observation": _suite(plasticity_observation_smoke_test),
     "pair_stdp": _suite(pair_smoke_test),
+    "triplet_stdp": _suite(triplet_smoke_test),
 }
 
 
