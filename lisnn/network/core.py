@@ -150,9 +150,10 @@ class SNN:
             raise RuntimeError("configure_runtime must be called before stepping")
         return self._runtime
 
-    def step(self, external_current=0, feedback_current=0):
+    def step(self, external_current=0, feedback_current=0, *, plasticity_enabled=True):
         """One causal tick, returning current channels, observations and update."""
-        return self.runtime.step(external_current, feedback_current)
+        return self.runtime.step(external_current, feedback_current,
+                                 plasticity_enabled=plasticity_enabled)
 
     def snapshot_runtime(self):
         """Capture neuron, synapse, learning-trace, clock and feedback state."""

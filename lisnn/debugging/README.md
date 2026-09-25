@@ -33,6 +33,7 @@ dependency is needed: smoke implementations use NumPy and the standard library.
 | `recurrent_learning` | `recurrent_smoke_test` | Causal learner dispatch and next-tick changed synaptic current |
 | `io_contracts` | `io_smoke_test` | Explicit time/channel mapping, capacity error and internal queue causality |
 | `stream_runtime` | `stream_runtime_smoke_test` | External frame delivery, feedback after observation and source logging |
+| `regimes` | `regime_smoke_test` | ACTIVE/SLEEP transitions, external gain and future internal pulse |
 
 ```python
 from lisnn.debugging import units_smoke_test, run_all_smoke_tests

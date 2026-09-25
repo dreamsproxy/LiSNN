@@ -7,7 +7,7 @@ import numpy as np
 
 from lisnn.io.contracts import CapacityError, StreamFrame, StreamScheduler, Transducer
 from lisnn.network.core import SNN
-from lisnn.validation import vector32
+from lisnn.validation import scalar32, vector32
 
 
 @dataclass(frozen=True)
@@ -103,23 +103,26 @@ class StreamRuntime:
                             f"outcome:{mode}", destination="feedback_current", effect="add_pA")
         self.schedule_frame(frame, port_name, observed_tick=observed_tick)
 
-    def step(self, external_current=0):
+    def step(self, external_current=0, *, external_gain=1, internal_gain=1,
+             plasticity_enabled=True):
         direct = vector32("external_current", external_current, self.network.population_size)
+        eg = scalar32("external_gain", external_gain, nonnegative=True)
+        ig = scalar32("internal_gain", internal_gain, nonnegative=True)
         scheduled = self.scheduler.consume(self.tick)
-        ext = direct.copy()
+        ext = direct * eg
         feedback = np.zeros_like(ext)
         records = []
         try:
             with np.errstate(over="raise", invalid="raise"):
                 for frame, name in scheduled:
-                    current = self.transducers[name].to_current(frame)
-                    target = feedback if frame.kind == "MODULATORY" and frame.destination == "feedback_current" else ext
+                    current = self.transducers[name].to_current(frame) * (eg if frame.source == "EXTERNAL" else ig)
+                    target = feedback if frame.source == "INTERNAL" or (frame.kind == "MODULATORY" and frame.destination == "feedback_current") else ext
                     target += current
                     records.append(Delivery(frame.source, name, frame.kind, frame.modality,
                                             self.tick, float(frame.timestamp_ms),
                                             frame.mapping_provenance, int(np.count_nonzero(current)),
                                             float(np.sum(np.abs(current), dtype=np.float64))))
-            result = self.network.step(ext, feedback)
+            result = self.network.step(ext, feedback, plasticity_enabled=plasticity_enabled)
         except Exception:
             self.scheduler._frames[self.tick] = list(scheduled)
             raise
