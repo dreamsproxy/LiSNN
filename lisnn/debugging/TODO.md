@@ -1,8 +1,9 @@
 # Debugging TODO
 
-- Completed #18: independent propagation/current/adapter smoke test in `propagation_smoke.py`.
-- Register this suite in the all-suite runner when the separate runner refactor lands.
+- Completed: all-suite CLI/progress/reports and foundation/network/spatial smoke coverage.
+- Register every future smoke suite in `runner.SMOKE_TESTS` so `python debug.py` runs it.
+
+- Completed #18: `propagation_smoke_test` runs as part of the full eight-suite runner.
 - Add pre-reset plasticity-voltage/history smoke test for #19.
 - Add Pair/Triplet/Voltage-STDP rule-specific smoke tests as M2 progresses.
 - Keep each debugger independently callable and keep pytest regression wrappers small.
-

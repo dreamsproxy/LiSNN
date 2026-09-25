@@ -5,12 +5,12 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-import Network
+from lisnn import network
 from lisnn.spatial import CompartmentType, MorphologyTable, SpatialVolume
 
 
 def test_non_spatial_network_remains_supported() -> None:
-    model = Network.create_nn(
+    model = network.create_nn(
         population=8,
         neuron_type="LIF",
         seed=1,
@@ -20,7 +20,7 @@ def test_non_spatial_network_remains_supported() -> None:
 
 
 def test_uniform_spatial_volume() -> None:
-    model = Network.create_nn(
+    model = network.create_nn(
         population=8,
         neuron_type="GLIF5",
         spatial={
@@ -53,21 +53,21 @@ def test_spatial_seed_is_deterministic_and_rng_independent() -> None:
         "placement": "uniform",
     }
 
-    model_a = Network.create_nn(
+    model_a = network.create_nn(
         population=16,
         neuron_type="AdEx",
         randomize_params=True,
         spatial=spatial,
         seed=42,
     )
-    model_b = Network.create_nn(
+    model_b = network.create_nn(
         population=16,
         neuron_type="AdEx",
         randomize_params=True,
         spatial=spatial,
         seed=42,
     )
-    model_without_space = Network.create_nn(
+    model_without_space = network.create_nn(
         population=16,
         neuron_type="AdEx",
         randomize_params=True,
@@ -100,7 +100,7 @@ def test_explicit_spatial_positions() -> None:
         dtype=np.float32,
     )
 
-    model = Network.create_nn(
+    model = network.create_nn(
         population=3,
         spatial={
             "size": (100.0, 100.0, 100.0),
@@ -115,7 +115,7 @@ def test_explicit_spatial_positions() -> None:
 
 def test_explicit_positions_must_fit_volume() -> None:
     with pytest.raises(ValueError, match="inside the spatial volume"):
-        Network.create_nn(
+        network.create_nn(
             population=2,
             spatial={
                 "size": (10.0, 10.0, 10.0),
@@ -137,3 +137,4 @@ def test_morphology_table_is_inactive_empty_shell() -> None:
     assert morphology.compartment_count == 0
     assert morphology.position.shape == (0, 3)
     assert CompartmentType.NODE_OF_RANVIER.value == 4
+

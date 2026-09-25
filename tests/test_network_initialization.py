@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import numpy as np
 
-import Network
-import NeuronModels as nm
+from lisnn import network
+from lisnn.neurons import kernels as nm
 from lisnn.neurons import NeuronType
 
 
 def test_homogeneous_population() -> None:
-    model = Network.create_nn(
+    model = network.create_nn(
         population=8,
         neuron_type="GLIF5",
         randomize_params=False,
@@ -24,7 +24,7 @@ def test_homogeneous_population() -> None:
 
 
 def test_mixed_population_uses_default_for_remainder() -> None:
-    model = Network.create_nn(
+    model = network.create_nn(
         population=8,
         neuron_type={
             "default": "LIF",
@@ -57,7 +57,7 @@ def test_mixed_population_uses_default_for_remainder() -> None:
 
 
 def test_enum_population_spec_is_accepted() -> None:
-    model = Network.create_nn(
+    model = network.create_nn(
         population=4,
         neuron_type=NeuronType.ADEX,
     )
@@ -66,7 +66,7 @@ def test_enum_population_spec_is_accepted() -> None:
 
 
 def test_izhikevich_initial_recovery_state() -> None:
-    model = Network.create_nn(
+    model = network.create_nn(
         population=4,
         neuron_type=NeuronType.IZHIKEVICH,
         randomize_params=True,
@@ -78,13 +78,13 @@ def test_izhikevich_initial_recovery_state() -> None:
 
 
 def test_population_seed_is_deterministic() -> None:
-    model_a = Network.create_nn(
+    model_a = network.create_nn(
         population=8,
         neuron_type="LIF",
         randomize_params=True,
         seed=1,
     )
-    model_b = Network.create_nn(
+    model_b = network.create_nn(
         population=8,
         neuron_type="LIF",
         randomize_params=True,
@@ -92,3 +92,4 @@ def test_population_seed_is_deterministic() -> None:
     )
 
     np.testing.assert_array_equal(model_a.pool, model_b.pool)
+

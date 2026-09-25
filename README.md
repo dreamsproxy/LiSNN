@@ -53,20 +53,25 @@ lisnn/
   network/
     spec.py         # homogeneous/mixed population specification
     core.py         # SNN constructor/container
+    runtime.py      # causal fixed-weight stepping
+  synapses/
+    core.py         # sparse topology and unsigned efficacy
+    propagation.py  # independent integrated-current propagation
   debugging/
-    __init__.py     # debugging API
+    runner.py       # full smoke-suite CLI
+    *_smoke.py      # independently callable diagnostics
   types.py          # shared NumPy/type aliases
 ```
 
-The original root modules remain compatibility facades or implementation
-surfaces so existing experiments do not need to change immediately.
+Root `main.py` demonstrates construction; root `debug.py` runs every active
+smoke test. Implementation and import APIs live under `lisnn/`.
 
 ## Network construction
 
 ```python
-import Network
+from lisnn import network
 
-model = Network.create_nn(
+model = network.create_nn(
     population=8,
     neuron_type="GLIF5",
     randomize_params=True,
@@ -78,7 +83,7 @@ Mixed populations use explicit counts and a required default type. Unassigned
 neurons are assigned to the default group:
 
 ```python
-model = Network.create_nn(
+model = network.create_nn(
     population=8,
     neuron_type={
         "default": "LIF",
@@ -104,7 +109,7 @@ model = create_nn(
 ## Population debugging
 
 ```python
-import debugging as debug
+from lisnn import debugging as debug
 
 debug.population_smoke_test(
     neuron_count=8,
@@ -117,6 +122,34 @@ debug.population_smoke_test(
 The smoke test checks alternating-input integration and explicitly exercises
 threshold crossing, spike/reset behavior, refractory state, and model-specific
 post-spike state transitions.
+
+## Full smoke suite
+
+```bash
+python debug.py
+python debug.py --verbose
+python debug.py --only propagation
+python -m lisnn.debugging --list
+```
+
+The default command runs all eight active suites and shows progress and PASS/FAIL
+for each. It writes suite diagnostics and an aggregate JSON report into a
+timestamped `logs/` directory; use `--log-dir PATH` to choose one. The process
+returns a failing exit code when any suite fails. See the
+[debugging guide](lisnn/debugging/README.md) for callable functions and reports.
+The full regression suite remains `python -m pytest -q`.
+
+## Import migration
+
+| Old root import | Canonical replacement |
+| --- | --- |
+| `import Network` | `from lisnn import network` |
+| `import NeuronModels as nm` | `from lisnn.neurons import kernels as nm` |
+| `import debugging as debug` or `import debug` | `from lisnn import debugging as debug` |
+
+`debug.py` is now the executable smoke-test entrypoint. Root `Network.py`,
+`NeuronModels.py` and `debugging.py` are removed. External callers using those
+names must update their imports. The frozen `legacy/` tree remains untouched.
 
 ## Design invariant
 

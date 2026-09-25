@@ -1,5 +1,5 @@
 """
-NeuronModels.py
+LiSNN vectorized neuron kernels
 
 Pure NumPy vectorized neuron models for LiSNN.
 

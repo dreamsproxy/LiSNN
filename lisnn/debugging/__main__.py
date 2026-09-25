@@ -1,4 +1,4 @@
-"""Run every active smoke suite: python debug.py [--verbose]."""
+"""Allow python -m lisnn.debugging."""
 
 from lisnn.debugging.runner import main
 
