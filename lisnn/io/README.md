@@ -99,3 +99,28 @@ specific evaluation tick, independently of the current regime setting.
 Run `python -m examples.active_sleep` for an editable ACTIVE -> SLEEP ->
 ACTIVE sequence with quiet periods and an explicit pulse. It makes no claim
 about biological sleep or durable memory.
+
+## Bounded literal endogenous replay (#76)
+
+`ReplayBuffer(max_frames=..., max_duration_ms=...)` records only delivered
+EXTERNAL auditory/visual stimulation after transduction into pA, with
+original timestamp, tick, external port and mapping provenance. It keeps an
+owned bounded recent sequence. Internal replay deliveries never re-enter the
+buffer automatically. `ReplayController` maps each modality to an explicit
+INTERNAL port; that port may converge on the same neurons as the external
+port or use different membership, but its capacity must be declared. It
+schedules the recorded channel currents with a bounded gain into future ticks
+only while SLEEP is active. Recorded inter-sample tick offsets are preserved.
+Ordered and seeded shuffled schedules can use the same event count, timing
+slots, duration and gain budgets. Limits cover `max_repeats`, `max_events`,
+`max_duration_ticks`, `max_gain` and the underlying queue capacity. Invalid
+plans leave queue and RNG state unchanged. A pending ACTIVE transition cannot
+be crossed by a replay schedule. Individual delivery logs preserve the
+`literal_replay:<original-port>:tick=<original-tick>` provenance.
+
+`python -m examples.internal_replay` demonstrates an auditory and a visual
+sample replayed through different internal neuron mappings. This is literal
+recent-experience replay, not activity reconstruction, cue-driven recall,
+peripheral receptor re-stimulation, or generative imagination. It does not
+reset state or directly mutate weights; a configured local learner may still
+change weights in response to the network activity caused by replay.

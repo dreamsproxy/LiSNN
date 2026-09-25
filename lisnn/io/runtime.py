@@ -21,6 +21,7 @@ class Delivery:
     mode: str
     nonzero_channels: int
     total_abs_current_pA: float
+    channel_current_pA: np.ndarray
 
 
 @dataclass(frozen=True)
@@ -121,7 +122,8 @@ class StreamRuntime:
                     records.append(Delivery(frame.source, name, frame.kind, frame.modality,
                                             self.tick, float(frame.timestamp_ms),
                                             frame.mapping_provenance, int(np.count_nonzero(current)),
-                                            float(np.sum(np.abs(current), dtype=np.float64))))
+                                            float(np.sum(np.abs(current), dtype=np.float64)),
+                                            current[self.transducers[name].port.neuron_indices].copy()))
             result = self.network.step(ext, feedback, plasticity_enabled=plasticity_enabled)
         except Exception:
             self.scheduler._frames[self.tick] = list(scheduled)
