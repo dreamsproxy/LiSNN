@@ -1,6 +1,8 @@
 # Controlled P1.2 state-cycle example
 
 `python -m examples.controlled_cycle` runs a small, deterministic experiment.
+Use `python -m examples.controlled_cycle --json cycle.json` to export complete
+per-tick observations and configuration to a chosen local path.
 It has one directed LIF connection, initial unsigned efficacy `0.5`, a
 selected Pair STDP learner, `dt=1 ms`, and two explicitly mapped EXTERNAL
 training frames: auditory input to the source cell at tick 0, visual input to

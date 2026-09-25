@@ -54,3 +54,15 @@ def test_progress_and_bounded_configuration():
         run_controlled_cycle(washout_ticks=0)
     with pytest.raises(ValueError):
         run_controlled_cycle(sleep_ticks=2)
+
+
+def test_example_can_export_raw_json(tmp_path, capsys):
+    from examples.controlled_cycle import main
+
+    target = tmp_path / "cycle.json"
+    main(["--json", str(target)])
+    assert target.is_file()
+    import json
+    result = json.loads(target.read_text())
+    assert len(result["controls"]["ordered"]["sleep_observations"]) == 5
+    assert "raw observations:" in capsys.readouterr().out
