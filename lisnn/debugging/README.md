@@ -27,6 +27,7 @@ dependency is needed: smoke implementations use NumPy and the standard library.
 | `spatial` | `spatial_smoke_test` | Position layout/bounds, explicit positions, independent RNG and empty morphology shell |
 | `propagation` | `propagation_smoke_test` | Causal two-hop delivery, duplicate impulse accumulation, mixed-family pA observations |
 | `plasticity_observation` | `plasticity_observation_smoke_test` | Pre-reset voltage across nine families, mixed CVA observation and bounded event traces |
+| `pair_stdp` | `pair_smoke_test` | Hand-checkable three-cell sequence, pre-before-post timing and independent fixed source edges |
 
 ```python
 from lisnn.debugging import units_smoke_test, run_all_smoke_tests
