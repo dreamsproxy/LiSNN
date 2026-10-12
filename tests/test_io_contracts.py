@@ -99,3 +99,24 @@ def test_probe_readback_is_owned_and_does_not_mutate_network():
     captured["voltage_mV"][:] = 999
     assert output.voltage_mV[0] != 999 and model.runtime.pool[0, 0] != 999
     assert "weights_after" in captured and captured["weights_after"] is None
+
+
+def test_long_running_timestamps_keep_adjacent_sample_precision():
+    samples = frame(values=[[1, 2], [3, 4]], axes=("time", "channel"),
+                    stamp=16777216, sample_period=1)
+    assert samples.sample(1).timestamp_ms == 16777217
+    assert samples.timestamp_ms == 16777216
+    for value in (float("nan"), float("inf"), -1, True):
+        with pytest.raises(ValueError):
+            frame(stamp=value)
+
+
+def test_ports_enforce_declared_stimulation_and_observation_roles():
+    readout = InterfacePort("readout", 2, [0], source="EXTERNAL", role="readout")
+    incoming = InterfacePort("input", 2, [0], source="EXTERNAL", role="input")
+    both = InterfacePort("both", 2, [0], source="EXTERNAL", role="overlap")
+    with pytest.raises(ValueError, match="input or overlap"):
+        Transducer(readout)
+    with pytest.raises(ValueError, match="readout or overlap"):
+        Probe(incoming)
+    assert Probe(both).port is both and Transducer(both).port is both

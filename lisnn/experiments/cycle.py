@@ -88,13 +88,13 @@ def run_controlled_cycle(*, progress=None, washout_ticks=100, sleep_ticks=6,
         sleep_start = branch.runtime.tick
         branch.transition(sleep_start, "SLEEP")
         branch.transition(sleep_start + sleep_ticks, "ACTIVE")
-        branch.step(plasticity_override=not freeze)  # Quiet before any replay.
+        first_sleep = branch.step(plasticity_override=not freeze)  # Quiet before replay.
         if order is not None:
             replay.schedule(branch, observed_tick=sleep_start,
                             start_tick=sleep_start + 1, gain=replay_gain, order=order)
         deliveries, observations = [], []
-        for _ in range(sleep_ticks - 1):
-            step = branch.step(plasticity_override=not freeze)
+        for offset in range(sleep_ticks):
+            step = first_sleep if offset == 0 else branch.step(plasticity_override=not freeze)
             update = step.routed.neural.plasticity_update
             components = {} if update is None else {
                 key: value.tolist() if isinstance(value, np.ndarray) else value

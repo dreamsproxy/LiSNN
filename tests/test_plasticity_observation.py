@@ -92,3 +92,20 @@ def test_trace_validation_and_no_partial_update():
         np.testing.assert_array_equal(traces.spike_trace, [0, 0])
     with pytest.raises(ValueError):
         PlasticityTraces(2, tau_spike_ms=1, tau_voltage_ms=1, history_ms=5)
+
+
+def test_small_trace_coefficient_preserves_voltage_response():
+    traces = PlasticityTraces(1, tau_spike_ms=1e7, tau_voltage_ms=1e7)
+    actual = traces.advance([0], [-60], 0.1)
+    expected = -np.expm1(-float(np.float32(0.1)) / 1e7) * -60
+    assert actual.voltage_trace_mV[0] != 0
+    np.testing.assert_allclose(actual.voltage_trace_mV, [expected], rtol=1e-6)
+
+
+@pytest.mark.parametrize("name", list(k.MODEL_STEPS))
+def test_generic_dispatcher_forwards_observation_and_keeps_spike_default(name):
+    pool = k.new_population(1)
+    observation = k.step(name, pool.copy(), 0, 0.1, return_observation=True)
+    direct = k.MODEL_STEPS[name](pool.copy(), 0, 0.1, return_observation=True)
+    np.testing.assert_array_equal(observation.plasticity_voltage_mV, direct.plasticity_voltage_mV)
+    np.testing.assert_array_equal(k.step(name, pool.copy(), 0, 0.1), direct.spikes)

@@ -113,3 +113,18 @@ def test_seeded_shuffle_budget_and_no_recursive_recording():
                                       out_b.neural.feedback_current_pA)
         record_a.record(out_a)
     assert len(record_a.entries) == 3  # INTERNAL replay never re-enters experience buffer.
+
+
+def test_later_active_transition_cannot_deliver_queued_replay():
+    regime = setup()
+    buffer = record_known_experience(regime)
+    tick = regime.runtime.tick
+    replay(buffer).schedule(regime, observed_tick=tick-1, start_tick=tick)
+    regime.transition(tick, "ACTIVE")
+    before = regime.runtime.network.runtime.pool.copy()
+    with pytest.raises(ValueError, match="requires SLEEP"):
+        regime.step()
+    assert regime.runtime.tick == tick
+    assert len(regime.runtime.scheduler._frames[tick]) == 1
+    assert regime.current.name == "SLEEP"
+    np.testing.assert_array_equal(regime.runtime.network.runtime.pool, before)
