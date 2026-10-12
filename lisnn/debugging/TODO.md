@@ -10,4 +10,5 @@
 - Completed #61: generic frame/port/transducer/probe/queue contract smoke suite.
 - Completed #71: external stream routing and future feedback smoke suite.
 - Completed #75: ACTIVE/SLEEP regime and pulse smoke suite.
+- Completed #76: bounded literal auditory/visual replay smoke suite.
 - Keep each debugger independently callable and keep pytest regression wrappers small.
