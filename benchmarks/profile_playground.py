@@ -20,6 +20,7 @@ import tracemalloc
 
 import numpy as np
 
+import lisnn
 from lisnn.io import (InterfacePort, Probe, ReplayBuffer, ReplayController,
                       RegimeController, StreamFrame, StreamRuntime, Transducer)
 from lisnn.network import create_nn
@@ -46,6 +47,7 @@ class Config:
     degree: int
     seed: int = 7
     dt_ms: float = 0.5
+    edge_order: str = "ordered"
 
 
 def fingerprint(value):
@@ -112,6 +114,13 @@ def workload(config, operation):
     net = create_nn(n, neuron_type={"default": "LIF", "AdEx": n // 4,
                                     "Izhikevich": n // 4}, seed=config.seed)
     edges = create_fixed_out_degree(n, degree, weight_range=(0.01, 0.02), seed=config.seed)
+    if config.edge_order == "shuffled":
+        order = np.random.default_rng(config.seed + 1).permutation(edges.edge_count)
+        edges.pre_idx = edges.pre_idx[order]
+        edges.post_idx = edges.post_idx[order]
+        edges.weight = edges.weight[order]
+    elif config.edge_order != "ordered":
+        raise ValueError("edge_order must be ordered or shuffled")
     indices = np.arange(min(n, 32), dtype=np.int32)
     current = np.full(n, 600, dtype=np.float32)
     spikes = (np.arange(n) % 7 == 0).astype(np.float32)
@@ -267,7 +276,8 @@ def measure(config, operation, *, steps, repeats, warmup, diagnostics):
 
 
 def source_digest():
-    root = Path(__file__).resolve().parents[1]
+    # This can intentionally be a separate reference worktree via PYTHONPATH.
+    root = Path(lisnn.__file__).resolve().parents[1]
     digest = hashlib.sha256()
     for path in sorted((root / "lisnn").rglob("*.py")):
         digest.update(str(path.relative_to(root)).encode())
@@ -283,6 +293,7 @@ def main(argv=None):
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--warmup", type=int, default=3)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--edge-order", choices=("ordered", "shuffled"), default="ordered")
     parser.add_argument("--timing-only", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
@@ -298,7 +309,7 @@ def main(argv=None):
     args.output.parent.mkdir(parents=True, exist_ok=True)
     for index, (size, op) in enumerate(jobs, 1):
         n, degree = SIZES[size]
-        row = measure(Config(n, degree, args.seed), op, steps=args.steps,
+        row = measure(Config(n, degree, args.seed, edge_order=args.edge_order), op, steps=args.steps,
                       repeats=args.repeats, warmup=args.warmup, diagnostics=not args.timing_only)
         row["size"] = size
         report["results"].append(row)

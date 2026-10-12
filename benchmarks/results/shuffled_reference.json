@@ -1,0 +1,826 @@
+{
+  "schema": 1,
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "cpu_count": 9,
+    "thread_environment": {
+      "OMP_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null,
+      "MKL_NUM_THREADS": null
+    }
+  },
+  "source_sha256": "71e265369400b5f21f9b791a7f3e38765e840db58d06ef278254f550bf6be028",
+  "steps": 30,
+  "repeats": 5,
+  "warmup": 3,
+  "jit": "none; NumPy reference",
+  "results": [
+    {
+      "config": {
+        "population": 512,
+        "degree": 16,
+        "seed": 7,
+        "dt_ms": 0.5,
+        "edge_order": "shuffled"
+      },
+      "operation": "propagation",
+      "edges": 8192,
+      "seconds_per_operation": [
+        0.001026551833274425,
+        0.0008770952000001368,
+        0.0008708604666026077,
+        0.0008951126333461919,
+        0.0008734693999334316
+      ],
+      "median_seconds": 0.0008770952000001368,
+      "initialization_seconds": [
+        0.015639536002709065,
+        0.005904929999815067,
+        0.0052821529970970005,
+        0.005150695000338601,
+        0.005584298000030685
+      ],
+      "final_observation_sha256": "4eea75cabb0f5c43f77d48511eeac7ea3ae2eb7255945217a8d3a71257a0a9f2",
+      "arrays_after_timing": {
+        "unique_backing_bytes": 225280,
+        "array_count": 8,
+        "largest": [
+          {
+            "path": "state.network.pool",
+            "bytes": 88064,
+            "shape": [
+              512,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network.neuron_types",
+            "bytes": 32768,
+            "shape": [
+              512
+            ],
+            "dtype": "<U16"
+          },
+          {
+            "path": "state.edges.pre_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.edges.post_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.edges.weight",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.current",
+            "bytes": 2048,
+            "shape": [
+              512
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.spikes",
+            "bytes": 2048,
+            "shape": [
+              512
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.voltage",
+            "bytes": 2048,
+            "shape": [
+              512
+            ],
+            "dtype": "float32"
+          }
+        ]
+      },
+      "size": "medium"
+    },
+    {
+      "config": {
+        "population": 512,
+        "degree": 16,
+        "seed": 7,
+        "dt_ms": 0.5,
+        "edge_order": "shuffled"
+      },
+      "operation": "fixed_tick",
+      "edges": 8192,
+      "seconds_per_operation": [
+        0.0012947152332344557,
+        0.0013845995666391293,
+        0.0013688528666534693,
+        0.0013587239332991884,
+        0.0014655647999461507
+      ],
+      "median_seconds": 0.0013688528666534693,
+      "initialization_seconds": [
+        0.007574524002848193,
+        0.007542546001786832,
+        0.007151736997911939,
+        0.007718970999121666,
+        0.007257966997713083
+      ],
+      "final_observation_sha256": "de2abcfa4e710090ea76864aeed7ed1821fbc333a5a92804908f404585cbdce8",
+      "arrays_after_timing": {
+        "unique_backing_bytes": 602496,
+        "array_count": 21,
+        "largest": [
+          {
+            "path": "state.network.pool",
+            "bytes": 88064,
+            "shape": [
+              512,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime.pool",
+            "bytes": 88064,
+            "shape": [
+              512,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._initial_runtime.pool",
+            "bytes": 88064,
+            "shape": [
+              512,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network.neuron_types",
+            "bytes": 32768,
+            "shape": [
+              512
+            ],
+            "dtype": "<U16"
+          },
+          {
+            "path": "state.network._runtime._edges.pre_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._edges.post_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._edges.weight",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._initial_runtime._edges.pre_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          }
+        ]
+      },
+      "size": "medium"
+    },
+    {
+      "config": {
+        "population": 512,
+        "degree": 16,
+        "seed": 7,
+        "dt_ms": 0.5,
+        "edge_order": "shuffled"
+      },
+      "operation": "adaptive_tick",
+      "edges": 8192,
+      "seconds_per_operation": [
+        0.002578733400029402,
+        0.002643459499934882,
+        0.0025592944666035086,
+        0.002757783633326956,
+        0.0026368665666571664
+      ],
+      "median_seconds": 0.0026368665666571664,
+      "initialization_seconds": [
+        0.009839193000516389,
+        0.00994035500116297,
+        0.01013894499919843,
+        0.010236291000182973,
+        0.010619186999974772
+      ],
+      "final_observation_sha256": "db9ad1e69dbdbcd8c596148517baab9dc037b4898ebca29a17f960783211bdb6",
+      "arrays_after_timing": {
+        "unique_backing_bytes": 815488,
+        "array_count": 29,
+        "largest": [
+          {
+            "path": "state.network.pool",
+            "bytes": 88064,
+            "shape": [
+              512,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._runtime.pool",
+            "bytes": 88064,
+            "shape": [
+              512,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._initial_runtime._runtime.pool",
+            "bytes": 88064,
+            "shape": [
+              512,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network.neuron_types",
+            "bytes": 32768,
+            "shape": [
+              512
+            ],
+            "dtype": "<U16"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.pre_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.post_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.weight",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._learner._pre_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          }
+        ]
+      },
+      "size": "medium"
+    },
+    {
+      "config": {
+        "population": 512,
+        "degree": 16,
+        "seed": 7,
+        "dt_ms": 0.5,
+        "edge_order": "shuffled"
+      },
+      "operation": "regime_tick",
+      "edges": 8192,
+      "seconds_per_operation": [
+        0.0032860769667119407,
+        0.0033021551999505997,
+        0.004074657200059543,
+        0.003429349033346322,
+        0.003437193500091477
+      ],
+      "median_seconds": 0.003429349033346322,
+      "initialization_seconds": [
+        0.009990090002247598,
+        0.010698006000893656,
+        0.009731171001476469,
+        0.02854952199777472,
+        0.01096978499845136
+      ],
+      "final_observation_sha256": "e180ed5438b1a158632a8b69514de2a3467ed8d34beb31167739961370694c94",
+      "arrays_after_timing": {
+        "unique_backing_bytes": 819712,
+        "array_count": 62,
+        "largest": [
+          {
+            "path": "state.network.pool",
+            "bytes": 88064,
+            "shape": [
+              512,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._runtime.pool",
+            "bytes": 88064,
+            "shape": [
+              512,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._initial_runtime._runtime.pool",
+            "bytes": 88064,
+            "shape": [
+              512,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network.neuron_types",
+            "bytes": 32768,
+            "shape": [
+              512
+            ],
+            "dtype": "<U16"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.pre_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.post_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.weight",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._learner._pre_idx",
+            "bytes": 32768,
+            "shape": [
+              8192
+            ],
+            "dtype": "int32"
+          }
+        ]
+      },
+      "size": "medium"
+    },
+    {
+      "config": {
+        "population": 4096,
+        "degree": 32,
+        "seed": 7,
+        "dt_ms": 0.5,
+        "edge_order": "shuffled"
+      },
+      "operation": "propagation",
+      "edges": 131072,
+      "seconds_per_operation": [
+        0.020990972300084346,
+        0.02017454673332395,
+        0.020090802033397873,
+        0.01982087026675193,
+        0.01965912686670587
+      ],
+      "median_seconds": 0.020090802033397873,
+      "initialization_seconds": [
+        0.06765814599930309,
+        0.06268434500088915,
+        0.05931484399843612,
+        0.05713607600046089,
+        0.05697212900122395
+      ],
+      "final_observation_sha256": "dd0d1ba3bca1c913fac47664750883adc9535e27b368dd936fd12912cbd775cc",
+      "arrays_after_timing": {
+        "unique_backing_bytes": 2588672,
+        "array_count": 8,
+        "largest": [
+          {
+            "path": "state.network.pool",
+            "bytes": 704512,
+            "shape": [
+              4096,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.edges.pre_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.edges.post_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.edges.weight",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network.neuron_types",
+            "bytes": 262144,
+            "shape": [
+              4096
+            ],
+            "dtype": "<U16"
+          },
+          {
+            "path": "state.current",
+            "bytes": 16384,
+            "shape": [
+              4096
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.spikes",
+            "bytes": 16384,
+            "shape": [
+              4096
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.voltage",
+            "bytes": 16384,
+            "shape": [
+              4096
+            ],
+            "dtype": "float32"
+          }
+        ]
+      },
+      "size": "stress"
+    },
+    {
+      "config": {
+        "population": 4096,
+        "degree": 32,
+        "seed": 7,
+        "dt_ms": 0.5,
+        "edge_order": "shuffled"
+      },
+      "operation": "fixed_tick",
+      "edges": 131072,
+      "seconds_per_operation": [
+        0.023809336366684874,
+        0.021714308100005533,
+        0.022587367333350507,
+        0.020767642900076076,
+        0.021324011533336792
+      ],
+      "median_seconds": 0.021714308100005533,
+      "initialization_seconds": [
+        0.09514883999872836,
+        0.09985398999924655,
+        0.09371178199944552,
+        0.11445402000026661,
+        0.09659803800241207
+      ],
+      "final_observation_sha256": "dddaabf1bdd79abc19eb0a9a2091b80dc9f576b9b8337458872d8024ef7de5ee",
+      "arrays_after_timing": {
+        "unique_backing_bytes": 7176576,
+        "array_count": 21,
+        "largest": [
+          {
+            "path": "state.network.pool",
+            "bytes": 704512,
+            "shape": [
+              4096,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime.pool",
+            "bytes": 704512,
+            "shape": [
+              4096,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._initial_runtime.pool",
+            "bytes": 704512,
+            "shape": [
+              4096,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._edges.pre_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._edges.post_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._edges.weight",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._initial_runtime._edges.pre_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._initial_runtime._edges.post_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          }
+        ]
+      },
+      "size": "stress"
+    },
+    {
+      "config": {
+        "population": 4096,
+        "degree": 32,
+        "seed": 7,
+        "dt_ms": 0.5,
+        "edge_order": "shuffled"
+      },
+      "operation": "adaptive_tick",
+      "edges": 131072,
+      "seconds_per_operation": [
+        0.044628297066689505,
+        0.041571639999892794,
+        0.044119336600003105,
+        0.04303068446667264,
+        0.044815745766754844
+      ],
+      "median_seconds": 0.044119336600003105,
+      "initialization_seconds": [
+        0.17002726500140852,
+        0.15476559499802534,
+        0.14565922600013437,
+        0.17047714599902974,
+        0.1761553840005945
+      ],
+      "final_observation_sha256": "29f1029ff3b84c70a941fc26dcde9d17f7bd6e18c1f3937838280e976a528b4e",
+      "arrays_after_timing": {
+        "unique_backing_bytes": 10453376,
+        "array_count": 29,
+        "largest": [
+          {
+            "path": "state.network.pool",
+            "bytes": 704512,
+            "shape": [
+              4096,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._runtime.pool",
+            "bytes": 704512,
+            "shape": [
+              4096,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._initial_runtime._runtime.pool",
+            "bytes": 704512,
+            "shape": [
+              4096,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.pre_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.post_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.weight",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._learner._pre_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._learner._post_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          }
+        ]
+      },
+      "size": "stress"
+    },
+    {
+      "config": {
+        "population": 4096,
+        "degree": 32,
+        "seed": 7,
+        "dt_ms": 0.5,
+        "edge_order": "shuffled"
+      },
+      "operation": "regime_tick",
+      "edges": 131072,
+      "seconds_per_operation": [
+        0.0466906123332592,
+        0.04529511306657999,
+        0.043655149999904094,
+        0.04384302526668762,
+        0.044656986799964216
+      ],
+      "median_seconds": 0.044656986799964216,
+      "initialization_seconds": [
+        0.15926112099987222,
+        0.1541262570026447,
+        0.16909242100155097,
+        0.14593031099866494,
+        0.14770116699946811
+      ],
+      "final_observation_sha256": "543cc5643fbbed46a0b2a953d498b8df27367f19be4dbb9f118a3b98af5b2df2",
+      "arrays_after_timing": {
+        "unique_backing_bytes": 10457600,
+        "array_count": 62,
+        "largest": [
+          {
+            "path": "state.network.pool",
+            "bytes": 704512,
+            "shape": [
+              4096,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._runtime.pool",
+            "bytes": 704512,
+            "shape": [
+              4096,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._initial_runtime._runtime.pool",
+            "bytes": 704512,
+            "shape": [
+              4096,
+              43
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.pre_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.post_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._runtime._edges.weight",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "float32"
+          },
+          {
+            "path": "state.network._runtime._learner._pre_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          },
+          {
+            "path": "state.network._runtime._learner._post_idx",
+            "bytes": 524288,
+            "shape": [
+              131072
+            ],
+            "dtype": "int32"
+          }
+        ]
+      },
+      "size": "stress"
+    }
+  ]
+}
