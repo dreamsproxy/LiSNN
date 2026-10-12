@@ -29,6 +29,7 @@ dependency is needed: smoke implementations use NumPy and the standard library.
 | `plasticity_observation` | `plasticity_observation_smoke_test` | Pre-reset voltage across nine families, mixed CVA observation and bounded event traces |
 | `pair_stdp` | `pair_smoke_test` | Hand-checkable three-cell sequence, pre-before-post timing and independent fixed source edges |
 | `triplet_stdp` | `triplet_smoke_test` | Hand-checkable pre-post-post sequence and isolated higher-order potentiation |
+| `voltage_stdp` | `voltage_smoke_test` | Independent rectified LTP/LTD gates and nonspiking depolarization |
 
 ```python
 from lisnn.debugging import units_smoke_test, run_all_smoke_tests

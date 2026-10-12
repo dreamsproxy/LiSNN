@@ -17,6 +17,7 @@ from lisnn.debugging.propagation_smoke import propagation_smoke_test
 from lisnn.debugging.plasticity_observation_smoke import plasticity_observation_smoke_test
 from lisnn.debugging.pair_smoke import pair_smoke_test
 from lisnn.debugging.triplet_smoke import triplet_smoke_test
+from lisnn.debugging.voltage_smoke import voltage_smoke_test
 
 
 def _population(log_dir, verbose):
@@ -42,6 +43,7 @@ SMOKE_TESTS = {
     "plasticity_observation": _suite(plasticity_observation_smoke_test),
     "pair_stdp": _suite(pair_smoke_test),
     "triplet_stdp": _suite(triplet_smoke_test),
+    "voltage_stdp": _suite(voltage_smoke_test),
 }
 
 

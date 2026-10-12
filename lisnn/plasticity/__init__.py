@@ -3,6 +3,7 @@
 from lisnn.plasticity.traces import PlasticityTraces, TraceSnapshot
 from lisnn.plasticity.pair import PairSTDP, PairUpdate
 from lisnn.plasticity.triplet import TripletSTDP, TripletUpdate
+from lisnn.plasticity.voltage import VoltageSTDP, VoltageUpdate
 
 __all__ = ["PlasticityTraces", "TraceSnapshot", "PairSTDP", "PairUpdate",
-           "TripletSTDP", "TripletUpdate"]
+           "TripletSTDP", "TripletUpdate", "VoltageSTDP", "VoltageUpdate"]

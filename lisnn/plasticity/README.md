@@ -93,3 +93,43 @@ adds triplet LTP on the second post; post-pre-pre adds triplet LTD on the second
 pre. A pre-pre-post sequence adds two pair LTP terms, but no false triplet
 component without earlier post history. `current_edges()` returns an owned
 snapshot to feed into later propagation.
+
+## Voltage-dependent primary rule
+
+`VoltageSTDP` implements the rectified voltage-gated LTD/LTP terms of
+[Clopath et al. (2010)](https://www.nature.com/articles/nn.2479) in the
+[Clopath–Gerstner model exposition, equations 1–3](https://www.frontiersin.org/journals/synaptic-neuroscience/articles/10.3389/fnsyn.2010.00025/full).
+It is the primary P1.2 learner; the homeostatic modulation from the original
+paper is reserved for later scope. The required `initial_voltage_mV` seeds
+both voltage filters at the starting membrane potential; it may be scalar or
+one value per cell. An arbitrary zero baseline would open both gates at rest.
+
+At tick `t` the global `plasticity_voltage_mV` is the integrated pre-reset
+voltage `u(t)`. From the pre-tick presynaptic trace `x`, compute
+`x_old = exp(-dt/tau_x_ms)*x`. Using the *previous* filtered voltage states
+`u_minus` and `u_plus`, independently evaluate each edge `i -> j`:
+
+```text
+LTD_gate[j] = max(u_minus[j] - theta_minus_mV, 0)
+current_gate[j] = max(u[j] - theta_plus_mV, 0)
+history_gate[j] = max(u_plus[j] - theta_minus_mV, 0)
+LTD_ij = -a_ltd * pre[i] * LTD_gate[j]
+LTP_ij = a_ltp * dt * x_old[i] * current_gate[j] * history_gate[j]
+w_ij' = clip(w_ij + LTD_ij + LTP_ij, 0, w_max)
+x_new = x_old + pre
+u_minus_new = exp(-dt/tau_minus_ms)*u_minus + (1-exp(-dt/tau_minus_ms))*u
+u_plus_new = exp(-dt/tau_plus_ms)*u_plus + (1-exp(-dt/tau_plus_ms))*u
+```
+
+`a_ltd` has efficacy/mV/event units and `a_ltp` efficacy/(mV²·ms).
+The pre-spike trace increments by one per event; any normalization factor is
+absorbed into `a_ltp`. Both filters incorporate this interval's voltage *after*
+the weight update, so a single depolarized tick cannot furnish its own recent
+voltage history. LTP integrates over `dt`; LTD is an event increment and does
+not get an additional timestep multiplier. Current pre spikes first affect LTP
+on the next tick. Even without a postsynaptic spike, a recent depolarized
+voltage can enable LTD on a presynaptic event and sustained strong voltage can
+enable LTP after a presynaptic event. Returned results expose the three gates,
+both components, next trace/filter values and the bounded applied change.
+This rule does not stack with Pair or Triplet STDP. Run
+`python debug.py --only voltage_stdp` for the small gating trace.

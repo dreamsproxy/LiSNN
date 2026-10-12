@@ -7,6 +7,7 @@ from lisnn.debugging.network_smoke import network_smoke_test, spatial_smoke_test
 from lisnn.debugging.plasticity_observation_smoke import plasticity_observation_smoke_test
 from lisnn.debugging.pair_smoke import pair_smoke_test
 from lisnn.debugging.triplet_smoke import triplet_smoke_test
+from lisnn.debugging.voltage_smoke import voltage_smoke_test
 from lisnn.debugging.runner import run_all_smoke_tests
 
 __all__ = [
@@ -20,5 +21,6 @@ __all__ = [
     "plasticity_observation_smoke_test",
     "pair_smoke_test",
     "triplet_smoke_test",
+    "voltage_smoke_test",
     "run_all_smoke_tests",
 ]
