@@ -25,7 +25,10 @@ class CharacterMedium:
         self.max_abs_current_pA = scalar32("max_abs_current_pA", max_abs_current_pA, positive=True)
         rng = np.random.default_rng(int(seed))
         embedding = rng.uniform(-1, 1, (128, len(port.neuron_indices)))
-        embedding /= np.max(np.abs(embedding), axis=1, keepdims=True)
+        # A single channel encodes amplitude; row normalization would reduce
+        # all ASCII values to only two signs. Keep existing wider-port patterns.
+        if embedding.shape[1] > 1:
+            embedding /= np.max(np.abs(embedding), axis=1, keepdims=True)
         self._embedding = embedding.astype(np.float32)
         self._embedding.flags.writeable = False
 

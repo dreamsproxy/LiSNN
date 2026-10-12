@@ -32,7 +32,7 @@ def test_determinism_raw_diagnostics_and_finite_state():
     a, b = run_controlled_cycle(), run_controlled_cycle()
     assert a == b
     for arm in a["controls"].values():
-        assert len(arm["sleep_observations"]) == a["configuration"]["sleep_ticks"] - 1
+        assert len(arm["sleep_observations"]) == a["configuration"]["sleep_ticks"]
         assert np.isfinite(arm["probe"]["readout_synaptic_current_pA"])
         for tick in arm["sleep_observations"]:
             for key in ("voltage_mV", "plasticity_voltage_mV", "external_current_pA",
@@ -64,5 +64,18 @@ def test_example_can_export_raw_json(tmp_path, capsys):
     assert target.is_file()
     import json
     result = json.loads(target.read_text())
-    assert len(result["controls"]["ordered"]["sleep_observations"]) == 5
+    assert len(result["controls"]["ordered"]["sleep_observations"]) == 6
     assert "raw observations:" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("seed", [0, 1, 2, 3, 4])
+def test_shuffled_control_changes_order_and_records_transition_tick(seed):
+    result = run_controlled_cycle(shuffle_seed=seed, washout_ticks=20)
+    ordered = result["controls"]["ordered"]
+    shuffled = result["controls"]["shuffled"]
+    assert [d["provenance"] for d in ordered["deliveries"]] != [d["provenance"] for d in shuffled["deliveries"]]
+    for arm in result["controls"].values():
+        records = arm["sleep_observations"]
+        assert len(records) == result["configuration"]["sleep_ticks"]
+        assert [r["tick"] for r in records] == list(range(22, 28))
+        assert records[0]["feedback_current_pA"] == [0, 0]

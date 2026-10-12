@@ -151,6 +151,9 @@ def workload(config, operation):
     if operation == "trace_history":
         traces = PlasticityTraces(n, tau_spike_ms=20, tau_voltage_ms=10,
                                  history_ms=32 * dt, history_max_samples=32)
+        # Fill the bounded history before timing or allocation tracing.
+        for _ in range(32):
+            traces.advance(spikes, voltage, dt)
         state["traces"] = traces
         return lambda _: traces.advance(spikes, voltage, dt), state
     external = InterfacePort("external", n, indices, source="EXTERNAL")
@@ -168,7 +171,7 @@ def workload(config, operation):
         return lambda _: net.step(current), state
     if operation == "probe":
         result = net.step(current)
-        probe = Probe(external)
+        probe = Probe(InterfacePort("probe", n, indices, source="EXTERNAL", role="readout"))
         state.update(result=result, probe=probe)
         return lambda _: probe.capture(result), state
     routed = StreamRuntime(net, transducers=transducers, max_queued_frames=256)
@@ -194,10 +197,12 @@ def workload(config, operation):
         result = routed.step()
         buffer.record(result)
     if operation == "replay_record":
+        for _ in range(buffer.max_frames - len(buffer._entries)):
+            buffer.record(result)
         state["result"] = result
         def record(_):
             buffer.record(result)
-            return len(buffer._entries)
+            return buffer.entries
         return record, state
     if operation == "replay_schedule":
         regime.transition(routed.tick, "SLEEP")

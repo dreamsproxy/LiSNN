@@ -91,6 +91,8 @@ class RegimeController:
             raise TypeError("plasticity_override must be boolean")
         for item in self.runtime.scheduler._frames.get(tick, ()):
             frame = item[0] if isinstance(item, tuple) else item
+            if frame.mapping_provenance.startswith("literal_replay:") and policy.name != "SLEEP":
+                raise ValueError("literal replay delivery requires SLEEP")
             if frame.source not in policy.permitted_sources:
                 raise ValueError(f"{frame.source} stream forbidden under {policy.name}")
         try:
