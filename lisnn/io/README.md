@@ -72,3 +72,30 @@ state (e.g. with `copy.deepcopy`).
 samples, two-site visual current, binary sparse events, and a subsequent
 closed-loop perturbation without a hardware dependency. A fixed frame
 schedule replays deterministically from the same initial network snapshot.
+
+## ACTIVE and SLEEP experimental regimes (#75)
+
+`RegimeController` wraps `StreamRuntime` with explicit `RegimePolicy` values.
+Its default ACTIVE policy has full external/internal gain, learning enabled,
+and actions enabled; the default SLEEP policy attenuates external current to
+5%, retains internal input and configurable learning, and marks environmental
+actions disabled. These are declared experiment settings, not neuron classes
+or a biological REM model. `transition(tick, "SLEEP"|"ACTIVE")` takes effect at
+that exact unexecuted simulation tick. Permitted sources can be restricted;
+a forbidden due frame raises rather than vanishing silently. Each result
+reports the applied policy. Existing neuron state, weights, traces, queues,
+and clock continue across a transition; `SNN.reset_runtime` remains an
+explicit, separate operation.
+
+SLEEP can receive a caller-defined internal `pulse` after a completed tick.
+Optional seeded, sparse low-amplitude background perturbations are bounded
+by `max_background_events`, delivered from an internal port at a later tick,
+and carry their source/mode in delivery logs. Snapshot/restore include the
+regime policy, transition schedule, network, queue, logs, and background RNG.
+When `plasticity_enabled=False`, the selected learner's history still evolves
+but its weights stay frozen. `plasticity_override=False` is available for a
+specific evaluation tick, independently of the current regime setting.
+
+Run `python -m examples.active_sleep` for an editable ACTIVE -> SLEEP ->
+ACTIVE sequence with quiet periods and an explicit pulse. It makes no claim
+about biological sleep or durable memory.
