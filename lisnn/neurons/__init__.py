@@ -32,8 +32,10 @@ from lisnn.neurons.registry import (
     get_step_function,
     normalize_neuron_type,
 )
+from lisnn.neurons.kernels import NeuronObservation
 
 __all__ = [
+    "NeuronObservation",
     "NeuronType",
     "NEURON_TYPE_ALIASES",
     "NEURON_STEP_REGISTRY",

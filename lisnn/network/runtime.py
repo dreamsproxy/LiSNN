@@ -26,6 +26,7 @@ class TickResult:
     total_current_pA: np.ndarray
     voltage_before_mV: np.ndarray
     voltage_mV: np.ndarray
+    plasticity_voltage_mV: np.ndarray
     izhikevich_indices: np.ndarray
     izhikevich_before: dict
     izhikevich_after: dict
@@ -117,6 +118,7 @@ class FixedWeightRuntime:
             # Integrate a working copy so later-slice failures cannot half-step state.
             working = self.pool.copy()
             current = np.zeros(self.population_size, dtype=np.float32)
+            plasticity_voltage = np.zeros(self.population_size, dtype=np.float32)
             izh_before, izh_after = {}, {}
             izh_indices = np.empty(0, dtype=np.int32)
             for model, section in self._slices:
@@ -127,8 +129,11 @@ class FixedWeightRuntime:
                     kernel_input = current_to_izhikevich(kernel_input, working[section, k.C_M])
                     # Expose the round-trip input in pA, not an unlabelled native value.
                     izh_before['input_current_pA'] = izhikevich_to_current(kernel_input, working[section, k.C_M])
-                emitted = get_step_function(model)(working[section], kernel_input, dt)
-                current[section] = binary_spikes(emitted, section.stop - section.start)
+                observation = get_step_function(model)(
+                    working[section], kernel_input, dt, return_observation=True,
+                )
+                current[section] = binary_spikes(observation.spikes, section.stop - section.start)
+                plasticity_voltage[section] = observation.plasticity_voltage_mV
                 if model == NeuronType.IZHIKEVICH:
                     izh_after = observe_izhikevich(working[section])
             if not np.all(np.isfinite(working)):
@@ -136,6 +141,7 @@ class FixedWeightRuntime:
         result = TickResult(
             self.tick, self.time_ms, float(dt), previous, current.copy(), propagation,
             external, feedback, total, self.pool[:, k.V].copy(), working[:, k.V].copy(),
+            plasticity_voltage.copy(),
             izh_indices, izh_before, izh_after,
         )
         self.pool[...] = working

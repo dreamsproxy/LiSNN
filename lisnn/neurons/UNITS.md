@@ -96,8 +96,14 @@ The existing refractory convention is retained: a neuron refractory at interval
 start stays refractory throughout that call, even if its timer reaches zero.
 Its next call may integrate voltage. Auxiliary-state evolution and reset rules
 remain model-specific. Kernels mutate the supplied population in place and
-return a new float32 `(N,)` vector of 0/1 spike events. They do not own a global
-clock or expose a new pre-reset observation API.
+return a new float32 `(N,)` vector of 0/1 spike events by default. With
+`return_observation=True`, each kernel returns independent float32 spike and
+`plasticity_voltage_mV` vectors. The latter is the integrated candidate before
+spike reset; a refractory cell reports the voltage actually retained or reset
+in that interval. GLIF spike resets may use the beginning-of-tick voltage,
+which differs from this integrated observation. Izhikevich's candidate is
+reported in mV; its input stays native-scale at the direct kernel boundary.
+Kernels do not own a global clock.
 
 Finite positive `dt` validates the argument, not numerical stability. Model
 parameters must be suitable for the chosen experiment; no new parameter
@@ -139,5 +145,6 @@ python -m pytest -q
 Issue #18 now defines fixed integrated impulses, positive synaptic effects,
 one-tick causal scheduling, channel ownership and feedback queues in the
 [propagation/runtime contract](../synapses/PROPAGATION.md). Weights remain
-unsigned efficacy, not pA. Receptor polarity, learning-rule ordering and
-pre-reset plasticity observations remain future work.
+unsigned efficacy, not pA. Receptor polarity and learning-rule ordering remain
+future work. Pre-reset plasticity observations are available from kernels and
+`FixedWeightRuntime`; `lisnn.plasticity.PlasticityTraces` holds decaying traces.
