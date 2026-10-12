@@ -64,3 +64,32 @@ an owned edge snapshot for a later propagation tick; `FixedWeightRuntime`
 still takes a fixed snapshot and does not integrate this learner until #23.
 Run `python debug.py --only pair_stdp` for the hand-checkable three-cell
 trajectory.
+
+## Triplet STDP reference rule
+
+`TripletSTDP` follows Pfister and Gerstner,
+[Triplets of Spikes in a Model of Spike Timing-Dependent Plasticity (2006)](https://www.jneurosci.org/content/26/38/9673),
+full four-trace, all-to-all formulation. At each interval, decay the existing
+fast pre trace `r1` by `tau_plus_ms`, fast post trace `o1` by `tau_minus_ms`,
+slow pre trace `r2` by `tau_x_ms`, and slow post trace `o2` by `tau_y_ms`.
+For each edge `i -> j`, after decay and before adding the current events:
+
+```text
+pair LTP     =  a2_plus  * r1[i] * post[j]
+pair LTD     = -a2_minus * o1[j] * pre[i]
+triplet LTP  =  a3_plus  * r1[i] * o2[j] * post[j]
+triplet LTD  = -a3_minus * o1[j] * r2[i] * pre[i]
+w' = clip(w + all four components, 0, w_max)
+```
+
+Then add current pre spikes to `r1,r2` and current post spikes to `o1,o2`.
+An initial simultaneous pre/post pair contributes zero; earlier events can
+still affect both updates on a later simultaneous tick. All four amplitudes
+are nonnegative efficacy increments, and all time constants are positive ms.
+The rule keeps the four components inspectable and is not combined with
+`PairSTDP` or a voltage rule. `a3_plus=a3_minus=0` reduces it to the Pair rule
+when pair amplitudes and fast time constants match. A pre-post-post sequence
+adds triplet LTP on the second post; post-pre-pre adds triplet LTD on the second
+pre. A pre-pre-post sequence adds two pair LTP terms, but no false triplet
+component without earlier post history. `current_edges()` returns an owned
+snapshot to feed into later propagation.
