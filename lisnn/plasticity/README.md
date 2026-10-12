@@ -30,3 +30,37 @@ returned snapshots, readback history, and inputs cannot mutate stored state.
 Run `python debug.py --only plasticity_observation` for the independent smoke
 check. The rule-specific old/new ordering and weight-update schedule belong
 to subsequent learner implementations.
+
+## Pair STDP reference rule
+
+`PairSTDP` implements the additive, all-to-all pair rule in Gerstner et al.,
+[Neuronal Dynamics, section 19.2.2, equations 19.10–19.14](https://neuronaldynamics.epfl.ch/online/Ch19.S2.html).
+It is a control learner, independent of the future voltage primary rule. For
+edge `i -> j`, a pre event leaves trace `x_i`, a post event leaves trace `y_j`:
+
+```text
+x_old' = exp(-dt/tau_plus_ms) * x_old
+y_old' = exp(-dt/tau_minus_ms) * y_old
+LTP_ij = a_plus * x_old'[i] * post[j]
+LTD_ij = -a_minus * y_old'[j] * pre[i]
+w_ij' = clip(w_ij + LTP_ij + LTD_ij, 0, w_max)
+x_new = x_old' + pre; y_new = y_old' + post
+```
+
+All spikes observed within one tick share its ending time. Traces decay over
+the interval before that tick's events are matched; simultaneous events do
+not pair with each other. Each pre/post event can pair with all earlier
+opposite-cell events. `a_plus` and `a_minus` are positive efficacy increments
+per isolated pair, `tau_*` and `dt` are in ms, weights remain unsigned and
+dimensionless. There is no factor of `dt` multiplying discrete spike updates;
+the elapsed time appears in the exponential. Finite exponential tails are
+retained: an isolated pair at a 200 ms separation with 10 ms tau changes
+weight by less than `1e-7` for amplitude `0.1` (float32 may round that change
+to zero). Weights saturate at hard bounds after the combined LTP/LTD event.
+
+Call `PairSTDP.step(spikes, dt_ms)` independently to inspect per-edge LTP,
+LTD, applied bounded change and before/after weights. `current_edges()` gives
+an owned edge snapshot for a later propagation tick; `FixedWeightRuntime`
+still takes a fixed snapshot and does not integrate this learner until #23.
+Run `python debug.py --only pair_stdp` for the hand-checkable three-cell
+trajectory.
