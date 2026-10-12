@@ -88,3 +88,15 @@ def test_two_edge_toy_sequence_is_deterministic_and_independent():
         out = [rule.step(events, 1) for rule in runs]
         np.testing.assert_array_equal(out[0].weights_after, out[1].weights_after)
     assert runs[0].weights[1] > runs[0].weights[0] > 0.5
+
+
+def test_reassigned_edges_are_normalized_and_owned():
+    edges = create_synapses(2, [0], [1], [0.5])
+    edges.pre_idx, edges.post_idx, edges.weight = [0], [1], [0.5]
+    rule = PairSTDP(edges, tau_plus_ms=10, tau_minus_ms=10,
+                    a_plus=0.1, a_minus=0.1, w_max=1)
+    edges.weight[0] = 0
+    assert rule.weights.dtype == np.float32
+    np.testing.assert_array_equal(rule.weights, [0.5])
+    rule.step([1, 0], 1)
+    assert rule.step([0, 1], 1).weights_after[0] > 0.5

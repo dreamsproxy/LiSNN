@@ -64,12 +64,14 @@ class PlasticityTraces:
         dt = scalar32("dt_ms", dt_ms, positive=True)
         events = binary_spikes(spikes, self.population_size)
         voltage = vector32("plasticity_voltage_mV", plasticity_voltage_mV, self.population_size)
-        spike_decay = np.float32(np.exp(-np.float64(dt) / self.tau_spike_ms))
-        voltage_decay = np.float32(np.exp(-np.float64(dt) / self.tau_voltage_ms))
+        spike_decay = np.exp(-np.float64(dt) / self.tau_spike_ms)
+        voltage_rate = -np.float64(dt) / self.tau_voltage_ms
+        voltage_decay = np.exp(voltage_rate)
+        voltage_gain = -np.expm1(voltage_rate)
         with np.errstate(over="raise", invalid="raise"):
             new_spike = np.float32(spike_decay * self._spike_trace + events)
             new_voltage = np.float32(voltage_decay * self._voltage_trace +
-                                     (np.float32(1) - voltage_decay) * voltage)
+                                     voltage_gain * voltage)
         if not np.all(np.isfinite(new_spike)) or not np.all(np.isfinite(new_voltage)):
             raise FloatingPointError("trace update produced non-finite values")
         new_time = self.time_ms + float(dt)
