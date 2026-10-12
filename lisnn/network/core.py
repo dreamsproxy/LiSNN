@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from collections import OrderedDict
 from copy import deepcopy
+from uuid import uuid4
 
 import numpy as np
 from numpy.typing import NDArray
@@ -140,6 +141,8 @@ class SNN:
                 params.setdefault("initial_voltage_mV", fixed.pool[:, nm.V].copy())
             factory = {"pair": PairSTDP, "triplet": TripletSTDP, "voltage": VoltageSTDP}[plasticity]
             runtime = AdaptiveRuntime(fixed, factory(fixed._edges, **params))
+        # Copies retain lineage; reconfiguration or unrelated networks do not.
+        runtime._snapshot_lineage = uuid4().hex
         self._runtime = runtime
         self._initial_runtime = deepcopy(runtime)
         return self
@@ -163,6 +166,8 @@ class SNN:
             raise ValueError("snapshot must match a configured runtime type")
         if snapshot.population_size != self.population_size:
             raise ValueError("snapshot population size must match")
+        if getattr(snapshot, "_snapshot_lineage", None) != self._runtime._snapshot_lineage:
+            raise ValueError("snapshot must originate from this runtime configuration")
         self._runtime = deepcopy(snapshot)
 
     def reset_runtime(self):
