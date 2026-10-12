@@ -35,6 +35,7 @@ dependency is needed: smoke implementations use NumPy and the standard library.
 | `stream_runtime` | `stream_runtime_smoke_test` | External frame delivery, feedback after observation and source logging |
 | `regimes` | `regime_smoke_test` | ACTIVE/SLEEP transitions, external gain and future internal pulse |
 | `replay` | `replay_smoke_test` | Known bounded auditory/visual stimulation through distinct internal path |
+| `controlled_cycle` | `cycle_smoke_test` | Four branches from a shared snapshot, matched replay budget and negative controls |
 
 ```python
 from lisnn.debugging import units_smoke_test, run_all_smoke_tests

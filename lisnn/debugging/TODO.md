@@ -11,4 +11,5 @@
 - Completed #71: external stream routing and future feedback smoke suite.
 - Completed #75: ACTIVE/SLEEP regime and pulse smoke suite.
 - Completed #76: bounded literal auditory/visual replay smoke suite.
+- Completed #69: controlled state-cycle exit smoke suite.
 - Keep each debugger independently callable and keep pytest regression wrappers small.

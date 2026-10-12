@@ -23,6 +23,7 @@ from lisnn.debugging.io_smoke import io_smoke_test
 from lisnn.debugging.stream_runtime_smoke import stream_runtime_smoke_test
 from lisnn.debugging.regime_smoke import regime_smoke_test
 from lisnn.debugging.replay_smoke import replay_smoke_test
+from lisnn.debugging.cycle_smoke import cycle_smoke_test
 
 
 def _population(log_dir, verbose):
@@ -54,6 +55,7 @@ SMOKE_TESTS = {
     "stream_runtime": _suite(stream_runtime_smoke_test),
     "regimes": _suite(regime_smoke_test),
     "replay": _suite(replay_smoke_test),
+    "controlled_cycle": _suite(cycle_smoke_test),
 }
 
 
