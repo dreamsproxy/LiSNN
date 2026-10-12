@@ -3,7 +3,7 @@
 `StreamFrame` declares `source` (`EXTERNAL` or `INTERNAL`), `kind`
 (`CONTINUOUS`, `EVENT`, or `MODULATORY`), free-form explicit `modality`,
 channel/time axes, timestamp in ms, optional sample period, and mapping
-provenance. Its float32 values have a declared channel axis. A two-dimensional
+provenance. Timestamps and sample periods retain float64 precision. Its float32 values have a declared channel axis. A two-dimensional
 frame must declare `("time", "channel")` or `("channel", "time")` and a sample
 period; `.sample(index)` selects one sample and preserves source, modality,
 provenance, and its computed timestamp. It rejects negative/out-of-range
@@ -13,7 +13,8 @@ destination and effect; neither is inferred from value shape.
 
 `InterfacePort` references ordinary neuron indices with an explicit source,
 input/readout role, optional biological identity, and currently one-to-one
-channel mapping. Roles can overlap in membership. Its capacity check reports
+channel mapping. Roles can overlap in membership. Transducers require input/overlap roles;
+probes require readout/overlap roles. Its capacity check reports
 required/available channels, input structure, mapping policy and an explicit
 remedy; no channels are truncated, wrapped, resized, or compressed.
 `Transducer.to_current(frame)` maps a single sample into a float32 population
@@ -42,7 +43,7 @@ to accept direct per-neuron pA vectors without using this package. Run
 
 `StreamRuntime(configured_snn, transducers={port_name: Transducer(port), ...})`
 maps declared sample timestamps to the configured `dt` on an exact-tick grid
-(within float32 representation tolerance). Off-grid timestamps require
+(within representation tolerance, capped at 0.001 tick). Off-grid timestamps require
 experiment-side resampling; no implicit floor, nearest-sample choice, or
 interpolation happens. `schedule_frame` maps a one-sample frame or validates
 and schedules each sample of a time-series frame atomically, with declared
@@ -61,7 +62,7 @@ contingent success stimulation, seeded unpredictable error/no-response
 perturbation, no-feedback control, random independent success selection,
 predeclared yoked currents and inverted contingency. Its `schedule` method
 uses `StreamRuntime.schedule_feedback` and requires a delay of at least one
-tick from the observed outcome. An outcome is an experiment-defined boolean;
+tick from an already executed observed outcome. An outcome is an experiment-defined boolean;
 there is no task target/error in the neuron, synapse, or learner. Pass a
 separate internal port even when its neuron membership overlaps an external
 sensory port. A snapshot copies network state, queue and delivery logs;
@@ -115,7 +116,10 @@ Ordered and seeded shuffled schedules can use the same event count, timing
 slots, duration and gain budgets. Limits cover `max_repeats`, `max_events`,
 `max_duration_ticks`, `max_gain` and the underlying queue capacity. Invalid
 plans leave queue and RNG state unchanged. A pending ACTIVE transition cannot
-be crossed by a replay schedule. Individual delivery logs preserve the
+be crossed by a replay schedule; delivery rechecks SLEEP if transitions change
+after scheduling. Shuffled replay excludes the identity permutation, requires
+at least two entries, and preserves budgets; identical payloads can still yield
+an ineffective order contrast. Individual delivery logs preserve the
 `literal_replay:<original-port>:tick=<original-tick>` provenance.
 
 `python -m examples.internal_replay` demonstrates an auditory and a visual

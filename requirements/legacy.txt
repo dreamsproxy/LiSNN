@@ -1,0 +1,17 @@
+vispy
+librosa
+matplotlib
+mpmath
+nest-asyncio
+networkx
+numpy
+opencv-python
+opencv-contrib-python
+pandas
+plotly
+pyaudio
+pyflowchart
+scipy
+scikit-learn
+setuptools
+setuptools_scm

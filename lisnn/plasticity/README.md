@@ -28,14 +28,14 @@ retain snapshots within an elapsed-time horizon and a hard sample count. The
 returned snapshots, readback history, and inputs cannot mutate stored state.
 
 Run `python debug.py --only plasticity_observation` for the independent smoke
-check. The rule-specific old/new ordering and weight-update schedule belong
-to subsequent learner implementations.
+check. Rule-specific old/new ordering and weight timing are specified below and in
+[the shared tick contract](../../docs/TIMESTEP.md).
 
 ## Pair STDP reference rule
 
 `PairSTDP` implements the additive, all-to-all pair rule in Gerstner et al.,
 [Neuronal Dynamics, section 19.2.2, equations 19.10–19.14](https://neuronaldynamics.epfl.ch/online/Ch19.S2.html).
-It is a control learner, independent of the future voltage primary rule. For
+It is a control learner, independent of the voltage primary rule. For
 edge `i -> j`, a pre event leaves trace `x_i`, a post event leaves trace `y_j`:
 
 ```text
@@ -61,7 +61,8 @@ to zero). Weights saturate at hard bounds after the combined LTP/LTD event.
 Call `PairSTDP.step(spikes, dt_ms)` independently to inspect per-edge LTP,
 LTD, applied bounded change and before/after weights. `current_edges()` gives
 an owned edge snapshot for a later propagation tick; `FixedWeightRuntime`
-still takes a fixed snapshot and does not integrate this learner until #23.
+takes a fixed snapshot; `SNN.configure_runtime(plasticity="pair", ...)`
+composes this learner through `AdaptiveRuntime`.
 Run `python debug.py --only pair_stdp` for the hand-checkable three-cell
 trajectory.
 
@@ -145,7 +146,7 @@ each neuron family, emits spike and pre-reset mV snapshots, then applies only
 the selected learner. Updated efficacy becomes available to propagation on
 the next tick. The `"off"` selection keeps `FixedWeightRuntime` unchanged.
 Inputs are a scalar or float32-compatible per-cell pA vector; generic stream
-ports belong to #61.
+ports are available through `lisnn.io`.
 
 `TickResult` exposes all current channels, both voltage observations and
 spikes. A learned tick also exposes `plasticity_update` (per-edge components),
@@ -153,7 +154,7 @@ spikes. A learned tick also exposes `plasticity_update` (per-edge components),
 additional fields are `None` and `SNN.runtime.weights` returns the fixed edge
 snapshot. `snapshot_runtime()` gives an independent copy of neuron/edge state,
 clock, traces and queued feedback; `restore_runtime(snapshot)` restores a
-matching copy; `reset_runtime()` restores the original configuration snapshot.
+copy from the same configuration lineage (including deep-copied experiment arms); `reset_runtime()` restores the original configuration snapshot.
 Failed integration or learning leaves the adaptive runtime unadvanced.
 
 `python -m examples.recurrent_learning` compares trained and disabled

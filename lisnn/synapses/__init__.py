@@ -2,6 +2,7 @@
 
 from lisnn.synapses.core import (
     SynapseEdges,
+    topology_validation,
     SynapseIndexArray,
     SynapseWeightArray,
     WeightSpec,
@@ -15,6 +16,7 @@ __all__ = [
     "propagate",
     "PropagationResult",
 
+    "topology_validation",
     "SynapseEdges",
     "SynapseIndexArray",
     "SynapseWeightArray",

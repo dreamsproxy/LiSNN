@@ -2,8 +2,10 @@
 
 This file preserves the long-range spatial/biophysical development horizon so
 work can resume without reconstructing the architecture from chat history.
+These local stages are independent of project Phases P1-P3 in issue #62.
+The completed spatial shell belongs to P1; later biophysics belongs to P2.
 
-## Phase 1 - Spatial shell
+## Stage 1 - Spatial shell
 
 - [x] First-class `SpatialVolume`.
 - [x] Micrometre coordinate convention.
@@ -15,7 +17,7 @@ work can resume without reconstructing the architecture from chat history.
 - [x] Reserve morphology array interface.
 - [ ] Add spatial debug/visualization helper when needed.
 
-## Phase 2 - Morphology and physical wiring
+## Stage 2 - Morphology and physical wiring
 
 - [ ] Define soma radius/volume representation.
 - [ ] Generate/import dendritic trees.
@@ -29,7 +31,7 @@ work can resume without reconstructing the architecture from chat history.
 - [ ] Separate grey-matter and white-matter spatial regions.
 - [ ] Preserve support for imported biological morphologies.
 
-## Phase 3 - Tissue and probe geometry
+## Stage 3 - Tissue and probe geometry
 
 - [ ] Define tissue-region masks/material properties.
 - [ ] Add extracellular-space volume fraction and tortuosity fields.
@@ -40,7 +42,7 @@ work can resume without reconstructing the architecture from chat history.
       source assumptions are explicit.
 - [ ] Support virtual probe placement at arbitrary coordinates.
 
-## Phase 4 - Extracellular ionic fields
+## Stage 4 - Extracellular ionic fields
 
 - [ ] Define voxel/adaptive-grid field API with explicit physical units.
 - [ ] Add extracellular Ca2+ concentration field.
@@ -54,7 +56,7 @@ work can resume without reconstructing the architecture from chat history.
 - [ ] Validate conservation and numerical stability independently from SNN
       learning experiments.
 
-## Phase 4/5 - Free neurotransmitters and other extracellular substances
+## Stage 4/5 - Free neurotransmitters and other extracellular substances
 
 - [ ] Generalize extracellular fields to arbitrary chemical species.
 - [ ] Add free neurotransmitter species only after release, uptake, degradation,
@@ -66,7 +68,7 @@ work can resume without reconstructing the architecture from chat history.
       species.
 - [ ] Couple synaptic terminal geometry to local release sites.
 
-## Phase 5+ - Clearance, metabolism, and state cycles
+## Stage 5+ - Clearance, metabolism, and state cycles
 
 - [ ] Add interstitial/CSF transport geometry.
 - [ ] Add macromolecular/interstitial solute fields such as tau only as separate

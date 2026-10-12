@@ -1,8 +1,8 @@
 """Core LiSNN network container.
 
-This module currently owns neuron-population construction and optional spatial
-placement. Fixed-weight stepping is composed separately in `runtime.py`;
-connectivity belongs to `lisnn.synapses`, and plasticity remains future work.
+This module owns population construction, optional spatial placement and runtime
+composition. Fixed/adaptive stepping lives in `runtime.py`; connectivity and
+independent local learning rules belong to their respective packages.
 """
 
 from __future__ import annotations

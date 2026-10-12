@@ -1,0 +1,3 @@
+# Optional experiment-side plotting; not needed for stepping or smoke tests.
+matplotlib
+plotly
