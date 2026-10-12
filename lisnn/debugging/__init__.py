@@ -9,6 +9,7 @@ from lisnn.debugging.pair_smoke import pair_smoke_test
 from lisnn.debugging.triplet_smoke import triplet_smoke_test
 from lisnn.debugging.voltage_smoke import voltage_smoke_test
 from lisnn.debugging.recurrent_smoke import recurrent_smoke_test
+from lisnn.debugging.io_smoke import io_smoke_test
 from lisnn.debugging.runner import run_all_smoke_tests
 
 __all__ = [
@@ -24,5 +25,6 @@ __all__ = [
     "triplet_smoke_test",
     "voltage_smoke_test",
     "recurrent_smoke_test",
+    "io_smoke_test",
     "run_all_smoke_tests",
 ]

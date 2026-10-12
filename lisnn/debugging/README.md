@@ -31,6 +31,7 @@ dependency is needed: smoke implementations use NumPy and the standard library.
 | `triplet_stdp` | `triplet_smoke_test` | Hand-checkable pre-post-post sequence and isolated higher-order potentiation |
 | `voltage_stdp` | `voltage_smoke_test` | Independent rectified LTP/LTD gates and nonspiking depolarization |
 | `recurrent_learning` | `recurrent_smoke_test` | Causal learner dispatch and next-tick changed synaptic current |
+| `io_contracts` | `io_smoke_test` | Explicit time/channel mapping, capacity error and internal queue causality |
 
 ```python
 from lisnn.debugging import units_smoke_test, run_all_smoke_tests
