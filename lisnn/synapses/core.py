@@ -22,6 +22,27 @@ SynapseWeightArray: TypeAlias = NDArray[np.float32]
 WeightSpec: TypeAlias = float | np.float32 | ArrayLike
 
 
+def _has_duplicate_edges(pre, post, population):
+    """Check validated indices without reordering the caller's edge arrays.
+
+    Canonical generated topologies are lexicographically ordered: adjacent
+    strict ordering proves uniqueness in linear time without an int64 key
+    array. Arbitrary input order falls back to sorting owned int64 keys.
+    There is no cache: mutable public edge containers are checked each time.
+    """
+    if pre.size < 2:
+        return False
+    increasing = (pre[1:] > pre[:-1]) | (
+        (pre[1:] == pre[:-1]) & (post[1:] > post[:-1]))
+    if np.all(increasing):
+        return False
+    # N and indices are int32-bounded, so N*N remains within signed int64.
+    keys = np.multiply(pre, np.int64(population), dtype=np.int64)
+    keys += post
+    keys.sort()
+    return bool(np.any(keys[1:] == keys[:-1]))
+
+
 def _validate_population(population: int) -> int:
     if not isinstance(population, (int, np.integer)):
         raise TypeError("population must be an integer")
@@ -117,13 +138,7 @@ class SynapseEdges:
             raise ValueError("autapses are disabled; set allow_self=True to permit them")
 
         if not self.allow_duplicates:
-            # int64 key prevents multiplication overflow for the supported
-            # int32 population/index range.
-            edge_keys = (
-                self.pre_idx.astype(np.int64) * np.int64(self.population_size)
-                + self.post_idx.astype(np.int64)
-            )
-            if np.unique(edge_keys).size != edge_keys.size:
+            if _has_duplicate_edges(self.pre_idx, self.post_idx, self.population_size):
                 raise ValueError(
                     "duplicate ordered synaptic edges are disabled; "
                     "set allow_duplicates=True to permit multiple contacts"
