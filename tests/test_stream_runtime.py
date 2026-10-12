@@ -77,6 +77,8 @@ def test_feedback_future_tick_log_and_replay_determinism():
 
 def test_control_modes_random_yoked_inverted_none():
     a, b = setup(), setup()
+    a.step()
+    b.step()
     for mode in ("random", "inverted"):
         policy_a = FeedbackPolicy(mode=mode, port_name="feedback", success_pA=50, error_pA=100, seed=13)
         policy_b = FeedbackPolicy(mode=mode, port_name="feedback", success_pA=50, error_pA=100, seed=13)
@@ -99,3 +101,20 @@ def test_failed_neuron_step_preserves_scheduled_input():
         routed.step([np.nan, 0, 0, 0])
     assert len(routed.scheduler._frames[0]) == 1
     np.testing.assert_array_equal(routed.step().neural.external_current_pA, [1, 2, 0, 0])
+
+
+def test_feedback_requires_executed_observation_and_handles_later_fractional_ticks():
+    routed = setup()
+    routed.network.configure_runtime(create_synapses(4, [], []), dt=0.1, impulse_scale=100)
+    with pytest.raises(ValueError, match="executed observation"):
+        routed.schedule_feedback(0, [1, 2], port_name="feedback", delivery_tick=1, mode="test")
+    assert not routed.scheduler._frames
+    for _ in range(641):
+        routed.step()
+    routed.schedule_feedback(640, [1, 2], port_name="feedback", delivery_tick=641, mode="test")
+    np.testing.assert_array_equal(routed.step().neural.feedback_current_pA, [1, 2, 0, 0])
+    assert routed.timestamp_to_tick(np.float32(64.1)) == 641
+    with pytest.raises(ValueError, match="does not align"):
+        routed.timestamp_to_tick(64.15)
+    with pytest.raises(ValueError, match="executed observation"):
+        routed.schedule_feedback(routed.tick, [1, 2], port_name="feedback", delivery_tick=routed.tick+1, mode="test")

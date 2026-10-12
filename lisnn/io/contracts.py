@@ -9,6 +9,17 @@ import numpy as np
 from lisnn.validation import scalar32, vector32
 
 
+def _time_ms(name, value, *, positive=False):
+    """Clock metadata uses float64; current and neural state remain float32."""
+    raw = np.asarray(value)
+    if raw.ndim != 0 or raw.dtype.kind not in "iuf":
+        raise ValueError(f"{name} must be a finite real scalar")
+    result = float(raw)
+    if not np.isfinite(result) or result < 0 or (positive and result == 0):
+        raise ValueError(f"{name} must be finite and {'positive' if positive else 'nonnegative'}")
+    return result
+
+
 class CapacityError(ValueError):
     """Declared channels cannot be mapped to the available neuron indices."""
 
@@ -51,9 +62,9 @@ class StreamFrame:
             raise ValueError("2D frames require explicit time and channel axes")
         if (raw.ndim == 2) != (self.sample_period_ms is not None):
             raise ValueError("sample_period_ms is required exactly for time-series frames")
-        timestamp = scalar32("timestamp_ms", self.timestamp_ms, nonnegative=True)
+        timestamp = _time_ms("timestamp_ms", self.timestamp_ms)
         if self.sample_period_ms is not None:
-            object.__setattr__(self, "sample_period_ms", scalar32("sample_period_ms", self.sample_period_ms, positive=True))
+            object.__setattr__(self, "sample_period_ms", _time_ms("sample_period_ms", self.sample_period_ms, positive=True))
         if self.kind == "MODULATORY":
             if not self.destination or not self.effect:
                 raise ValueError("modulatory frames require destination and permitted effect")
@@ -151,6 +162,8 @@ class Transducer:
     def __init__(self, port, *, event_amplitude_pA=None):
         if not isinstance(port, InterfacePort):
             raise TypeError("port must be an InterfacePort")
+        if port.role not in ("input", "overlap"):
+            raise ValueError("transducer requires an input or overlap port")
         self.port = port
         self.event_amplitude_pA = None if event_amplitude_pA is None else scalar32("event_amplitude_pA", event_amplitude_pA)
 
@@ -205,6 +218,8 @@ class Probe:
     def __init__(self, port):
         if not isinstance(port, InterfacePort):
             raise TypeError("port must be an InterfacePort")
+        if port.role not in ("readout", "overlap"):
+            raise ValueError("probe requires a readout or overlap port")
         self.port = port
 
     def capture(self, tick_result):

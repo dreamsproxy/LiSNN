@@ -99,3 +99,21 @@ def test_unconfigured_and_invalid_selector():
     with pytest.raises(ValueError):
         model.configure_runtime(create_synapses(2, [0], [1]), dt=0.1,
                                 impulse_scale=100, plasticity="all")
+
+
+def test_restore_rejects_foreign_or_reconfigured_runtime_and_accepts_forks():
+    from copy import deepcopy
+    a, b = setup("pair", PAIR), setup("triplet", TRIPLET)
+    saved = a.snapshot_runtime()
+    before = b.runtime.pool.copy()
+    with pytest.raises(ValueError, match="originate"):
+        b.restore_runtime(saved)
+    np.testing.assert_array_equal(b.runtime.pool, before)
+    fork = deepcopy(a)
+    fork.step()
+    fork.restore_runtime(saved)
+    assert fork.runtime.tick == 0
+    a.configure_runtime(create_synapses(2, [1], [0], [0.5]), dt=1,
+                        impulse_scale=20, plasticity="pair", plasticity_params=PAIR)
+    with pytest.raises(ValueError, match="originate"):
+        a.restore_runtime(saved)

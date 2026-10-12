@@ -45,3 +45,12 @@ def test_current_is_accepted_by_neural_runtime_without_frame_scheduler():
     np.testing.assert_array_equal(first.external_current_pA, current)
     np.testing.assert_array_equal(second.external_current_pA, current)
     assert first.time_ms == 0 and second.time_ms == 1
+
+
+@pytest.mark.parametrize("seed", [0, 1, 9])
+def test_single_neuron_medium_keeps_ascii_amplitude_distinctions(seed):
+    medium = CharacterMedium(InterfacePort("text", 1, [0], source="EXTERNAL"),
+                              seed=seed, max_abs_current_pA=20)
+    currents = np.array([medium.current_for_id(i)[0] for i in range(128)])
+    assert len(np.unique(currents)) == 128
+    assert np.max(np.abs(currents)) <= 20
