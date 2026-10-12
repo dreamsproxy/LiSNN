@@ -3308,6 +3308,8 @@ def step(
     neurons,
     input_current,
     dt,
+    *,
+    return_observation=False,
 ):
     """
     Generic dispatcher.
@@ -3356,4 +3358,5 @@ def step(
         neurons,
         input_current,
         dt,
+        return_observation=return_observation,
     )
