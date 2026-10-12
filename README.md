@@ -66,6 +66,11 @@ lisnn/
 Root `main.py` demonstrates construction; root `debug.py` runs every active
 smoke test. Implementation and import APIs live under `lisnn/`.
 
+An initial synthetic text medium lives in `lisnn/media/`. It maps 7-bit ASCII
+character IDs through fixed seeded embeddings into bounded pA currents on an
+explicit input port. Presentation timing remains an experiment decision; see
+`python -m examples.character_input` and `lisnn/media/README.md`.
+
 ## Network construction
 
 ```python
