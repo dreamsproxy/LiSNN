@@ -11,6 +11,9 @@ separate later modules.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from contextlib import contextmanager
+from contextvars import ContextVar
+import os
 from typing import TypeAlias
 
 import numpy as np
@@ -22,7 +25,42 @@ SynapseWeightArray: TypeAlias = NDArray[np.float32]
 WeightSpec: TypeAlias = float | np.float32 | ArrayLike
 
 
+_VALIDATION_BACKENDS = ("optimized", "reference")
+_default_backend = os.environ.get("LISNN_TOPOLOGY_VALIDATION", "optimized")
+if _default_backend not in _VALIDATION_BACKENDS:
+    raise ValueError("LISNN_TOPOLOGY_VALIDATION must be optimized or reference")
+_validation_backend = ContextVar("lisnn_topology_validation", default=_default_backend)
+
+
+@contextmanager
+def topology_validation(backend):
+    """Select the NumPy duplicate-check implementation in this context.
+
+    Both backends validate every public topology and preserve synapse order.
+    The reference is the original NumPy unique formulation, useful for debugging.
+    Nested calls restore the previous mode, including on failure.
+    """
+    if backend not in _VALIDATION_BACKENDS:
+        raise ValueError("topology validation backend must be optimized or reference")
+    token = _validation_backend.set(backend)
+    try:
+        yield
+    finally:
+        _validation_backend.reset(token)
+
+
+def _reference_duplicate_edges(pre, post, population):
+    keys = pre.astype(np.int64) * np.int64(population) + post.astype(np.int64)
+    return np.unique(keys).size != keys.size
+
+
 def _has_duplicate_edges(pre, post, population):
+    if _validation_backend.get() == "reference":
+        return _reference_duplicate_edges(pre, post, population)
+    return _optimized_duplicate_edges(pre, post, population)
+
+
+def _optimized_duplicate_edges(pre, post, population):
     """Check validated indices without reordering the caller's edge arrays.
 
     Canonical generated topologies are lexicographically ordered: adjacent
@@ -279,6 +317,7 @@ def create_fixed_out_degree(
 
 
 __all__ = [
+    "topology_validation",
     "SynapseEdges",
     "SynapseIndexArray",
     "SynapseWeightArray",

@@ -1,0 +1,5989 @@
+{
+  "schema": 1,
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "cpu_count": 9,
+    "thread_environment": {
+      "OMP_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null,
+      "MKL_NUM_THREADS": null
+    }
+  },
+  "source_sha256": "4551c97dd750320ed5acb60bb9e52e01b1e0d9ab788062459611adae84ef38b6",
+  "steps": 30,
+  "repeats": 3,
+  "warmup": 3,
+  "timing_enforced": false,
+  "max_slowdown": 1.5,
+  "bounded_state_prefilled": true,
+  "results": [
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "neurons",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "neurons",
+        "edges": 128,
+        "seconds_per_operation": [
+          2.9516100039472803e-05,
+          2.9210933401676206e-05,
+          2.868986666726414e-05
+        ],
+        "median_seconds": 2.9210933401676206e-05,
+        "initialization_seconds": [
+          0.011774531998526072,
+          0.000762788000429282,
+          0.00072930700116558
+        ],
+        "final_observation_sha256": "2a4f0ab38738d481660056169e332235acdef526014690fe461fcd6079d9966f",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9472,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 728,
+          "peak_bytes": 5224
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "neurons",
+        "edges": 128,
+        "seconds_per_operation": [
+          2.9060066663078032e-05,
+          3.0186433408137723e-05,
+          2.8623766653860608e-05
+        ],
+        "median_seconds": 2.9060066663078032e-05,
+        "initialization_seconds": [
+          0.0006456109986174852,
+          0.0006442689991672523,
+          0.0006314700003713369
+        ],
+        "final_observation_sha256": "2a4f0ab38738d481660056169e332235acdef526014690fe461fcd6079d9966f",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9472,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 728,
+          "peak_bytes": 5224
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0051915482626836,
+      "optimized_peak_limit_bytes": 72066.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "propagation",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "propagation",
+        "edges": 128,
+        "seconds_per_operation": [
+          6.536203327414113e-05,
+          5.772990007244516e-05,
+          6.204670001655662e-05
+        ],
+        "median_seconds": 6.204670001655662e-05,
+        "initialization_seconds": [
+          0.0008058329985942692,
+          0.00043201000153203495,
+          0.0004388609995658044
+        ],
+        "final_observation_sha256": "a33b19d352b2d82bd0d9490554281b4d490d78ebe7037a45b002f5c623b50910",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9472,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 1880,
+          "peak_bytes": 10776
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "propagation",
+        "edges": 128,
+        "seconds_per_operation": [
+          7.236460005515255e-05,
+          6.397326663621546e-05,
+          7.998336671638147e-05
+        ],
+        "median_seconds": 7.236460005515255e-05,
+        "initialization_seconds": [
+          0.0005600030017376412,
+          0.0005497469974216074,
+          0.0004832880003959872
+        ],
+        "final_observation_sha256": "a33b19d352b2d82bd0d9490554281b4d490d78ebe7037a45b002f5c623b50910",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9472,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 1880,
+          "peak_bytes": 10776
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.1662924867211744,
+      "optimized_peak_limit_bytes": 79006.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "pair",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "pair",
+        "edges": 128,
+        "seconds_per_operation": [
+          4.541066676514068e-05,
+          5.03668000116401e-05,
+          4.869430000932577e-05
+        ],
+        "median_seconds": 4.869430000932577e-05,
+        "initialization_seconds": [
+          0.0007817959995009005,
+          0.0012238620001880918,
+          0.0005408840006566606
+        ],
+        "final_observation_sha256": "4bceebc0c38325d6a6d4ae1e7802a54bf50db5da4cd4e21761d53632c3988205",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11264,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 5896,
+          "peak_bytes": 13336
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "pair",
+        "edges": 128,
+        "seconds_per_operation": [
+          5.1286199959577064e-05,
+          4.457709995525268e-05,
+          4.4033266628199876e-05
+        ],
+        "median_seconds": 4.457709995525268e-05,
+        "initialization_seconds": [
+          0.0005307890023686923,
+          0.0006181099997775164,
+          0.0006206239995663054
+        ],
+        "final_observation_sha256": "4bceebc0c38325d6a6d4ae1e7802a54bf50db5da4cd4e21761d53632c3988205",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11264,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 5896,
+          "peak_bytes": 13336
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0923613258423273,
+      "optimized_peak_limit_bytes": 82206.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "triplet",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "triplet",
+        "edges": 128,
+        "seconds_per_operation": [
+          7.829753327920722e-05,
+          6.41612333614224e-05,
+          6.937839995468191e-05
+        ],
+        "median_seconds": 6.937839995468191e-05,
+        "initialization_seconds": [
+          0.0006561879999935627,
+          0.000793253999290755,
+          0.0005026159997214563
+        ],
+        "final_observation_sha256": "2844e749e07d4d6533627cecd7c4fd2211a14859e6ce5766faec82edccaafa95",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11520,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 6824,
+          "peak_bytes": 18360
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "triplet",
+        "edges": 128,
+        "seconds_per_operation": [
+          5.343576667655725e-05,
+          6.967886656639166e-05,
+          5.920376667442421e-05
+        ],
+        "median_seconds": 5.920376667442421e-05,
+        "initialization_seconds": [
+          0.0007224180008051917,
+          0.0007061030009936076,
+          0.0006730630011588801
+        ],
+        "final_observation_sha256": "2844e749e07d4d6533627cecd7c4fd2211a14859e6ce5766faec82edccaafa95",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11520,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 6824,
+          "peak_bytes": 18360
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.8533458066645557,
+      "optimized_peak_limit_bytes": 88486.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "voltage",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "voltage",
+        "edges": 128,
+        "seconds_per_operation": [
+          7.314006664576785e-05,
+          6.077449991911029e-05,
+          7.20537666590341e-05
+        ],
+        "median_seconds": 7.20537666590341e-05,
+        "initialization_seconds": [
+          0.0007577100004709791,
+          0.0005910390027565882,
+          0.0005266430016490631
+        ],
+        "final_observation_sha256": "2734184eb1de625d0c9a255c5f940e8b40764e59625204b0cfabd5b36390a484",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11392,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 7208,
+          "peak_bytes": 16704
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "voltage",
+        "edges": 128,
+        "seconds_per_operation": [
+          6.749256657106647e-05,
+          6.308063323861764e-05,
+          5.826336673635524e-05
+        ],
+        "median_seconds": 6.308063323861764e-05,
+        "initialization_seconds": [
+          0.0006113599993113894,
+          0.000655225998343667,
+          0.0005170180011191405
+        ],
+        "final_observation_sha256": "2734184eb1de625d0c9a255c5f940e8b40764e59625204b0cfabd5b36390a484",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11392,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 7208,
+          "peak_bytes": 16704
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.1422486262379996,
+      "optimized_peak_limit_bytes": 86416.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "trace_history",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "trace_history",
+        "edges": 128,
+        "seconds_per_operation": [
+          4.067019993575135e-05,
+          4.920069998964512e-05,
+          3.551680007755446e-05
+        ],
+        "median_seconds": 4.067019993575135e-05,
+        "initialization_seconds": [
+          0.002171758998883888,
+          0.0018677309999475256,
+          0.0018252879999636207
+        ],
+        "final_observation_sha256": "12121c8c4d8f6771db4abfd4cfb354d133b03289acb3d0bf65240439c1de961e",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 26112,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 32544,
+          "peak_bytes": 34216
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "trace_history",
+        "edges": 128,
+        "seconds_per_operation": [
+          3.6737300009311485e-05,
+          3.791373334631013e-05,
+          3.6116033273477416e-05
+        ],
+        "median_seconds": 3.6737300009311485e-05,
+        "initialization_seconds": [
+          0.001773919997503981,
+          0.0016639440000290051,
+          0.001656512999034021
+        ],
+        "final_observation_sha256": "12121c8c4d8f6771db4abfd4cfb354d133b03289acb3d0bf65240439c1de961e",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 26112,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 32544,
+          "peak_bytes": 34216
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.903297747917324,
+      "optimized_peak_limit_bytes": 108306.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "transducer",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "transducer",
+        "edges": 128,
+        "seconds_per_operation": [
+          1.9596333004301415e-06,
+          1.9289000192657113e-06,
+          1.9376000030509507e-06
+        ],
+        "median_seconds": 1.9376000030509507e-06,
+        "initialization_seconds": [
+          0.0006473539979197085,
+          0.0005504879991349299,
+          0.0005372289997467306
+        ],
+        "final_observation_sha256": "64539a846f6fa2aed9b856e76060146762ea89f4f435c60e456a0b957f14b591",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9856,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 224,
+          "peak_bytes": 4152
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "transducer",
+        "edges": 128,
+        "seconds_per_operation": [
+          1.96196657877105e-06,
+          1.919900023494847e-06,
+          2.706066637377565e-06
+        ],
+        "median_seconds": 1.96196657877105e-06,
+        "initialization_seconds": [
+          0.0006828469995525666,
+          0.0005172090022824705,
+          0.00047748900033184327
+        ],
+        "final_observation_sha256": "64539a846f6fa2aed9b856e76060146762ea89f4f435c60e456a0b957f14b591",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9856,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 224,
+          "peak_bytes": 4152
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9875805347635624,
+      "optimized_peak_limit_bytes": 70726.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "probe",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "probe",
+        "edges": 128,
+        "seconds_per_operation": [
+          2.1631566657257887e-05,
+          2.131106666638516e-05,
+          2.1968066721456126e-05
+        ],
+        "median_seconds": 2.1631566657257887e-05,
+        "initialization_seconds": [
+          0.0021757040012744255,
+          0.00187971900231787,
+          0.0031968319999577943
+        ],
+        "final_observation_sha256": "76e0fe85f21a7ef76572bd9d46816659e454f30daaac79fe08a109ba08af39ae",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 36160,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 10224,
+          "peak_bytes": 19920
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "probe",
+        "edges": 128,
+        "seconds_per_operation": [
+          2.0424766747358567e-05,
+          2.1154166703733304e-05,
+          2.1683633409944984e-05
+        ],
+        "median_seconds": 2.1154166703733304e-05,
+        "initialization_seconds": [
+          0.002170126001146855,
+          0.0019484530021145474,
+          0.0018798499986587558
+        ],
+        "final_observation_sha256": "76e0fe85f21a7ef76572bd9d46816659e454f30daaac79fe08a109ba08af39ae",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 36160,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 10224,
+          "peak_bytes": 19920
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9779304032348297,
+      "optimized_peak_limit_bytes": 90436.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "fixed_tick",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "fixed_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0005297723999926044,
+          0.0005001511333830421,
+          0.0005048342000615473
+        ],
+        "median_seconds": 0.0005048342000615473,
+        "initialization_seconds": [
+          0.0011171920014021453,
+          0.002381695001531625,
+          0.0009379809998790734
+        ],
+        "final_observation_sha256": "1d17001f8eb7b49ac168d6f8e0822070582e5b1d57e02e3055d571b02ccf8292",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 24192,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 5888,
+          "peak_bytes": 21288
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "fixed_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0006119514332870797,
+          0.00042852866669515304,
+          0.0004507564666710095
+        ],
+        "median_seconds": 0.0004507564666710095,
+        "initialization_seconds": [
+          0.0009467849995417055,
+          0.0011114219996670727,
+          0.0008529929982614703
+        ],
+        "final_observation_sha256": "1d17001f8eb7b49ac168d6f8e0822070582e5b1d57e02e3055d571b02ccf8292",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 24192,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 5888,
+          "peak_bytes": 21288
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.1199710650629604,
+      "optimized_peak_limit_bytes": 92146.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "adaptive_tick",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "adaptive_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0006920035667765963,
+          0.000625626999923649,
+          0.00081976386657819
+        ],
+        "median_seconds": 0.0006920035667765963,
+        "initialization_seconds": [
+          0.001257783002074575,
+          0.0011242430009588134,
+          0.0011081080010626465
+        ],
+        "final_observation_sha256": "70c1015b249e481680cc5b58872fd22c7d9aeada4a4d7bff5582876e369270c5",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 28288,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 38212,
+          "peak_bytes": 66568
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "adaptive_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0006627799334334365,
+          0.0006513764000070902,
+          0.0006484373666656514
+        ],
+        "median_seconds": 0.0006513764000070902,
+        "initialization_seconds": [
+          0.0012309129997447599,
+          0.0011919339995074552,
+          0.0011803670022345614
+        ],
+        "final_observation_sha256": "70c1015b249e481680cc5b58872fd22c7d9aeada4a4d7bff5582876e369270c5",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 28288,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 37197,
+          "peak_bytes": 67268
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9412905240376861,
+      "optimized_peak_limit_bytes": 149621.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "routed_tick",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "routed_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0008260302999891186,
+          0.0007580266334116459,
+          0.0007557849000780455
+        ],
+        "median_seconds": 0.0007580266334116459,
+        "initialization_seconds": [
+          0.001436581998859765,
+          0.0013097720002406277,
+          0.0012087499999324791
+        ],
+        "final_observation_sha256": "1f5d192f77f74f0bcb64b0e15ac85ca1d3afacc1a9ac90345c9bfe4c82643eaf",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 32512,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 49669,
+          "peak_bytes": 81052
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "routed_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.000736007133309613,
+          0.0007266196666023461,
+          0.0007257830666882607
+        ],
+        "median_seconds": 0.0007266196666023461,
+        "initialization_seconds": [
+          0.001521649999631336,
+          0.0011752790014725178,
+          0.0011869959998875856
+        ],
+        "final_observation_sha256": "1f5d192f77f74f0bcb64b0e15ac85ca1d3afacc1a9ac90345c9bfe4c82643eaf",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 32512,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 40855,
+          "peak_bytes": 70523
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0432233921718055,
+      "optimized_peak_limit_bytes": 166851.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "regime_tick",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "regime_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.001200085299933562,
+          0.0011981704334175446,
+          0.001235210199956782
+        ],
+        "median_seconds": 0.001200085299933562,
+        "initialization_seconds": [
+          0.001414087997545721,
+          0.0012335560022620484,
+          0.0011567710025701672
+        ],
+        "final_observation_sha256": "b61b3fdd94ae5b91d418b05cf565e4ad586919d9cbfb6248dde1b028ddb2d171",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 32512,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 53029,
+          "peak_bytes": 138408
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "regime_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0013083709999288354,
+          0.0012391915332652084,
+          0.0012420101000316208
+        ],
+        "median_seconds": 0.0012420101000316208,
+        "initialization_seconds": [
+          0.0012988249982299749,
+          0.001261188997887075,
+          0.0012860860006185248
+        ],
+        "final_observation_sha256": "b61b3fdd94ae5b91d418b05cf565e4ad586919d9cbfb6248dde1b028ddb2d171",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 32512,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 53462,
+          "peak_bytes": 139709
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0349348501313864,
+      "optimized_peak_limit_bytes": 240172.25
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "replay_record",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_record",
+        "edges": 128,
+        "seconds_per_operation": [
+          3.09716334110514e-05,
+          2.847219996813995e-05,
+          2.7987133338077306e-05
+        ],
+        "median_seconds": 2.847219996813995e-05,
+        "initialization_seconds": [
+          0.008069055002124514,
+          0.007472276000044076,
+          0.007805548997566802
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 41280,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_record",
+        "edges": 128,
+        "seconds_per_operation": [
+          2.860269996745046e-05,
+          2.8353366603065902e-05,
+          2.7562133376098548e-05
+        ],
+        "median_seconds": 2.8353366603065902e-05,
+        "initialization_seconds": [
+          0.007167148000007728,
+          0.007730877001449699,
+          0.007143602000724059
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 41280,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0041911553833327,
+      "optimized_peak_limit_bytes": 109336.0
+    },
+    {
+      "size": "small",
+      "edge_order": "ordered",
+      "operation": "replay_schedule",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_schedule",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.00024866796666174197,
+          0.00024801993337556877,
+          0.00023767139997895963
+        ],
+        "median_seconds": 0.00024801993337556877,
+        "initialization_seconds": [
+          0.008703240000613732,
+          0.00869109099949128,
+          0.008271259001048747
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 30336,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 8196,
+          "peak_bytes": 20884
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_schedule",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.00024206233332127642,
+          0.0002559512333391467,
+          0.00026554969990684186
+        ],
+        "median_seconds": 0.0002559512333391467,
+        "initialization_seconds": [
+          0.009150523001153488,
+          0.008628167001006659,
+          0.009291895999922417
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 30336,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 8294,
+          "peak_bytes": 20982
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0319784779216428,
+      "optimized_peak_limit_bytes": 91763.5
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "neurons",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "neurons",
+        "edges": 128,
+        "seconds_per_operation": [
+          2.15243999264203e-05,
+          2.30316666905613e-05,
+          2.1065366672701204e-05
+        ],
+        "median_seconds": 2.15243999264203e-05,
+        "initialization_seconds": [
+          0.0008102089996100403,
+          0.0005023359990445897,
+          0.0004891959979431704
+        ],
+        "final_observation_sha256": "2a4f0ab38738d481660056169e332235acdef526014690fe461fcd6079d9966f",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9472,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 728,
+          "peak_bytes": 5224
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "neurons",
+        "edges": 128,
+        "seconds_per_operation": [
+          2.1298399951774626e-05,
+          2.1374166681198404e-05,
+          2.1470666615641677e-05
+        ],
+        "median_seconds": 2.1374166681198404e-05,
+        "initialization_seconds": [
+          0.0006165280028653797,
+          0.0004804339987458661,
+          0.0004628259994206019
+        ],
+        "final_observation_sha256": "2a4f0ab38738d481660056169e332235acdef526014690fe461fcd6079d9966f",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9472,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 728,
+          "peak_bytes": 5224
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0070287299365943,
+      "optimized_peak_limit_bytes": 72066.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "propagation",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "propagation",
+        "edges": 128,
+        "seconds_per_operation": [
+          6.35472999420017e-05,
+          6.1864133264559e-05,
+          7.04473666701233e-05
+        ],
+        "median_seconds": 6.35472999420017e-05,
+        "initialization_seconds": [
+          0.0005601929988188203,
+          0.0004729920001409482,
+          0.00042255600055796094
+        ],
+        "final_observation_sha256": "e4628af0381d1d24940bd3bf29d81559a6482f7a3a8b6e83953030dd8c733892",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9472,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 1880,
+          "peak_bytes": 10776
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "propagation",
+        "edges": 128,
+        "seconds_per_operation": [
+          6.892406660578369e-05,
+          6.950529993143088e-05,
+          6.847806677493888e-05
+        ],
+        "median_seconds": 6.892406660578369e-05,
+        "initialization_seconds": [
+          0.0005319709998730104,
+          0.0006700490012008231,
+          0.0004990910019841976
+        ],
+        "final_observation_sha256": "e4628af0381d1d24940bd3bf29d81559a6482f7a3a8b6e83953030dd8c733892",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9472,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 1880,
+          "peak_bytes": 10776
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0846104660416611,
+      "optimized_peak_limit_bytes": 79006.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "pair",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "pair",
+        "edges": 128,
+        "seconds_per_operation": [
+          5.4637899908508794e-05,
+          4.397086668177508e-05,
+          4.3583599957249435e-05
+        ],
+        "median_seconds": 4.397086668177508e-05,
+        "initialization_seconds": [
+          0.0006930630006536376,
+          0.0005636780006170738,
+          0.0005441890025394969
+        ],
+        "final_observation_sha256": "2df238f1a71649e5628f637aa66672ba5fe0e3f15f4a57083b810de2c8cdb21d",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11264,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 5896,
+          "peak_bytes": 13336
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "pair",
+        "edges": 128,
+        "seconds_per_operation": [
+          5.006233332096599e-05,
+          4.58830666805928e-05,
+          4.473469998629298e-05
+        ],
+        "median_seconds": 4.58830666805928e-05,
+        "initialization_seconds": [
+          0.0006075940000300761,
+          0.0005234679993009195,
+          0.0005062620002718177
+        ],
+        "final_observation_sha256": "2df238f1a71649e5628f637aa66672ba5fe0e3f15f4a57083b810de2c8cdb21d",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11264,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 5896,
+          "peak_bytes": 13336
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9583244944779047,
+      "optimized_peak_limit_bytes": 82206.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "triplet",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "triplet",
+        "edges": 128,
+        "seconds_per_operation": [
+          6.927763339869368e-05,
+          5.924716667019917e-05,
+          5.4399866712628864e-05
+        ],
+        "median_seconds": 5.924716667019917e-05,
+        "initialization_seconds": [
+          0.0007957380003063008,
+          0.0005782499974884558,
+          0.0005652210020343773
+        ],
+        "final_observation_sha256": "10ee9f3fc08a505b83ac9d551be2547735a3a26f727344d06c09f34d0c51642e",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11520,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 6824,
+          "peak_bytes": 18360
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "triplet",
+        "edges": 128,
+        "seconds_per_operation": [
+          6.658486660550503e-05,
+          6.292936668614857e-05,
+          6.543750011284525e-05
+        ],
+        "median_seconds": 6.543750011284525e-05,
+        "initialization_seconds": [
+          0.0006508089973067399,
+          0.0006114309981057886,
+          0.0005621969976346008
+        ],
+        "final_observation_sha256": "10ee9f3fc08a505b83ac9d551be2547735a3a26f727344d06c09f34d0c51642e",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11520,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 6824,
+          "peak_bytes": 18360
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.1044831979410041,
+      "optimized_peak_limit_bytes": 88486.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "voltage",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "voltage",
+        "edges": 128,
+        "seconds_per_operation": [
+          6.628409998180966e-05,
+          6.418259993855221e-05,
+          6.459453325078358e-05
+        ],
+        "median_seconds": 6.459453325078358e-05,
+        "initialization_seconds": [
+          0.0007162080000853166,
+          0.0006008450000081211,
+          0.0005673939995176625
+        ],
+        "final_observation_sha256": "eea799635bd500f545f22b0d7d4712ea86cb90039e177a60dc93207492834429",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11392,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 7208,
+          "peak_bytes": 16704
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "voltage",
+        "edges": 128,
+        "seconds_per_operation": [
+          6.432216662991172e-05,
+          6.095943329758787e-05,
+          6.417926657983722e-05
+        ],
+        "median_seconds": 6.417926657983722e-05,
+        "initialization_seconds": [
+          0.00065850100145326,
+          0.0005571890033024829,
+          0.0005895680005778559
+        ],
+        "final_observation_sha256": "eea799635bd500f545f22b0d7d4712ea86cb90039e177a60dc93207492834429",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 11392,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 7208,
+          "peak_bytes": 16704
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.006470417832366,
+      "optimized_peak_limit_bytes": 86416.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "trace_history",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "trace_history",
+        "edges": 128,
+        "seconds_per_operation": [
+          3.672593338706065e-05,
+          3.965600008086767e-05,
+          3.6349033325677735e-05
+        ],
+        "median_seconds": 3.672593338706065e-05,
+        "initialization_seconds": [
+          0.0023229759972309694,
+          0.0017549920012243092,
+          0.0020090840007469524
+        ],
+        "final_observation_sha256": "12121c8c4d8f6771db4abfd4cfb354d133b03289acb3d0bf65240439c1de961e",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 26112,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 32544,
+          "peak_bytes": 34216
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "trace_history",
+        "edges": 128,
+        "seconds_per_operation": [
+          4.112390003380521e-05,
+          4.8085400097382564e-05,
+          4.385499996715225e-05
+        ],
+        "median_seconds": 4.385499996715225e-05,
+        "initialization_seconds": [
+          0.0018739109982561786,
+          0.0017634639989410061,
+          0.001877285998489242
+        ],
+        "final_observation_sha256": "12121c8c4d8f6771db4abfd4cfb354d133b03289acb3d0bf65240439c1de961e",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 26112,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 32544,
+          "peak_bytes": 34216
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.1941153273071974,
+      "optimized_peak_limit_bytes": 108306.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "transducer",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "transducer",
+        "edges": 128,
+        "seconds_per_operation": [
+          2.0604333258233964e-06,
+          2.036399988962027e-06,
+          2.0077000954188407e-06
+        ],
+        "median_seconds": 2.036399988962027e-06,
+        "initialization_seconds": [
+          0.0006544050011143554,
+          0.0005273540009511635,
+          0.0004998320000595413
+        ],
+        "final_observation_sha256": "64539a846f6fa2aed9b856e76060146762ea89f4f435c60e456a0b957f14b591",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9856,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 224,
+          "peak_bytes": 4152
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "transducer",
+        "edges": 128,
+        "seconds_per_operation": [
+          1.956933313825478e-06,
+          1.9512666767695918e-06,
+          1.9599333124157663e-06
+        ],
+        "median_seconds": 1.956933313825478e-06,
+        "initialization_seconds": [
+          0.0004966470005456358,
+          0.0004981199999747332,
+          0.00045117899935576133
+        ],
+        "final_observation_sha256": "64539a846f6fa2aed9b856e76060146762ea89f4f435c60e456a0b957f14b591",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 9856,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 224,
+          "peak_bytes": 4152
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.040607758361068,
+      "optimized_peak_limit_bytes": 70726.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "probe",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "probe",
+        "edges": 128,
+        "seconds_per_operation": [
+          2.1354833249157914e-05,
+          2.116753324420036e-05,
+          2.4980266728865294e-05
+        ],
+        "median_seconds": 2.1354833249157914e-05,
+        "initialization_seconds": [
+          0.0019437560004007537,
+          0.001834651000535814,
+          0.0017710860010993201
+        ],
+        "final_observation_sha256": "c23a14117779ee3d1fc0b16bb990ec8b995596f4133d8bbd03835f585b0fc3af",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 36160,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 8880,
+          "peak_bytes": 18576
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "probe",
+        "edges": 128,
+        "seconds_per_operation": [
+          2.2540933302176805e-05,
+          2.0306200046131077e-05,
+          2.1665633297137296e-05
+        ],
+        "median_seconds": 2.1665633297137296e-05,
+        "initialization_seconds": [
+          0.002307623999513453,
+          0.0019472709973342717,
+          0.002259319997392595
+        ],
+        "final_observation_sha256": "c23a14117779ee3d1fc0b16bb990ec8b995596f4133d8bbd03835f585b0fc3af",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 36160,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 8880,
+          "peak_bytes": 18576
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0145540845181564,
+      "optimized_peak_limit_bytes": 88756.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "fixed_tick",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "fixed_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0005153650333037755,
+          0.0004910230665700511,
+          0.0004771465333760716
+        ],
+        "median_seconds": 0.0004910230665700511,
+        "initialization_seconds": [
+          0.00096788600058062,
+          0.0014159410020511132,
+          0.0012023400013276841
+        ],
+        "final_observation_sha256": "1d17001f8eb7b49ac168d6f8e0822070582e5b1d57e02e3055d571b02ccf8292",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 24192,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 5888,
+          "peak_bytes": 21288
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "fixed_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.000487864000024274,
+          0.0005070718999680442,
+          0.0005609907332351819
+        ],
+        "median_seconds": 0.0005070718999680442,
+        "initialization_seconds": [
+          0.0009987930025090463,
+          0.0009979419992305338,
+          0.0018416019993310329
+        ],
+        "final_observation_sha256": "1d17001f8eb7b49ac168d6f8e0822070582e5b1d57e02e3055d571b02ccf8292",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 24192,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 5888,
+          "peak_bytes": 21288
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.968349984688553,
+      "optimized_peak_limit_bytes": 92146.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "adaptive_tick",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "adaptive_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0008330966000357875,
+          0.0008334403999469941,
+          0.0007531795999966562
+        ],
+        "median_seconds": 0.0008330966000357875,
+        "initialization_seconds": [
+          0.0017353920011373702,
+          0.0011648430008790456,
+          0.0013275179990159813
+        ],
+        "final_observation_sha256": "2ea1072f48a5920f86254bc622f5ba4c0a66ae268ccc23cf4d3870b32e4a116c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 28288,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 25130,
+          "peak_bytes": 53490
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "adaptive_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0007852044333655309,
+          0.000834104033371356,
+          0.0008051311000599526
+        ],
+        "median_seconds": 0.0008051311000599526,
+        "initialization_seconds": [
+          0.0014408679999178275,
+          0.0012573929998325184,
+          0.0017506850017525721
+        ],
+        "final_observation_sha256": "2ea1072f48a5920f86254bc622f5ba4c0a66ae268ccc23cf4d3870b32e4a116c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 28288,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 24747,
+          "peak_bytes": 54871
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9664318639943632,
+      "optimized_peak_limit_bytes": 134124.75
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "routed_tick",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "routed_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0008446832999955707,
+          0.0008770376333510891,
+          0.0008530852667414971
+        ],
+        "median_seconds": 0.0008530852667414971,
+        "initialization_seconds": [
+          0.0014326669988804497,
+          0.0013890510017517954,
+          0.0012973230004718062
+        ],
+        "final_observation_sha256": "a2e35e19060f49991cd1abf2748f5694ecebf5242ffea255f70d42715a83d1b2",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 32512,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 41156,
+          "peak_bytes": 72588
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "routed_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.000793685900013467,
+          0.000929878200016295,
+          0.000930768566589298
+        ],
+        "median_seconds": 0.000929878200016295,
+        "initialization_seconds": [
+          0.0012982339976588264,
+          0.0013046839994785842,
+          0.0024167369992937893
+        ],
+        "final_observation_sha256": "a2e35e19060f49991cd1abf2748f5694ecebf5242ffea255f70d42715a83d1b2",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 32512,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 41308,
+          "peak_bytes": 70976
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9174161376474337,
+      "optimized_peak_limit_bytes": 156271.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "regime_tick",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "regime_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0013182583999878262,
+          0.00140083033341701,
+          0.0013220537999586667
+        ],
+        "median_seconds": 0.0013220537999586667,
+        "initialization_seconds": [
+          0.001435439997294452,
+          0.0012185039995529223,
+          0.0014904130002832972
+        ],
+        "final_observation_sha256": "8da23f5ccdb00b1a8178bd905cdbae8d237eec9d63cc0b731185724d864b413d",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 32512,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 53581,
+          "peak_bytes": 139062
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "regime_tick",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.0013848065666631252,
+          0.0013876544999220641,
+          0.0012928328000270995
+        ],
+        "median_seconds": 0.0013848065666631252,
+        "initialization_seconds": [
+          0.0014211289999366272,
+          0.0012796259979950264,
+          0.001282039000216173
+        ],
+        "final_observation_sha256": "8da23f5ccdb00b1a8178bd905cdbae8d237eec9d63cc0b731185724d864b413d",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 32512,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 53283,
+          "peak_bytes": 139530
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0474661218071613,
+      "optimized_peak_limit_bytes": 239948.5
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "replay_record",
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_record",
+        "edges": 128,
+        "seconds_per_operation": [
+          3.077763334052482e-05,
+          3.1918700066550325e-05,
+          3.0773300022701736e-05
+        ],
+        "median_seconds": 3.077763334052482e-05,
+        "initialization_seconds": [
+          0.008602317000622861,
+          0.00873916199998348,
+          0.007874081002228195
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 41280,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_record",
+        "edges": 128,
+        "seconds_per_operation": [
+          3.622119996483282e-05,
+          2.8520900013973004e-05,
+          2.7832900013891048e-05
+        ],
+        "median_seconds": 2.8520900013973004e-05,
+        "initialization_seconds": [
+          0.009223782999470131,
+          0.0082741040023393,
+          0.008466702998703113
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 41280,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.079125600014242,
+      "optimized_peak_limit_bytes": 109336.0
+    },
+    {
+      "size": "small",
+      "edge_order": "shuffled",
+      "operation": "replay_schedule",
+      "optimized": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_schedule",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.00028801150001527275,
+          0.00024830806675405864,
+          0.0002415088332782034
+        ],
+        "median_seconds": 0.00024830806675405864,
+        "initialization_seconds": [
+          0.009032924997882219,
+          0.010308985998563003,
+          0.010117177000211086
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 30336,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 8098,
+          "peak_bytes": 20786
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 32,
+          "degree": 4,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_schedule",
+        "edges": 128,
+        "seconds_per_operation": [
+          0.00023987003332877067,
+          0.0002443280666435991,
+          0.0002507173333773001
+        ],
+        "median_seconds": 0.0002443280666435991,
+        "initialization_seconds": [
+          0.008892683999874862,
+          0.008842519000609173,
+          0.009594840001227567
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 30336,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 8343,
+          "peak_bytes": 21031
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9839715231064095,
+      "optimized_peak_limit_bytes": 91824.75
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "neurons",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "neurons",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.8908833337482064e-05,
+          3.275863333935073e-05,
+          2.8051866684108974e-05
+        ],
+        "median_seconds": 2.8908833337482064e-05,
+        "initialization_seconds": [
+          0.005909174000407802,
+          0.005461491000460228,
+          0.005767640999692958
+        ],
+        "final_observation_sha256": "f8b22ea8e9b90f86ed7ef83348f5742ed5525df9e24e7a8d08766daf22d37d12",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225280,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 4568,
+          "peak_bytes": 21544
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "neurons",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.8093266761667714e-05,
+          2.9344166614464483e-05,
+          2.7583533301367426e-05
+        ],
+        "median_seconds": 2.8093266761667714e-05,
+        "initialization_seconds": [
+          0.004591069999150932,
+          0.004390687998238718,
+          0.004338790000474546
+        ],
+        "final_observation_sha256": "f8b22ea8e9b90f86ed7ef83348f5742ed5525df9e24e7a8d08766daf22d37d12",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225280,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 4568,
+          "peak_bytes": 21544
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.029030677803806,
+      "optimized_peak_limit_bytes": 92466.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "propagation",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "propagation",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00010157120001773971,
+          9.632129998256762e-05,
+          9.586626668654693e-05
+        ],
+        "median_seconds": 9.632129998256762e-05,
+        "initialization_seconds": [
+          0.004809038000530563,
+          0.005002769001293927,
+          0.004656788001739187
+        ],
+        "final_observation_sha256": "dfd9c12a96f1032e9d23b1e016f0428f244b6124666dd2c84748572fcc931bff",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225280,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 76376,
+          "peak_bytes": 250392
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "propagation",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0008905216333611558,
+          0.0008898612999473698,
+          0.0009112111000528482
+        ],
+        "median_seconds": 0.0008905216333611558,
+        "initialization_seconds": [
+          0.005422030000772793,
+          0.005233285999565851,
+          0.005822342998726526
+        ],
+        "final_observation_sha256": "dfd9c12a96f1032e9d23b1e016f0428f244b6124666dd2c84748572fcc931bff",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225280,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 76376,
+          "peak_bytes": 276320
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 9.24532407185455,
+      "optimized_peak_limit_bytes": 410936.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "pair",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "pair",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00011357493325097797,
+          0.00012391650003943747,
+          0.0001275396333464111
+        ],
+        "median_seconds": 0.00012391650003943747,
+        "initialization_seconds": [
+          0.006242576000659028,
+          0.006369615999574307,
+          0.006457559000409674
+        ],
+        "final_observation_sha256": "439cc376417e336743bb413ea4dced855bed97139964a8c6e3f7e24157f0b994",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 327680,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 207112,
+          "peak_bytes": 518296
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "pair",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00011330320000221642,
+          0.00011683850001039293,
+          0.00011917536661106472
+        ],
+        "median_seconds": 0.00011683850001039293,
+        "initialization_seconds": [
+          0.004546993997792015,
+          0.004521696002484532,
+          0.004922558000544086
+        ],
+        "final_observation_sha256": "439cc376417e336743bb413ea4dced855bed97139964a8c6e3f7e24157f0b994",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 327680,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 207112,
+          "peak_bytes": 518296
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0605793469482656,
+      "optimized_peak_limit_bytes": 713406.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "triplet",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "triplet",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00021686773325200193,
+          0.0001855279000058848,
+          0.00018502146667742636
+        ],
+        "median_seconds": 0.0001855279000058848,
+        "initialization_seconds": [
+          0.0045752959995297715,
+          0.004617931001121178,
+          0.0046547160018235445
+        ],
+        "final_observation_sha256": "4419bee9f71959afe05047e8ef555291584ab5b00a41725467a602d22cce6b7a",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 331776,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 272552,
+          "peak_bytes": 785208
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "triplet",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00019640560009671996,
+          0.00019788853326948205,
+          0.00019164539990015327
+        ],
+        "median_seconds": 0.00019640560009671996,
+        "initialization_seconds": [
+          0.00688897800137056,
+          0.006395765998604475,
+          0.006017145999066997
+        ],
+        "final_observation_sha256": "4419bee9f71959afe05047e8ef555291584ab5b00a41725467a602d22cce6b7a",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 331776,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 272552,
+          "peak_bytes": 785208
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.058631074304674,
+      "optimized_peak_limit_bytes": 1047046.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "voltage",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "voltage",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00016903576664238548,
+          0.0001401542666523407,
+          0.00014382480003405362
+        ],
+        "median_seconds": 0.00014382480003405362,
+        "initialization_seconds": [
+          0.006198588998813648,
+          0.006286671999987448,
+          0.006404018000466749
+        ],
+        "final_observation_sha256": "cbb9a2ae877b5639e59e0afa018bfad6142213cfd035aec7e4c2a3b3a3a118e8",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 329728,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 218024,
+          "peak_bytes": 546624
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "voltage",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0001408723666827427,
+          0.00013917913335414293,
+          0.00014498890001656643
+        ],
+        "median_seconds": 0.0001408723666827427,
+        "initialization_seconds": [
+          0.0046434389987553,
+          0.0043654709988913964,
+          0.004548885000986047
+        ],
+        "final_observation_sha256": "cbb9a2ae877b5639e59e0afa018bfad6142213cfd035aec7e4c2a3b3a3a118e8",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 329728,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 218024,
+          "peak_bytes": 546624
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0209582150199839,
+      "optimized_peak_limit_bytes": 748816.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "trace_history",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "trace_history",
+        "edges": 8192,
+        "seconds_per_operation": [
+          4.076266668562312e-05,
+          4.4895900039894816e-05,
+          5.071633325618071e-05
+        ],
+        "median_seconds": 4.4895900039894816e-05,
+        "initialization_seconds": [
+          0.005960821003100136,
+          0.006358120001095813,
+          0.006054061999748228
+        ],
+        "final_observation_sha256": "957f91204ad9779a5c0b4019f38b10ab9e65ad018411ce932b5cecbb90a76335",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 491520,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 274464,
+          "peak_bytes": 287656
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "trace_history",
+        "edges": 8192,
+        "seconds_per_operation": [
+          4.510256670376596e-05,
+          4.7702800050804704e-05,
+          4.4590100029987906e-05
+        ],
+        "median_seconds": 4.510256670376596e-05,
+        "initialization_seconds": [
+          0.006791451000026427,
+          0.00694318900059443,
+          0.0073227020002377685
+        ],
+        "final_observation_sha256": "957f91204ad9779a5c0b4019f38b10ab9e65ad018411ce932b5cecbb90a76335",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 491520,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 274464,
+          "peak_bytes": 287656
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.004603241358064,
+      "optimized_peak_limit_bytes": 425106.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "transducer",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "transducer",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.1795999297561746e-06,
+          2.1592666598735375e-06,
+          2.0821332630778974e-06
+        ],
+        "median_seconds": 2.1592666598735375e-06,
+        "initialization_seconds": [
+          0.0053285100002540275,
+          0.005148439002368832,
+          0.005688852001185296
+        ],
+        "final_observation_sha256": "e06c60cead18dda13514cc674f01b39e2cf9162b557ee06523bfe9041aacf771",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225664,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 2144,
+          "peak_bytes": 7992
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "transducer",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.0758000270385915e-06,
+          2.0794667458782594e-06,
+          2.0927999382062505e-06
+        ],
+        "median_seconds": 2.0794667458782594e-06,
+        "initialization_seconds": [
+          0.00485674000083236,
+          0.0043645490004564635,
+          0.00478411099902587
+        ],
+        "final_observation_sha256": "e06c60cead18dda13514cc674f01b39e2cf9162b557ee06523bfe9041aacf771",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225664,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 2144,
+          "peak_bytes": 7992
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0383751815956908,
+      "optimized_peak_limit_bytes": 75526.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "probe",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "probe",
+        "edges": 8192,
+        "seconds_per_operation": [
+          4.3974533279348783e-05,
+          4.216713326362272e-05,
+          3.291320002366168e-05
+        ],
+        "median_seconds": 4.216713326362272e-05,
+        "initialization_seconds": [
+          0.009171714002150111,
+          0.009554760999890277,
+          0.0068695389963977505
+        ],
+        "final_observation_sha256": "03bd0f585b8a74b856fde83f05ad0993c1ebfd6541e3fe7304f75fa311e88f30",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 1216000,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 306864,
+          "peak_bytes": 614544
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "probe",
+        "edges": 8192,
+        "seconds_per_operation": [
+          3.09766333278579e-05,
+          3.0994666667538694e-05,
+          3.089616669361324e-05
+        ],
+        "median_seconds": 3.09766333278579e-05,
+        "initialization_seconds": [
+          0.016231339002843015,
+          0.014355606999743031,
+          0.014500774999760324
+        ],
+        "final_observation_sha256": "03bd0f585b8a74b856fde83f05ad0993c1ebfd6541e3fe7304f75fa311e88f30",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 1216000,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 306864,
+          "peak_bytes": 614544
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.7346155863666741,
+      "optimized_peak_limit_bytes": 833716.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "fixed_tick",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "fixed_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0015796868666560235,
+          0.0017611935333358513,
+          0.001299379666670575
+        ],
+        "median_seconds": 0.0015796868666560235,
+        "initialization_seconds": [
+          0.008213090997742256,
+          0.011992189000011422,
+          0.007599897999170935
+        ],
+        "final_observation_sha256": "de2abcfa4e710090ea76864aeed7ed1821fbc333a5a92804908f404585cbdce8",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 602496,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 102464,
+          "peak_bytes": 313010
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "fixed_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0005168041333187527,
+          0.000531325700042847,
+          0.0004848537333600689
+        ],
+        "median_seconds": 0.0005168041333187527,
+        "initialization_seconds": [
+          0.004946734999975888,
+          0.0049406959988118615,
+          0.0047097780006879475
+        ],
+        "final_observation_sha256": "de2abcfa4e710090ea76864aeed7ed1821fbc333a5a92804908f404585cbdce8",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 602496,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 102464,
+          "peak_bytes": 313010
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 3.056645186855945,
+      "optimized_peak_limit_bytes": 456798.5
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "adaptive_tick",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "adaptive_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0010671280999910474,
+          0.0010257271333102835,
+          0.0010647162666524916
+        ],
+        "median_seconds": 0.0010647162666524916,
+        "initialization_seconds": [
+          0.006377297999279108,
+          0.006758120998711092,
+          0.005691296002623858
+        ],
+        "final_observation_sha256": "7011e8af069a6f145288508e4725b5df120bcb12879b7340bd088714ad90bf30",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 815488,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 703250,
+          "peak_bytes": 1613078
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "adaptive_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.002727216666608001,
+          0.0027962322000045486,
+          0.0027392025000153807
+        ],
+        "median_seconds": 0.0027392025000153807,
+        "initialization_seconds": [
+          0.011215701000764966,
+          0.011702273000992136,
+          0.010801436001202092
+        ],
+        "final_observation_sha256": "7011e8af069a6f145288508e4725b5df120bcb12879b7340bd088714ad90bf30",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 815488,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 704160,
+          "peak_bytes": 1638391
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 2.572706537702798,
+      "optimized_peak_limit_bytes": 2113524.75
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "routed_tick",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "routed_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0026665867000701836,
+          0.0026062034999389046,
+          0.0026815064999633855
+        ],
+        "median_seconds": 0.0026665867000701836,
+        "initialization_seconds": [
+          0.01043506599671673,
+          0.009913540998240933,
+          0.010229846997390268
+        ],
+        "final_observation_sha256": "9e298e4c688f0728336a5d84369499580684c89a15c11dc4dcf431636f59fbe1",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 819712,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 719133,
+          "peak_bytes": 1662409
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "routed_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0011028772332792869,
+          0.0011287268000160112,
+          0.0011124663332642134
+        ],
+        "median_seconds": 0.0011124663332642134,
+        "initialization_seconds": [
+          0.005859524000698002,
+          0.005302189998474205,
+          0.005839849000039976
+        ],
+        "final_observation_sha256": "9e298e4c688f0728336a5d84369499580684c89a15c11dc4dcf431636f59fbe1",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 819712,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 720881,
+          "peak_bytes": 1639652
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 2.3970044039407914,
+      "optimized_peak_limit_bytes": 2143547.25
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "regime_tick",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "regime_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.001584165933309123,
+          0.0016173161333426834,
+          0.0016281939000085306
+        ],
+        "median_seconds": 0.0016173161333426834,
+        "initialization_seconds": [
+          0.005301990000589285,
+          0.005657064000843093,
+          0.00521890500021982
+        ],
+        "final_observation_sha256": "8d391e628f299e6a49a0a0bf402d2645f623fd77fa595cc54240c9d4e75d829b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 819712,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 731984,
+          "peak_bytes": 2390287
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "regime_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.003560445699986303,
+          0.0036052254334208557,
+          0.0034895864000039486
+        ],
+        "median_seconds": 0.003560445699986303,
+        "initialization_seconds": [
+          0.011070281001593685,
+          0.010750730998552172,
+          0.011074949001340428
+        ],
+        "final_observation_sha256": "8d391e628f299e6a49a0a0bf402d2645f623fd77fa595cc54240c9d4e75d829b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 819712,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 731672,
+          "peak_bytes": 2414484
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 2.2014531522835563,
+      "optimized_peak_limit_bytes": 3083641.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "replay_record",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_record",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.7963433361340624e-05,
+          2.8104299902527905e-05,
+          2.8078266647450317e-05
+        ],
+        "median_seconds": 2.8078266647450317e-05,
+        "initialization_seconds": [
+          0.03147574299873668,
+          0.031374680998851545,
+          0.030836140998871997
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 1221120,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_record",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.7977433395183955e-05,
+          2.926606672796576e-05,
+          2.801750003224394e-05
+        ],
+        "median_seconds": 2.801750003224394e-05,
+        "initialization_seconds": [
+          0.013796104001812637,
+          0.01658098600091762,
+          0.023518146001151763
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 1221120,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0021688807044327,
+      "optimized_peak_limit_bytes": 109336.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "ordered",
+      "operation": "replay_schedule",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_schedule",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0002431619667428701,
+          0.00023692526665399782,
+          0.0002348587999828548
+        ],
+        "median_seconds": 0.00023692526665399782,
+        "initialization_seconds": [
+          0.014999225000792649,
+          0.015328039997257292,
+          0.01493826300065848
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 817536,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 8294,
+          "peak_bytes": 22902
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_schedule",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00023914756675367244,
+          0.0002613733666900468,
+          0.0002517909666494234
+        ],
+        "median_seconds": 0.0002517909666494234,
+        "initialization_seconds": [
+          0.03338805100065656,
+          0.03486592499757535,
+          0.037750087001768406
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 817536,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 8392,
+          "peak_bytes": 23000
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0627442577373363,
+      "optimized_peak_limit_bytes": 94286.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "neurons",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "neurons",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.8604366646807952e-05,
+          2.8359333373373375e-05,
+          2.9445000109262764e-05
+        ],
+        "median_seconds": 2.8604366646807952e-05,
+        "initialization_seconds": [
+          0.005455630998767447,
+          0.005628271002933616,
+          0.005212094001763035
+        ],
+        "final_observation_sha256": "f8b22ea8e9b90f86ed7ef83348f5742ed5525df9e24e7a8d08766daf22d37d12",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225280,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 4568,
+          "peak_bytes": 21544
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "neurons",
+        "edges": 8192,
+        "seconds_per_operation": [
+          3.053063325448117e-05,
+          2.823450001111875e-05,
+          2.8259533307088227e-05
+        ],
+        "median_seconds": 2.8259533307088227e-05,
+        "initialization_seconds": [
+          0.004807875997357769,
+          0.00468643299973337,
+          0.00503482799831545
+        ],
+        "final_observation_sha256": "f8b22ea8e9b90f86ed7ef83348f5742ed5525df9e24e7a8d08766daf22d37d12",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225280,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 4568,
+          "peak_bytes": 21544
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0122023720622886,
+      "optimized_peak_limit_bytes": 92466.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "propagation",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "propagation",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00043658496664041496,
+          0.0003619183666160097,
+          0.00032703386665768145
+        ],
+        "median_seconds": 0.0003619183666160097,
+        "initialization_seconds": [
+          0.0046795029993518256,
+          0.0049594550000620075,
+          0.005294267997669522
+        ],
+        "final_observation_sha256": "4eea75cabb0f5c43f77d48511eeac7ea3ae2eb7255945217a8d3a71257a0a9f2",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225280,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 76376,
+          "peak_bytes": 250392
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "propagation",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0009813586999371181,
+          0.0009271213665973239,
+          0.000987056933324008
+        ],
+        "median_seconds": 0.0009813586999371181,
+        "initialization_seconds": [
+          0.00581875699936063,
+          0.005380628997954773,
+          0.006058339000446722
+        ],
+        "final_observation_sha256": "4eea75cabb0f5c43f77d48511eeac7ea3ae2eb7255945217a8d3a71257a0a9f2",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225280,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 76376,
+          "peak_bytes": 276320
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 2.7115471069152064,
+      "optimized_peak_limit_bytes": 410936.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "pair",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "pair",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0001257903333074258,
+          0.0001181441332543424,
+          0.00013050106669349287
+        ],
+        "median_seconds": 0.0001257903333074258,
+        "initialization_seconds": [
+          0.006872993999422761,
+          0.0066523419991426636,
+          0.006653995002125157
+        ],
+        "final_observation_sha256": "e6746bd2e0f7db3212d52792d4500e039abd35e40171ca3d4f6da6f9418baf66",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 327680,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 207112,
+          "peak_bytes": 518296
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "pair",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0001243354666560966,
+          0.00014292976666183677,
+          0.000117644399991453
+        ],
+        "median_seconds": 0.0001243354666560966,
+        "initialization_seconds": [
+          0.005074097000033362,
+          0.005061878000560682,
+          0.005201739000767702
+        ],
+        "final_observation_sha256": "e6746bd2e0f7db3212d52792d4500e039abd35e40171ca3d4f6da6f9418baf66",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 327680,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 207112,
+          "peak_bytes": 518296
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0117011395899873,
+      "optimized_peak_limit_bytes": 713406.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "triplet",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "triplet",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0002222244666578869,
+          0.00023412906666635535,
+          0.00024183599998650607
+        ],
+        "median_seconds": 0.00023412906666635535,
+        "initialization_seconds": [
+          0.00535160399886081,
+          0.004871581997576868,
+          0.0051076679992547724
+        ],
+        "final_observation_sha256": "cab61fa54f4341f4588654d69d1081cc9d59078ba6b98284e903825016cd9091",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 331776,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 272552,
+          "peak_bytes": 785208
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "triplet",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0001944323000013052,
+          0.0002356530333296784,
+          0.0002192867332875418
+        ],
+        "median_seconds": 0.0002192867332875418,
+        "initialization_seconds": [
+          0.006959845999517711,
+          0.007224394001241308,
+          0.006876120001834352
+        ],
+        "final_observation_sha256": "cab61fa54f4341f4588654d69d1081cc9d59078ba6b98284e903825016cd9091",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 331776,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 272552,
+          "peak_bytes": 785208
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9366061908068657,
+      "optimized_peak_limit_bytes": 1047046.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "voltage",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "voltage",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00014925699991484483,
+          0.00015149769994119802,
+          0.00016236973339497733
+        ],
+        "median_seconds": 0.00015149769994119802,
+        "initialization_seconds": [
+          0.0067993739976373035,
+          0.006119410998508101,
+          0.007283492999704322
+        ],
+        "final_observation_sha256": "3d95a77369cd7c6d29b4702232df3f0f786fe92482000442224b7091f2a7edbd",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 329728,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 218024,
+          "peak_bytes": 546624
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "voltage",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0001492786999733653,
+          0.00016675766673870384,
+          0.00017980330000379278
+        ],
+        "median_seconds": 0.00016675766673870384,
+        "initialization_seconds": [
+          0.005404093997640302,
+          0.005880300999706378,
+          0.004897460999927716
+        ],
+        "final_observation_sha256": "3d95a77369cd7c6d29b4702232df3f0f786fe92482000442224b7091f2a7edbd",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 329728,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 218024,
+          "peak_bytes": 546624
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9084901636251783,
+      "optimized_peak_limit_bytes": 748816.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "trace_history",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "trace_history",
+        "edges": 8192,
+        "seconds_per_operation": [
+          4.920706669508945e-05,
+          4.133556673574882e-05,
+          8.390093341101116e-05
+        ],
+        "median_seconds": 4.920706669508945e-05,
+        "initialization_seconds": [
+          0.0064327929976570886,
+          0.006052981003449531,
+          0.00758356400183402
+        ],
+        "final_observation_sha256": "957f91204ad9779a5c0b4019f38b10ab9e65ad018411ce932b5cecbb90a76335",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 491520,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 274464,
+          "peak_bytes": 287656
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "trace_history",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00012533296661179822,
+          4.2061966693533276e-05,
+          4.645490007533226e-05
+        ],
+        "median_seconds": 4.645490007533226e-05,
+        "initialization_seconds": [
+          0.007351324999035569,
+          0.00982228399880114,
+          0.006664051001280313
+        ],
+        "final_observation_sha256": "957f91204ad9779a5c0b4019f38b10ab9e65ad018411ce932b5cecbb90a76335",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 491520,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 274464,
+          "peak_bytes": 287656
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9440696874534112,
+      "optimized_peak_limit_bytes": 425106.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "transducer",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "transducer",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.173933292700288e-06,
+          2.0974666161540273e-06,
+          2.090166647879717e-06
+        ],
+        "median_seconds": 2.0974666161540273e-06,
+        "initialization_seconds": [
+          0.006009274999087211,
+          0.005682733000867302,
+          0.006379973001457984
+        ],
+        "final_observation_sha256": "e06c60cead18dda13514cc674f01b39e2cf9162b557ee06523bfe9041aacf771",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225664,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 2144,
+          "peak_bytes": 7992
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "transducer",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.086133342042255e-06,
+          2.0714333610764396e-06,
+          2.081133425235748e-06
+        ],
+        "median_seconds": 2.081133425235748e-06,
+        "initialization_seconds": [
+          0.004631141000572825,
+          0.0049064850027207285,
+          0.004542537000816083
+        ],
+        "final_observation_sha256": "e06c60cead18dda13514cc674f01b39e2cf9162b557ee06523bfe9041aacf771",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 225664,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 2144,
+          "peak_bytes": 7992
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0078482190138427,
+      "optimized_peak_limit_bytes": 75526.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "probe",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "probe",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.9880966758355497e-05,
+          3.822420003416482e-05,
+          3.052526662941091e-05
+        ],
+        "median_seconds": 3.052526662941091e-05,
+        "initialization_seconds": [
+          0.008292431997688254,
+          0.00798051200035843,
+          0.00793307100320817
+        ],
+        "final_observation_sha256": "80b184de3a4bd319e767f09cdf797861ba5cfb0dceb95c70bc19a3643be30f46",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 1216000,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 306864,
+          "peak_bytes": 614544
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "probe",
+        "edges": 8192,
+        "seconds_per_operation": [
+          3.3925399960329136e-05,
+          3.1291433333535676e-05,
+          3.1044733259477655e-05
+        ],
+        "median_seconds": 3.1291433333535676e-05,
+        "initialization_seconds": [
+          0.01400486900092801,
+          0.01294200999836903,
+          0.012780337001458975
+        ],
+        "final_observation_sha256": "80b184de3a4bd319e767f09cdf797861ba5cfb0dceb95c70bc19a3643be30f46",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 1216000,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 306864,
+          "peak_bytes": 614544
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0250994270885931,
+      "optimized_peak_limit_bytes": 833716.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "fixed_tick",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "fixed_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0015007682333816775,
+          0.0013453376333927736,
+          0.00135799466673537
+        ],
+        "median_seconds": 0.00135799466673537,
+        "initialization_seconds": [
+          0.008397739999054465,
+          0.007579834000353003,
+          0.007804567998391576
+        ],
+        "final_observation_sha256": "de2abcfa4e710090ea76864aeed7ed1821fbc333a5a92804908f404585cbdce8",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 602496,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 102464,
+          "peak_bytes": 313010
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "fixed_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.000737443300022278,
+          0.0007307946332730352,
+          0.0007171761334272257
+        ],
+        "median_seconds": 0.0007307946332730352,
+        "initialization_seconds": [
+          0.005807470999570796,
+          0.005501209998328704,
+          0.005358304999390384
+        ],
+        "final_observation_sha256": "de2abcfa4e710090ea76864aeed7ed1821fbc333a5a92804908f404585cbdce8",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 602496,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 102464,
+          "peak_bytes": 313010
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.8582438963095176,
+      "optimized_peak_limit_bytes": 456798.5
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "adaptive_tick",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "adaptive_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0013634265000291635,
+          0.0014549789666489232,
+          0.0013414130332724502
+        ],
+        "median_seconds": 0.0013634265000291635,
+        "initialization_seconds": [
+          0.007302010999410413,
+          0.00670772600278724,
+          0.006296727999142604
+        ],
+        "final_observation_sha256": "db9ad1e69dbdbcd8c596148517baab9dc037b4898ebca29a17f960783211bdb6",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 815488,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 703511,
+          "peak_bytes": 1613339
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "adaptive_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.002503741866651884,
+          0.0024387116666427272,
+          0.002504132799973983
+        ],
+        "median_seconds": 0.002503741866651884,
+        "initialization_seconds": [
+          0.010271670002111932,
+          0.009740600999066373,
+          0.013064503000350669
+        ],
+        "final_observation_sha256": "db9ad1e69dbdbcd8c596148517baab9dc037b4898ebca29a17f960783211bdb6",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 815488,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 704621,
+          "peak_bytes": 1638905
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.8363599846404108,
+      "optimized_peak_limit_bytes": 2114167.25
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "routed_tick",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "routed_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00253783349993076,
+          0.0026913328666220574,
+          0.0026882599333475808
+        ],
+        "median_seconds": 0.0026882599333475808,
+        "initialization_seconds": [
+          0.010390327999630244,
+          0.011058425003284356,
+          0.01019234100022004
+        ],
+        "final_observation_sha256": "961fc6d8b212c86fc4c40390534b309f359b8f417b8ebd94ea8a5c2d0781f2fd",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 819712,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 720447,
+          "peak_bytes": 1663719
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "routed_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0014946429999933267,
+          0.0015993592666442662,
+          0.0016746446000373302
+        ],
+        "median_seconds": 0.0015993592666442662,
+        "initialization_seconds": [
+          0.006531360999360913,
+          0.006957833000342362,
+          0.008326392999151722
+        ],
+        "final_observation_sha256": "961fc6d8b212c86fc4c40390534b309f359b8f417b8ebd94ea8a5c2d0781f2fd",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 819712,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 719656,
+          "peak_bytes": 1638476
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.6808355629739262,
+      "optimized_peak_limit_bytes": 2145184.75
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "regime_tick",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "regime_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0020197530332855726,
+          0.0020846306666499003,
+          0.0021006007333198794
+        ],
+        "median_seconds": 0.0020846306666499003,
+        "initialization_seconds": [
+          0.006527625002490822,
+          0.0067179620018578134,
+          0.006556678999913856
+        ],
+        "final_observation_sha256": "e180ed5438b1a158632a8b69514de2a3467ed8d34beb31167739961370694c94",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 819712,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 731620,
+          "peak_bytes": 2389923
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "regime_tick",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0031556186999902518,
+          0.003148831833338287,
+          0.0032039347333920887
+        ],
+        "median_seconds": 0.0031556186999902518,
+        "initialization_seconds": [
+          0.009954944001947297,
+          0.009699949998321244,
+          0.010536838999541942
+        ],
+        "final_observation_sha256": "e180ed5438b1a158632a8b69514de2a3467ed8d34beb31167739961370694c94",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 819712,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 731831,
+          "peak_bytes": 2414594
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.5137543309105588,
+      "optimized_peak_limit_bytes": 3083778.5
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "replay_record",
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_record",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.860906667289479e-05,
+          2.7844566648127512e-05,
+          2.727840001170989e-05
+        ],
+        "median_seconds": 2.7844566648127512e-05,
+        "initialization_seconds": [
+          0.03198901799987652,
+          0.03307074599797488,
+          0.033399580999684986
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 1221120,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_record",
+        "edges": 8192,
+        "seconds_per_operation": [
+          2.7767133360612206e-05,
+          3.918663339087895e-05,
+          2.7921333336659398e-05
+        ],
+        "median_seconds": 2.7921333336659398e-05,
+        "initialization_seconds": [
+          0.019134409998514457,
+          0.019367812001291895,
+          0.0200712410005508
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 1221120,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9972506080706722,
+      "optimized_peak_limit_bytes": 109336.0
+    },
+    {
+      "size": "medium",
+      "edge_order": "shuffled",
+      "operation": "replay_schedule",
+      "optimized": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_schedule",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.00024033940001875939,
+          0.0002571597332765426,
+          0.00025941109997802415
+        ],
+        "median_seconds": 0.0002571597332765426,
+        "initialization_seconds": [
+          0.020686235999164637,
+          0.021610577001411002,
+          0.01992428000085056
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 817536,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 2207,
+          "peak_bytes": 17072
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 512,
+          "degree": 16,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_schedule",
+        "edges": 8192,
+        "seconds_per_operation": [
+          0.0002892770999703013,
+          0.00027435830003620746,
+          0.0002454571000271244
+        ],
+        "median_seconds": 0.00027435830003620746,
+        "initialization_seconds": [
+          0.038179236002179096,
+          0.03689463200134924,
+          0.03764772499926039
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 817536,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 2109,
+          "peak_bytes": 16925
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0668789259521048,
+      "optimized_peak_limit_bytes": 86692.25
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "neurons",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "neurons",
+        "edges": 131072,
+        "seconds_per_operation": [
+          7.394866673469854e-05,
+          7.254116668870362e-05,
+          7.549829994483541e-05
+        ],
+        "median_seconds": 7.394866673469854e-05,
+        "initialization_seconds": [
+          0.05746181900030933,
+          0.055826707000960596,
+          0.05528436099848477
+        ],
+        "final_observation_sha256": "9d9948e6929a057019b0cafe4745db81b1dbc67712c4606ab9f068475aadd836",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2588672,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 33240,
+          "peak_bytes": 157272
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "neurons",
+        "edges": 131072,
+        "seconds_per_operation": [
+          7.338913322503988e-05,
+          7.997136660075436e-05,
+          7.115876663495631e-05
+        ],
+        "median_seconds": 7.338913322503988e-05,
+        "initialization_seconds": [
+          0.03491170699999202,
+          0.03542093400028534,
+          0.03498367599968333
+        ],
+        "final_observation_sha256": "9d9948e6929a057019b0cafe4745db81b1dbc67712c4606ab9f068475aadd836",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2588672,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 33240,
+          "peak_bytes": 157272
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0076242010917735,
+      "optimized_peak_limit_bytes": 262126.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "propagation",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "propagation",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0007375858665909618,
+          0.0006787209000322037,
+          0.0006875318333186442
+        ],
+        "median_seconds": 0.0006875318333186442,
+        "initialization_seconds": [
+          0.03384573799849022,
+          0.03574862700043013,
+          0.034091834000719246
+        ],
+        "final_observation_sha256": "cf1e0020d09eef0a271fefd4f5701176cdec29637e0314c45f338d94be88cc77",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2588672,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 1196632,
+          "peak_bytes": 2934176
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "propagation",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.019489453333396037,
+          0.019668031133308735,
+          0.021229235699987234
+        ],
+        "median_seconds": 0.019668031133308735,
+        "initialization_seconds": [
+          0.05458901499878266,
+          0.05366362199856667,
+          0.06869066000217572
+        ],
+        "final_observation_sha256": "cf1e0020d09eef0a271fefd4f5701176cdec29637e0314c45f338d94be88cc77",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2588672,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 1196632,
+          "peak_bytes": 4345696
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 28.60672070756812,
+      "optimized_peak_limit_bytes": 5497656.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "pair",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "pair",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0012389647999953013,
+          0.001200641100028103,
+          0.0011354396333141874
+        ],
+        "median_seconds": 0.001200641100028103,
+        "initialization_seconds": [
+          0.0729394920017512,
+          0.07652942699860432,
+          0.0758050969998294
+        ],
+        "final_observation_sha256": "da5e82028c011aa443e3c9bb19300fcd5a747ce3c7e226116d0f4cef17e10b6b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4194304,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 3213688,
+          "peak_bytes": 8048904
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "pair",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0010826444665629727,
+          0.0010900045667464535,
+          0.0012437757000346513
+        ],
+        "median_seconds": 0.0010900045667464535,
+        "initialization_seconds": [
+          0.03570929700072156,
+          0.03813299600005848,
+          0.034135638998122886
+        ],
+        "final_observation_sha256": "da5e82028c011aa443e3c9bb19300fcd5a747ce3c7e226116d0f4cef17e10b6b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4194304,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 3213688,
+          "peak_bytes": 8048904
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.1015009814242225,
+      "optimized_peak_limit_bytes": 10126666.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "triplet",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "triplet",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.002826532066683285,
+          0.002196486266620923,
+          0.0026795451000604467
+        ],
+        "median_seconds": 0.0026795451000604467,
+        "initialization_seconds": [
+          0.03626502300176071,
+          0.03538244400260737,
+          0.035083914997812826
+        ],
+        "final_observation_sha256": "d244a2a76b38e34991e429ac260a1067931d464dfa155ba72e9664857852316a",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4227072,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 4262056,
+          "peak_bytes": 12276536
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "triplet",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0027063898667014047,
+          0.002194792999944184,
+          0.0022755990333583518
+        ],
+        "median_seconds": 0.0022755990333583518,
+        "initialization_seconds": [
+          0.07479816200066125,
+          0.0792432429989276,
+          0.07287293399713235
+        ],
+        "final_observation_sha256": "d244a2a76b38e34991e429ac260a1067931d464dfa155ba72e9664857852316a",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4227072,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 4262056,
+          "peak_bytes": 12276536
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.849248267292466,
+      "optimized_peak_limit_bytes": 15411206.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "voltage",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "voltage",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0013742264333510927,
+          0.001443359833380479,
+          0.0015074466666798495
+        ],
+        "median_seconds": 0.001443359833380479,
+        "initialization_seconds": [
+          0.0724669770024775,
+          0.07785872900058166,
+          0.0759607709987904
+        ],
+        "final_observation_sha256": "c398288c1387866c0e220c058f077b813605a180bfcd65a1ba738bf58a4668b7",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4210688,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 3296168,
+          "peak_bytes": 8263488
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "voltage",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0013989496333427572,
+          0.001362053099971187,
+          0.0013589203666924733
+        ],
+        "median_seconds": 0.001362053099971187,
+        "initialization_seconds": [
+          0.03598183700160007,
+          0.03578784499768517,
+          0.03517304999695625
+        ],
+        "final_observation_sha256": "c398288c1387866c0e220c058f077b813605a180bfcd65a1ba738bf58a4668b7",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4210688,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 3296168,
+          "peak_bytes": 8263488
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0596942464365098,
+      "optimized_peak_limit_bytes": 10394896.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "trace_history",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "trace_history",
+        "edges": 131072,
+        "seconds_per_operation": [
+          5.481486659846269e-05,
+          6.26242999715032e-05,
+          5.739606664671252e-05
+        ],
+        "median_seconds": 5.739606664671252e-05,
+        "initialization_seconds": [
+          0.03922409799997695,
+          0.03755748899857281,
+          0.03815645999929984
+        ],
+        "final_observation_sha256": "72b41adcb7146b335180028d2287f21f76aca2f44762f1504a8b7c9011fc644b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4718592,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 2080800,
+          "peak_bytes": 2180008
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "trace_history",
+        "edges": 131072,
+        "seconds_per_operation": [
+          5.983173335456134e-05,
+          7.192260006074017e-05,
+          6.0103133243198197e-05
+        ],
+        "median_seconds": 6.0103133243198197e-05,
+        "initialization_seconds": [
+          0.057988956999906804,
+          0.055701803001284134,
+          0.058984825998777524
+        ],
+        "final_observation_sha256": "72b41adcb7146b335180028d2287f21f76aca2f44762f1504a8b7c9011fc644b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4718592,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 2080800,
+          "peak_bytes": 2180008
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0471646709372675,
+      "optimized_peak_limit_bytes": 2790546.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "transducer",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "transducer",
+        "edges": 131072,
+        "seconds_per_operation": [
+          2.447366690224347e-06,
+          2.3501999142657344e-06,
+          2.521799979149364e-06
+        ],
+        "median_seconds": 2.447366690224347e-06,
+        "initialization_seconds": [
+          0.0584215970011428,
+          0.057956427001045085,
+          0.057834213999740314
+        ],
+        "final_observation_sha256": "88fcdcb9aa62ff0ef321759d01ffcbe48c75907c0f9290c8c4490911f04a3e3b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2589056,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 16480,
+          "peak_bytes": 36664
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "transducer",
+        "edges": 131072,
+        "seconds_per_operation": [
+          2.2854333413609613e-06,
+          2.3361666535492986e-06,
+          2.2704000002704562e-06
+        ],
+        "median_seconds": 2.2854333413609613e-06,
+        "initialization_seconds": [
+          0.04089268000097945,
+          0.04084835200046655,
+          0.03923056799976621
+        ],
+        "final_observation_sha256": "88fcdcb9aa62ff0ef321759d01ffcbe48c75907c0f9290c8c4490911f04a3e3b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2589056,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 16480,
+          "peak_bytes": 36664
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0708545490838755,
+      "optimized_peak_limit_bytes": 111366.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "probe",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "probe",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0002067762999407326,
+          0.0001655111666574764,
+          0.0001704632667194043
+        ],
+        "median_seconds": 0.0001704632667194043,
+        "initialization_seconds": [
+          0.06334864900054527,
+          0.047083950998057844,
+          0.041971093000029214
+        ],
+        "final_observation_sha256": "6ff341356fb0fa830ec6a55c4e108e612b99c15f5e6ee7cd4fceb4ee05edd381",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 16605696,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 4787888,
+          "peak_bytes": 9576592
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "probe",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.00020222070003607465,
+          0.0001722288666011688,
+          0.00017798793329954304
+        ],
+        "median_seconds": 0.00017798793329954304,
+        "initialization_seconds": [
+          0.19822738000220852,
+          0.19937487800052622,
+          0.19245624399991357
+        ],
+        "final_observation_sha256": "6ff341356fb0fa830ec6a55c4e108e612b99c15f5e6ee7cd4fceb4ee05edd381",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 16605696,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 4787888,
+          "peak_bytes": 9576592
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.044142452065787,
+      "optimized_peak_limit_bytes": 12036276.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "fixed_tick",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "fixed_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.02075048899993514,
+          0.020932304233307757,
+          0.02082292056669151
+        ],
+        "median_seconds": 0.02082292056669151,
+        "initialization_seconds": [
+          0.09487820000140346,
+          0.09853087500232505,
+          0.09051051999995252
+        ],
+        "final_observation_sha256": "dddaabf1bdd79abc19eb0a9a2091b80dc9f576b9b8337458872d8024ef7de5ee",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 7176576,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 1387584,
+          "peak_bytes": 4586112
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "fixed_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0013440627667781276,
+          0.001387462133304022,
+          0.0014302197999010483
+        ],
+        "median_seconds": 0.001387462133304022,
+        "initialization_seconds": [
+          0.03728022399809561,
+          0.03613419900284498,
+          0.03882476000217139
+        ],
+        "final_observation_sha256": "dddaabf1bdd79abc19eb0a9a2091b80dc9f576b9b8337458872d8024ef7de5ee",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 7176576,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 1387584,
+          "peak_bytes": 3632306
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 15.007919904167052,
+      "optimized_peak_limit_bytes": 5798176.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "adaptive_tick",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "adaptive_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.004779601033321038,
+          0.004822740833333228,
+          0.0051397967666465165
+        ],
+        "median_seconds": 0.004822740833333228,
+        "initialization_seconds": [
+          0.03924712599837221,
+          0.03956812799879117,
+          0.038281121000181884
+        ],
+        "final_observation_sha256": "611036d787e5bf3356c3216d49e59a9f177b7f893e11632b659f94ca9ccb0d9f",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10453376,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 10092473,
+          "peak_bytes": 23412157
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "adaptive_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.046364657666587546,
+          0.045099109000026755,
+          0.04715492463328701
+        ],
+        "median_seconds": 0.046364657666587546,
+        "initialization_seconds": [
+          0.18024968700046884,
+          0.1537486519991944,
+          0.16305092200127547
+        ],
+        "final_observation_sha256": "611036d787e5bf3356c3216d49e59a9f177b7f893e11632b659f94ca9ccb0d9f",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10453376,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 10092294,
+          "peak_bytes": 23856274
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 9.613756838462063,
+      "optimized_peak_limit_bytes": 29885878.5
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "routed_tick",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "routed_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.04426948183330145,
+          0.04387128106657959,
+          0.042616204266717736
+        ],
+        "median_seconds": 0.04387128106657959,
+        "initialization_seconds": [
+          0.15352980000170646,
+          0.16056729100091616,
+          0.1564661510019505
+        ],
+        "final_observation_sha256": "3030b6525fb2d6ff2eb6b3d862cd3b7fcab1101bd963669931ec754937165a8d",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10457600,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 10110539,
+          "peak_bytes": 23940855
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "routed_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.006640935733351701,
+          0.0054814978332918445,
+          0.004895673699987431
+        ],
+        "median_seconds": 0.0054814978332918445,
+        "initialization_seconds": [
+          0.04261760800000047,
+          0.041343811000842834,
+          0.03694182599792839
+        ],
+        "final_observation_sha256": "3030b6525fb2d6ff2eb6b3d862cd3b7fcab1101bd963669931ec754937165a8d",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10457600,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 10108814,
+          "peak_bytes": 23494830
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 8.003520643596286,
+      "optimized_peak_limit_bytes": 29991604.75
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "regime_tick",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "regime_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.009202443400014696,
+          0.008816481433314038,
+          0.0074182650000390515
+        ],
+        "median_seconds": 0.008816481433314038,
+        "initialization_seconds": [
+          0.0436434429975634,
+          0.060577141997782746,
+          0.047364637001010124
+        ],
+        "final_observation_sha256": "aa028a91420f4cc1306f8cfa61c6ebb2863072697174ed8585dfc643f7008a94",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10457600,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 10121942,
+          "peak_bytes": 32367765
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "regime_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.047058190299988686,
+          0.04602252036662927,
+          0.048552239633257464
+        ],
+        "median_seconds": 0.047058190299988686,
+        "initialization_seconds": [
+          0.1721915770031046,
+          0.15390655699957279,
+          0.15404587000011816
+        ],
+        "final_observation_sha256": "aa028a91420f4cc1306f8cfa61c6ebb2863072697174ed8585dfc643f7008a94",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10457600,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 10120777,
+          "peak_bytes": 32810949
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 5.33752502695397,
+      "optimized_peak_limit_bytes": 41079222.25
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "replay_record",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_record",
+        "edges": 131072,
+        "seconds_per_operation": [
+          2.793240006819057e-05,
+          2.756883344166757e-05,
+          2.825486662914045e-05
+        ],
+        "median_seconds": 2.793240006819057e-05,
+        "initialization_seconds": [
+          0.545058532999974,
+          0.5491824860000634,
+          0.49830730599933304
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 16610816,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_record",
+        "edges": 131072,
+        "seconds_per_operation": [
+          2.871489996323362e-05,
+          3.1342166645724014e-05,
+          2.9176933336808966e-05
+        ],
+        "median_seconds": 2.9176933336808966e-05,
+        "initialization_seconds": [
+          0.08424514299986186,
+          0.0877693590009585,
+          0.08165096900120261
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 16610816,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9573453023917246,
+      "optimized_peak_limit_bytes": 109336.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "ordered",
+      "operation": "replay_schedule",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_schedule",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0002687651999925341,
+          0.00027273616663781773,
+          0.00027824713324662296
+        ],
+        "median_seconds": 0.00027273616663781773,
+        "initialization_seconds": [
+          0.09482666099938797,
+          0.0933122119968175,
+          0.0898713630012935
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10455424,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 2354,
+          "peak_bytes": 31506
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "ordered"
+        },
+        "operation": "replay_schedule",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.00023730316667448884,
+          0.00025329860000056215,
+          0.00024234010003662358
+        ],
+        "median_seconds": 0.00024234010003662358,
+        "initialization_seconds": [
+          0.5963465280001401,
+          0.5435019719989214,
+          0.5348028839980543
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10455424,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 2060,
+          "peak_bytes": 31212
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.8885513902468284,
+      "optimized_peak_limit_bytes": 104551.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "neurons",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "neurons",
+        "edges": 131072,
+        "seconds_per_operation": [
+          7.125559992952428e-05,
+          9.323300000687595e-05,
+          7.457156668048508e-05
+        ],
+        "median_seconds": 7.457156668048508e-05,
+        "initialization_seconds": [
+          0.058144205999269616,
+          0.05775495999841951,
+          0.0565669319985318
+        ],
+        "final_observation_sha256": "9d9948e6929a057019b0cafe4745db81b1dbc67712c4606ab9f068475aadd836",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2588672,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 33240,
+          "peak_bytes": 157272
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "neurons",
+        "edges": 131072,
+        "seconds_per_operation": [
+          6.939276669678899e-05,
+          7.551130001957063e-05,
+          7.138076665190359e-05
+        ],
+        "median_seconds": 7.138076665190359e-05,
+        "initialization_seconds": [
+          0.03815399699669797,
+          0.03797451699938392,
+          0.03737512600127957
+        ],
+        "final_observation_sha256": "9d9948e6929a057019b0cafe4745db81b1dbc67712c4606ab9f068475aadd836",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2588672,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 33240,
+          "peak_bytes": 157272
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.044701117377203,
+      "optimized_peak_limit_bytes": 262126.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "propagation",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "propagation",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.006469786933303112,
+          0.007066733100024673,
+          0.006237452933297997
+        ],
+        "median_seconds": 0.006469786933303112,
+        "initialization_seconds": [
+          0.036038062997249654,
+          0.037570088999927975,
+          0.037689337998017436
+        ],
+        "final_observation_sha256": "dd0d1ba3bca1c913fac47664750883adc9535e27b368dd936fd12912cbd775cc",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2588672,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 1196632,
+          "peak_bytes": 2934176
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "propagation",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.020186323999951128,
+          0.0196238897665656,
+          0.01981069563322914
+        ],
+        "median_seconds": 0.01981069563322914,
+        "initialization_seconds": [
+          0.056797287998051615,
+          0.05667386300046928,
+          0.05507028300053207
+        ],
+        "final_observation_sha256": "dd0d1ba3bca1c913fac47664750883adc9535e27b368dd936fd12912cbd775cc",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2588672,
+          "array_count": 8
+        },
+        "allocations": {
+          "retained_bytes": 1196632,
+          "peak_bytes": 4345696
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 3.06203215615246,
+      "optimized_peak_limit_bytes": 5497656.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "pair",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "pair",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0012230959334071183,
+          0.0011448544999439036,
+          0.0012361592666517633
+        ],
+        "median_seconds": 0.0012230959334071183,
+        "initialization_seconds": [
+          0.0783983809997153,
+          0.07656492200112552,
+          0.07576123100079712
+        ],
+        "final_observation_sha256": "736b439a9d236fbd568e3f77e0d7221941eac34fa12d4ca2c610926f3e1a8b32",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4194304,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 3213688,
+          "peak_bytes": 8048904
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "pair",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0012518365333865707,
+          0.0012143874999310355,
+          0.0011245218667075582
+        ],
+        "median_seconds": 0.0012143874999310355,
+        "initialization_seconds": [
+          0.055143552999652456,
+          0.0477192649996141,
+          0.0439583439983835
+        ],
+        "final_observation_sha256": "736b439a9d236fbd568e3f77e0d7221941eac34fa12d4ca2c610926f3e1a8b32",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4194304,
+          "array_count": 13
+        },
+        "allocations": {
+          "retained_bytes": 3213688,
+          "peak_bytes": 8048904
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0071710499956377,
+      "optimized_peak_limit_bytes": 10126666.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "triplet",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "triplet",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0021745466999467072,
+          0.0023487414999787386,
+          0.0022331124999861156
+        ],
+        "median_seconds": 0.0022331124999861156,
+        "initialization_seconds": [
+          0.04224677700040047,
+          0.04250584699911997,
+          0.045819716000551125
+        ],
+        "final_observation_sha256": "59f95039f72597bf10504b4f11d51291d9e62cbbd7aaf0a25df2cba7ece4b2a9",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4227072,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 4262056,
+          "peak_bytes": 12276536
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "triplet",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.002103020466650681,
+          0.002023933400050737,
+          0.002749491033440184
+        ],
+        "median_seconds": 0.002103020466650681,
+        "initialization_seconds": [
+          0.07217451500036987,
+          0.07233076999909827,
+          0.07744072100103949
+        ],
+        "final_observation_sha256": "59f95039f72597bf10504b4f11d51291d9e62cbbd7aaf0a25df2cba7ece4b2a9",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4227072,
+          "array_count": 12
+        },
+        "allocations": {
+          "retained_bytes": 4262056,
+          "peak_bytes": 12276536
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9417440754389921,
+      "optimized_peak_limit_bytes": 15411206.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "voltage",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "voltage",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.001415866633396945,
+          0.0015198572667335004,
+          0.0014098274665836168
+        ],
+        "median_seconds": 0.001415866633396945,
+        "initialization_seconds": [
+          0.07456105700111948,
+          0.07947948999935761,
+          0.09777697699973942
+        ],
+        "final_observation_sha256": "f31adc7afd7f183db9d986bcf239bcd9e853e12ba6a901ce9919518df5666b62",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4210688,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 3296168,
+          "peak_bytes": 8263488
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "voltage",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0014460406666330528,
+          0.0013409017999947536,
+          0.0013634833999579617
+        ],
+        "median_seconds": 0.0013634833999579617,
+        "initialization_seconds": [
+          0.043624496000120416,
+          0.0436504059980507,
+          0.04302264099897002
+        ],
+        "final_observation_sha256": "f31adc7afd7f183db9d986bcf239bcd9e853e12ba6a901ce9919518df5666b62",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4210688,
+          "array_count": 14
+        },
+        "allocations": {
+          "retained_bytes": 3296168,
+          "peak_bytes": 8263488
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.038418680741253,
+      "optimized_peak_limit_bytes": 10394896.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "trace_history",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "trace_history",
+        "edges": 131072,
+        "seconds_per_operation": [
+          5.4594166673875107e-05,
+          5.9637433393315103e-05,
+          6.895846660578778e-05
+        ],
+        "median_seconds": 5.9637433393315103e-05,
+        "initialization_seconds": [
+          0.04105911499937065,
+          0.04050563200144097,
+          0.041922273998352466
+        ],
+        "final_observation_sha256": "72b41adcb7146b335180028d2287f21f76aca2f44762f1504a8b7c9011fc644b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4718592,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 2080800,
+          "peak_bytes": 2180008
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "trace_history",
+        "edges": 131072,
+        "seconds_per_operation": [
+          5.5600333265222916e-05,
+          5.634679995030941e-05,
+          6.298146666570877e-05
+        ],
+        "median_seconds": 5.634679995030941e-05,
+        "initialization_seconds": [
+          0.06068368099658983,
+          0.06436937800026499,
+          0.05853873199885129
+        ],
+        "final_observation_sha256": "72b41adcb7146b335180028d2287f21f76aca2f44762f1504a8b7c9011fc644b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 4718592,
+          "array_count": 138
+        },
+        "allocations": {
+          "retained_bytes": 2080800,
+          "peak_bytes": 2180008
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.9448226850859992,
+      "optimized_peak_limit_bytes": 2790546.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "transducer",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "transducer",
+        "edges": 131072,
+        "seconds_per_operation": [
+          2.9751332476735116e-06,
+          2.360900058799113e-06,
+          2.2560333794293302e-06
+        ],
+        "median_seconds": 2.360900058799113e-06,
+        "initialization_seconds": [
+          0.05650005399729707,
+          0.06723264299944276,
+          0.058903321998514
+        ],
+        "final_observation_sha256": "88fcdcb9aa62ff0ef321759d01ffcbe48c75907c0f9290c8c4490911f04a3e3b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2589056,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 16480,
+          "peak_bytes": 36664
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "transducer",
+        "edges": 131072,
+        "seconds_per_operation": [
+          2.227366591493289e-06,
+          2.329500057385303e-06,
+          3.978333309836065e-06
+        ],
+        "median_seconds": 2.329500057385303e-06,
+        "initialization_seconds": [
+          0.04084562400021241,
+          0.055988434000028064,
+          0.04969498200080125
+        ],
+        "final_observation_sha256": "88fcdcb9aa62ff0ef321759d01ffcbe48c75907c0f9290c8c4490911f04a3e3b",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 2589056,
+          "array_count": 11
+        },
+        "allocations": {
+          "retained_bytes": 16480,
+          "peak_bytes": 36664
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0134792876755945,
+      "optimized_peak_limit_bytes": 111366.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "probe",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "probe",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.00020730536671180743,
+          0.00022328773338813334,
+          0.00023508979999557292
+        ],
+        "median_seconds": 0.00022328773338813334,
+        "initialization_seconds": [
+          0.09411976300179958,
+          0.09649625000020023,
+          0.10261226399961743
+        ],
+        "final_observation_sha256": "23f9a9ca9e781425c96868c24f3624b784a18cc5e3196ab164c4ad827e6324c6",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 16605696,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 4787888,
+          "peak_bytes": 9576592
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "probe",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0001766091333896232,
+          0.00018074103330339614,
+          0.00027504729999539755
+        ],
+        "median_seconds": 0.00018074103330339614,
+        "initialization_seconds": [
+          0.2125126490027469,
+          0.22756283300259383,
+          0.19458031400063192
+        ],
+        "final_observation_sha256": "23f9a9ca9e781425c96868c24f3624b784a18cc5e3196ab164c4ad827e6324c6",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 16605696,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 4787888,
+          "peak_bytes": 9576592
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 0.8094534821096521,
+      "optimized_peak_limit_bytes": 12036276.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "fixed_tick",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "fixed_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.020069583599979523,
+          0.02093354583339533,
+          0.021950023566629777
+        ],
+        "median_seconds": 0.02093354583339533,
+        "initialization_seconds": [
+          0.09507528199901571,
+          0.09435604000100284,
+          0.09781125300287385
+        ],
+        "final_observation_sha256": "dddaabf1bdd79abc19eb0a9a2091b80dc9f576b9b8337458872d8024ef7de5ee",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 7176576,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 1387584,
+          "peak_bytes": 4586112
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "fixed_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0073710095332595905,
+          0.00790224379998108,
+          0.007313008266646648
+        ],
+        "median_seconds": 0.0073710095332595905,
+        "initialization_seconds": [
+          0.05222031599987531,
+          0.057320847001392394,
+          0.05482372400001623
+        ],
+        "final_observation_sha256": "dddaabf1bdd79abc19eb0a9a2091b80dc9f576b9b8337458872d8024ef7de5ee",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 7176576,
+          "array_count": 21
+        },
+        "allocations": {
+          "retained_bytes": 1387584,
+          "peak_bytes": 3632306
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 2.8399835516340928,
+      "optimized_peak_limit_bytes": 5798176.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "adaptive_tick",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "adaptive_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.01695930729996083,
+          0.01662831499997992,
+          0.01875801266663378
+        ],
+        "median_seconds": 0.01695930729996083,
+        "initialization_seconds": [
+          0.068738335998205,
+          0.0832419549988117,
+          0.06949711299967021
+        ],
+        "final_observation_sha256": "29f1029ff3b84c70a941fc26dcde9d17f7bd6e18c1f3937838280e976a528b4e",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10453376,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 10092469,
+          "peak_bytes": 23412153
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "adaptive_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.045097467999949,
+          0.04192110913342428,
+          0.04368466066674349
+        ],
+        "median_seconds": 0.04368466066674349,
+        "initialization_seconds": [
+          0.15704160099994624,
+          0.15773462300057872,
+          0.15497016199879
+        ],
+        "final_observation_sha256": "29f1029ff3b84c70a941fc26dcde9d17f7bd6e18c1f3937838280e976a528b4e",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10453376,
+          "array_count": 29
+        },
+        "allocations": {
+          "retained_bytes": 10093640,
+          "peak_bytes": 23857624
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 2.5758517075072036,
+      "optimized_peak_limit_bytes": 29887566.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "routed_tick",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "routed_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.04580756543340006,
+          0.0436349515333859,
+          0.04328033383341487
+        ],
+        "median_seconds": 0.0436349515333859,
+        "initialization_seconds": [
+          0.15741908799827797,
+          0.155109300998447,
+          0.15302770500056795
+        ],
+        "final_observation_sha256": "4b601d091bfd56f8ebb770e37ee3d1c95329e10c80e5957d433f4d11f9f111f8",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10457600,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 10108552,
+          "peak_bytes": 23938868
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "routed_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.01763863296667599,
+          0.017652527533330915,
+          0.01889674576668767
+        ],
+        "median_seconds": 0.017652527533330915,
+        "initialization_seconds": [
+          0.07576537600107258,
+          0.07025610599885113,
+          0.07052473899966571
+        ],
+        "final_observation_sha256": "4b601d091bfd56f8ebb770e37ee3d1c95329e10c80e5957d433f4d11f9f111f8",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10457600,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 10109973,
+          "peak_bytes": 23495993
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 2.4718812334945146,
+      "optimized_peak_limit_bytes": 29989121.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "regime_tick",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "regime_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.021517781066722818,
+          0.019414636366733854,
+          0.01875734773335959
+        ],
+        "median_seconds": 0.019414636366733854,
+        "initialization_seconds": [
+          0.07446890500068548,
+          0.07963900799950352,
+          0.06980078000196954
+        ],
+        "final_observation_sha256": "543cc5643fbbed46a0b2a953d498b8df27367f19be4dbb9f118a3b98af5b2df2",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10457600,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 10121593,
+          "peak_bytes": 32367469
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "regime_tick",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.04853335286667668,
+          0.04728480189999876,
+          0.050169888399977935
+        ],
+        "median_seconds": 0.04853335286667668,
+        "initialization_seconds": [
+          0.17776136999964365,
+          0.1501045279983373,
+          0.16135609100092552
+        ],
+        "final_observation_sha256": "543cc5643fbbed46a0b2a953d498b8df27367f19be4dbb9f118a3b98af5b2df2",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10457600,
+          "array_count": 62
+        },
+        "allocations": {
+          "retained_bytes": 10121519,
+          "peak_bytes": 32811740
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 2.4998332160285264,
+      "optimized_peak_limit_bytes": 41080211.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "replay_record",
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_record",
+        "edges": 131072,
+        "seconds_per_operation": [
+          2.8298933345164792e-05,
+          2.70633999510513e-05,
+          3.0073933400368937e-05
+        ],
+        "median_seconds": 2.8298933345164792e-05,
+        "initialization_seconds": [
+          0.5242432779996307,
+          0.5216755080000439,
+          0.5105416330006847
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 16610816,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_record",
+        "edges": 131072,
+        "seconds_per_operation": [
+          2.7979133301414548e-05,
+          2.784523336837689e-05,
+          2.7799199961009437e-05
+        ],
+        "median_seconds": 2.784523336837689e-05,
+        "initialization_seconds": [
+          0.20906706499954453,
+          0.21060277599826804,
+          0.20126473100026487
+        ],
+        "final_observation_sha256": "42c53143553f6d499f242fee06d00b1293bc558c6f282981bb10286a8706d760",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 16610816,
+          "array_count": 102
+        },
+        "allocations": {
+          "retained_bytes": 22680,
+          "peak_bytes": 35040
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0162936316886162,
+      "optimized_peak_limit_bytes": 109336.0
+    },
+    {
+      "size": "stress",
+      "edge_order": "shuffled",
+      "operation": "replay_schedule",
+      "optimized": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_schedule",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.0003329054000156854,
+          0.00026740183335884163,
+          0.00025411016673994405
+        ],
+        "median_seconds": 0.00026740183335884163,
+        "initialization_seconds": [
+          0.25935813000251073,
+          0.24351506899984088,
+          0.23164841800098657
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10455424,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 2158,
+          "peak_bytes": 31359
+        }
+      },
+      "reference": {
+        "config": {
+          "population": 4096,
+          "degree": 32,
+          "seed": 7,
+          "dt_ms": 0.5,
+          "edge_order": "shuffled"
+        },
+        "operation": "replay_schedule",
+        "edges": 131072,
+        "seconds_per_operation": [
+          0.00026665836667234545,
+          0.00031325216671878784,
+          0.000285451333305294
+        ],
+        "median_seconds": 0.000285451333305294,
+        "initialization_seconds": [
+          0.5855872499996622,
+          0.7721766139984538,
+          0.6256372009993356
+        ],
+        "final_observation_sha256": "837bfe34eac8e8cddfbaa10df345b20daf2846a82befdfd1a33a38f592e5542c",
+        "arrays_after_timing": {
+          "unique_backing_bytes": 10455424,
+          "array_count": 45
+        },
+        "allocations": {
+          "retained_bytes": 2060,
+          "peak_bytes": 31212
+        }
+      },
+      "passed": true,
+      "failures": [],
+      "speedup": 1.0674995370066545,
+      "optimized_peak_limit_bytes": 104551.0
+    }
+  ],
+  "passed": true
+}

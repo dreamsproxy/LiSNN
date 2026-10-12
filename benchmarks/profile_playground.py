@@ -27,7 +27,7 @@ from lisnn.network import create_nn
 from lisnn.neurons.registry import get_step_function
 from lisnn.plasticity import PairSTDP, TripletSTDP, VoltageSTDP
 from lisnn.plasticity.traces import PlasticityTraces
-from lisnn.synapses import create_fixed_out_degree
+from lisnn.synapses import create_fixed_out_degree, topology_validation
 from lisnn.synapses.propagation import propagate
 
 
@@ -275,6 +275,13 @@ def measure(config, operation, *, steps, repeats, warmup, diagnostics):
     return report
 
 
+def environment():
+    return dict(python=platform.python_version(), numpy=np.__version__,
+        platform=platform.platform(), processor=platform.processor(), cpu_count=os.cpu_count(),
+        thread_environment={k: os.environ.get(k) for k in
+            ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS")})
+
+
 def source_digest():
     # This can intentionally be a separate reference worktree via PYTHONPATH.
     root = Path(lisnn.__file__).resolve().parents[1]
@@ -294,23 +301,23 @@ def main(argv=None):
     parser.add_argument("--warmup", type=int, default=3)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--edge-order", choices=("ordered", "shuffled"), default="ordered")
+    parser.add_argument("--validation-backend", choices=("optimized", "reference"), default="optimized")
     parser.add_argument("--timing-only", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.steps <= 0 or args.repeats <= 0 or args.warmup < 0:
         parser.error("steps/repeats must be positive and warmup nonnegative")
-    report = dict(schema=1, environment=dict(python=platform.python_version(),
-        numpy=np.__version__, platform=platform.platform(), processor=platform.processor(),
-        cpu_count=os.cpu_count(), thread_environment={k: os.environ.get(k) for k in
-            ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS")}),
+    report = dict(schema=2, environment=environment(),
         source_sha256=source_digest(), steps=args.steps, repeats=args.repeats,
-        warmup=args.warmup, jit="none; NumPy reference", results=[])
+        warmup=args.warmup, topology_validation=args.validation_backend,
+        jit="none", bounded_state_prefilled=True, replay_payload_fingerprinted=True, results=[])
     jobs = [(size, op) for size in args.sizes for op in args.operations]
     args.output.parent.mkdir(parents=True, exist_ok=True)
     for index, (size, op) in enumerate(jobs, 1):
         n, degree = SIZES[size]
-        row = measure(Config(n, degree, args.seed, edge_order=args.edge_order), op, steps=args.steps,
-                      repeats=args.repeats, warmup=args.warmup, diagnostics=not args.timing_only)
+        with topology_validation(args.validation_backend):
+            row = measure(Config(n, degree, args.seed, edge_order=args.edge_order), op, steps=args.steps,
+                          repeats=args.repeats, warmup=args.warmup, diagnostics=not args.timing_only)
         row["size"] = size
         report["results"].append(row)
         filled = 20 * index // len(jobs)

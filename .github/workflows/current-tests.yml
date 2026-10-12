@@ -12,6 +12,11 @@ on:
 jobs:
   pytest:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        validation: [optimized, reference]
+    env:
+      LISNN_TOPOLOGY_VALIDATION: ${{ matrix.validation }}
 
     steps:
       - name: Checkout
@@ -25,7 +30,7 @@ jobs:
       - name: Install active test dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install numpy pytest
+          python -m pip install -r requirements/test.txt
 
       - name: Run active tests
         run: python -m pytest -q
@@ -34,10 +39,14 @@ jobs:
       - name: Run all active smoke tests
         run: python debug.py --log-dir logs/ci-smoke
 
+      - name: Matched numerical and memory gate
+        if: matrix.validation == 'optimized'
+        run: python -m benchmarks.regression_gate --steps 5 --repeats 2 --output logs/regression-gate.json
+
       - name: Upload smoke diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: smoke-diagnostics
-          path: logs/ci-smoke/
+          name: diagnostics-${{ matrix.validation }}
+          path: logs/
           if-no-files-found: ignore

@@ -1,0 +1,3 @@
+# Optional future/live media experiments; unused by the ASCII medium.
+librosa
+opencv-python

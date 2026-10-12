@@ -54,7 +54,15 @@ steady-state allocation, not process RSS or a GPU allocation. Its retained
 count includes the final observation. Delivery logs grow during timed routing;
 the benchmark reports a finite prefix, not an unlimited-run memory bound.
 
-## Captured NumPy baseline
+## Historical NumPy baseline
+
+The four schema-1 reports below preserve the original #25/#26 measurements.
+Their trace/replay buffers were not fully populated at measurement start and
+`replay_record` fingerprinted only length. Those two workloads cannot support
+steady-state allocation or replay-payload equivalence claims. Integration fixes
+corrected both; current matched gate reports supersede those claims. The
+recorded topology-validation timing comparison remains historical evidence,
+not a timing baseline for a changed code revision.
 
 `results/numpy_baseline.json` records the untouched runtime at PR #92 commit
 `df5288c36a6fe588ed3381c63d964adbec6653df`, with its `lisnn` source digest in the
@@ -120,18 +128,11 @@ python -m benchmarks.compare_profiles benchmarks/results/numpy_baseline.json ben
 python -m benchmarks.compare_profiles benchmarks/results/shuffled_reference.json benchmarks/results/shuffled_optimized.json
 ```
 
-To reproduce the unordered comparison against the untouched runtime, use the
-same current harness with a reference worktree on `PYTHONPATH`. The harness
-hashes the actually imported `lisnn` source, not its own working directory:
+For current comparisons use `regression_gate` below. It switches only the
+validation implementation within the same corrected source revision, so later
+contract repairs cannot be mistaken for optimization-induced differences.
 
-```bash
-git worktree add ../LiSNN-reference aee886230df61564f5dff5eee9248c7a0817c8b2
-PYTHONPATH=../LiSNN-reference python benchmarks/profile_playground.py --sizes medium stress --operations propagation fixed_tick adaptive_tick regime_tick --edge-order shuffled --steps 30 --repeats 5 --timing-only --output /tmp/reference.json
-python -m benchmarks.profile_playground --sizes medium stress --operations propagation fixed_tick adaptive_tick regime_tick --edge-order shuffled --steps 30 --repeats 5 --timing-only --output /tmp/optimized.json
-python -m benchmarks.compare_profiles /tmp/reference.json /tmp/optimized.json
-```
-
-Verification: 346 tests and all 19 smoke suites pass. Dedicated differential
+Historical #26 verification: 346 tests and all 19 smoke suites passed. Dedicated differential
 tests compare every tick of all 14 workloads with the original duplicate-check
 oracle in ordered and shuffled configurations. An additional 80-tick comparison
 covers all nine neuron families together, each of off/Pair/Triplet/Voltage
@@ -141,5 +142,79 @@ also checked. No new JIT backend or learning rule is introduced.
 
 Remaining costs include triplet update arrays and rollback/snapshot copies.
 The current regime snapshots and delivery history still need care for long
-runs; this change does not claim to bound their lifetime memory. Dedicated
-performance regression policy and Numba remain separate #28/#27 decisions.
+runs; this change does not claim to bound their lifetime memory. The policy below completes #28. Numba remains conditional under #27.
+
+
+## Regression policy (#28)
+
+```bash
+python -m benchmarks.regression_gate --output logs/regression-gate.json
+python -m benchmarks.regression_gate --sizes small medium stress --steps 30 --repeats 5 --output logs/scaling-gate.json
+```
+
+Every case runs sequentially with the reference and optimized duplicate check,
+using the same current source revision, seeds, configuration, requested warmup,
+steps and repeat counts. The first mode alternates between cases. History and
+replay-record fixtures are full before warmup. Replay fingerprints include all
+retained entry metadata and current arrays, not just length. Schema-2 standalone
+profiles also record the backend and these corrected measurement conventions.
+
+Hard gates, including CI:
+
+- Same final observation fingerprint and deterministic repeats in every workload.
+- Equal reachable persistent ndarray backing bytes across backends.
+- Optimized traced peak <= 1.25 * reference peak + 65,536 bytes, allowing small
+  allocator bookkeeping differences while catching material new workspaces.
+- Independent tests compare every tick of all workloads and mixed-neuron learner
+  runs. Bounded histories/replay buffers keep identical storage after 500 more
+  operations. The complete scientific tests and smoke suites run with both
+  process defaults in CI.
+
+CI records wall time without enforcing portable milliseconds on shared runners.
+For an idle controlled host, opt into an end-to-end slowdown threshold:
+
+```bash
+python -m benchmarks.regression_gate --sizes stress --operations fixed_tick adaptive_tick routed_tick regime_tick --steps 100 --repeats 7 --enforce-timing --max-slowdown 1.5 --output logs/performance-gate.json
+```
+
+This fails if an optimized median is >1.5 times its paired reference median.
+A failure is a reason to inspect load and rerun the same configuration, not to
+weaken the threshold automatically. A new optimization must show an end-to-end
+benefit on the workload it targets; beating this ceiling alone proves no gain.
+Record environment/source/configuration and retain the raw samples with any
+performance claim. Compare historical runs only when their measurement protocol
+and environment match. Host baselines are evidence, not universal guarantees.
+
+To disable the optimized duplicate-check path in a whole process, set
+`LISNN_TOPOLOGY_VALIDATION=reference` before starting Python. Programmatic
+`with lisnn.synapses.topology_validation("reference"):` is scoped and restores
+the previous mode even on failure. All topology validity checks remain active.
+The standalone profiler also accepts `--validation-backend reference`.
+
+The memory gate measures a finite workload, not unlimited recording. Routing
+logs and rollback snapshots may grow with experiment length; history/replay
+capacity bounds do not bound those logs. No JIT kernel is currently justified
+by a measured, validated replacement, so #27 remains deferred.
+
+
+## Integrated baseline after review repairs
+
+`results/integrated_gate.json` records 84 matched cases: all 14 workloads,
+three sizes and both edge orders, with 30 steps, 3 repeats and 3 warmup steps.
+All semantic, deterministic-repeat, persistent-storage and allocation gates
+passed. Raw timing samples and environment/source hashes are retained.
+The stress end-to-end cases also satisfy the optional 1.5x slowdown ceiling:
+
+| Edge order | Operation | Reference ms | Optimized ms | Speedup |
+| --- | --- | ---: | ---: | ---: |
+| ordered | fixed_tick | 20.823 | 1.387 | 15.01x |
+| ordered | adaptive_tick | 46.365 | 4.823 | 9.61x |
+| ordered | routed_tick | 43.871 | 5.481 | 8.00x |
+| ordered | regime_tick | 47.058 | 8.816 | 5.34x |
+| shuffled | fixed_tick | 20.934 | 7.371 | 2.84x |
+| shuffled | adaptive_tick | 43.685 | 16.959 | 2.58x |
+| shuffled | routed_tick | 43.635 | 17.653 | 2.47x |
+| shuffled | regime_tick | 48.533 | 19.415 | 2.50x |
+
+These remain measurements from this host and finite recording duration.
+The integrated baseline includes independent audit-log delivery arrays from #96.
