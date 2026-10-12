@@ -118,3 +118,16 @@ def test_feedback_requires_executed_observation_and_handles_later_fractional_tic
         routed.timestamp_to_tick(64.15)
     with pytest.raises(ValueError, match="executed observation"):
         routed.schedule_feedback(routed.tick, [1, 2], port_name="feedback", delivery_tick=routed.tick+1, mode="test")
+
+
+def test_delivery_observation_and_audit_history_have_independent_arrays():
+    routed = setup()
+    routed.schedule_frame(frame("EXTERNAL", "CONTINUOUS", "auditory", [10, 20], 0), "auditory")
+    result = routed.step()
+    snapshot = routed.snapshot()
+    result.deliveries[0].channel_current_pA[:] = 999
+    np.testing.assert_array_equal(routed.deliveries[0].channel_current_pA, [10, 20])
+    np.testing.assert_array_equal(snapshot.deliveries[0].channel_current_pA, [10, 20])
+    routed.deliveries[0].channel_current_pA[:] = -1
+    np.testing.assert_array_equal(result.deliveries[0].channel_current_pA, [999, 999])
+    np.testing.assert_array_equal(snapshot.deliveries[0].channel_current_pA, [10, 20])

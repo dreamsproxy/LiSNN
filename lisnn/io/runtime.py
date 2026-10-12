@@ -136,7 +136,8 @@ class StreamRuntime:
         except Exception:
             self.scheduler._frames[self.tick] = list(scheduled)
             raise
-        self.deliveries.extend(records)
+        # Returned observations and retained audit history are separate owners.
+        self.deliveries.extend(deepcopy(records))
         return RoutedTick(result, tuple(records))
 
     def snapshot(self):

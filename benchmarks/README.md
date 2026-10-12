@@ -207,13 +207,14 @@ The stress end-to-end cases also satisfy the optional 1.5x slowdown ceiling:
 
 | Edge order | Operation | Reference ms | Optimized ms | Speedup |
 | --- | --- | ---: | ---: | ---: |
-| ordered | fixed_tick | 22.427 | 1.467 | 15.29x |
-| ordered | adaptive_tick | 43.852 | 4.844 | 9.05x |
-| ordered | routed_tick | 45.739 | 5.173 | 8.84x |
-| ordered | regime_tick | 48.348 | 6.734 | 7.18x |
-| shuffled | fixed_tick | 20.796 | 7.875 | 2.64x |
-| shuffled | adaptive_tick | 45.785 | 17.552 | 2.61x |
-| shuffled | routed_tick | 44.755 | 17.906 | 2.50x |
-| shuffled | regime_tick | 48.021 | 18.246 | 2.63x |
+| ordered | fixed_tick | 20.823 | 1.387 | 15.01x |
+| ordered | adaptive_tick | 46.365 | 4.823 | 9.61x |
+| ordered | routed_tick | 43.871 | 5.481 | 8.00x |
+| ordered | regime_tick | 47.058 | 8.816 | 5.34x |
+| shuffled | fixed_tick | 20.934 | 7.371 | 2.84x |
+| shuffled | adaptive_tick | 43.685 | 16.959 | 2.58x |
+| shuffled | routed_tick | 43.635 | 17.653 | 2.47x |
+| shuffled | regime_tick | 48.533 | 19.415 | 2.50x |
 
 These remain measurements from this host and finite recording duration.
+The integrated baseline includes independent audit-log delivery arrays from #96.
