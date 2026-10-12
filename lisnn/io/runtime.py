@@ -59,9 +59,15 @@ class StreamRuntime:
     def timestamp_to_tick(self, timestamp_ms):
         dt = float(self.network.runtime.dt if hasattr(self.network.runtime, "dt")
                    else self.network.runtime._runtime.dt)
-        relative = float(timestamp_ms) / dt
+        timestamp = float(timestamp_ms)
+        if not np.isfinite(timestamp) or timestamp < 0:
+            raise ValueError("timestamp must be finite and nonnegative")
+        relative = timestamp / dt
         tick = round(relative)
-        if tick < 0 or not np.isclose(relative, tick, rtol=0, atol=2e-5):
+        # Accommodate supplied float32 timestamps, but never round a materially
+        # off-grid sample. Double-precision internally generated times stay exact.
+        tolerance = min(1e-3, max(2e-5, 0.5 * abs(float(np.spacing(np.float32(timestamp)))) / dt))
+        if tick < 0 or abs(relative - tick) > tolerance:
             raise ValueError(f"timestamp {timestamp_ms} ms does not align to dt={dt} ms; "
                              "provide explicit resampling in the experiment")
         return tick
@@ -81,8 +87,10 @@ class StreamRuntime:
             if tick < self.tick:
                 raise ValueError("cannot submit frame for an executed tick")
             if sample.source == "INTERNAL":
-                if observed_tick is None or tick <= observed_tick:
-                    raise ValueError("internal frame must target a future tick after observation")
+                if (isinstance(observed_tick, (bool, np.bool_)) or
+                        not isinstance(observed_tick, (int, np.integer)) or
+                        not 0 <= observed_tick < self.tick or tick <= observed_tick):
+                    raise ValueError("internal frame requires an executed observation and a future delivery tick")
             entries.append((sample, tick, current))
         if sum(map(len, self.scheduler._frames.values())) + len(entries) > self.scheduler.max_frames:
             raise CapacityError("routing exceeds declared queued-frame capacity")
