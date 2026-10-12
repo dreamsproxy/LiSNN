@@ -32,7 +32,7 @@ class PairSTDP:
     """
 
     def __init__(self, edges, *, tau_plus_ms, tau_minus_ms, a_plus, a_minus, w_max):
-        validated_edges(edges)
+        edges = validated_edges(edges)
         self.population_size = edges.population_size
         self._pre_idx = edges.pre_idx.copy()
         self._post_idx = edges.post_idx.copy()

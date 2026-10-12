@@ -109,7 +109,13 @@ class ReplayController:
             for repeat in range(repeats):
                 ordered = list(entries)
                 if order == "shuffled":
-                    ordered = list(self._rng.permutation(ordered))
+                    if len(ordered) < 2:
+                        raise ValueError("shuffled replay requires at least two entries")
+                    # Rejection sampling is uniform over non-identity permutations.
+                    permutation = self._rng.permutation(len(ordered))
+                    while np.array_equal(permutation, np.arange(len(ordered))):
+                        permutation = self._rng.permutation(len(ordered))
+                    ordered = [ordered[i] for i in permutation]
                 for entry, slot in zip(ordered, entries):
                     tick = start_tick + repeat * span + (slot.original_tick - first)
                     name = self.internal_ports.get(entry.modality)
