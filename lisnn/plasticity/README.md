@@ -133,3 +133,30 @@ enable LTP after a presynaptic event. Returned results expose the three gates,
 both components, next trace/filter values and the bounded applied change.
 This rule does not stack with Pair or Triplet STDP. Run
 `python debug.py --only voltage_stdp` for the small gating trace.
+
+## Recurrent network checkpoint
+
+`SNN.configure_runtime(edges, dt=..., impulse_scale=...,
+plasticity="off"|"pair"|"triplet"|"voltage", plasticity_params={...})`
+creates an independent working copy of the construction pool and edges.
+`SNN.step(external_current, feedback_current=0)` first applies queued feedback
+and propagation from previous spikes using *current* edge weights, integrates
+each neuron family, emits spike and pre-reset mV snapshots, then applies only
+the selected learner. Updated efficacy becomes available to propagation on
+the next tick. The `"off"` selection keeps `FixedWeightRuntime` unchanged.
+Inputs are a scalar or float32-compatible per-cell pA vector; generic stream
+ports belong to #61.
+
+`TickResult` exposes all current channels, both voltage observations and
+spikes. A learned tick also exposes `plasticity_update` (per-edge components),
+`weights_before`, `weights_after`, and `trace_state`; with learning off these
+additional fields are `None` and `SNN.runtime.weights` returns the fixed edge
+snapshot. `snapshot_runtime()` gives an independent copy of neuron/edge state,
+clock, traces and queued feedback; `restore_runtime(snapshot)` restores a
+matching copy; `reset_runtime()` restores the original configuration snapshot.
+Failed integration or learning leaves the adaptive runtime unadvanced.
+
+`python -m examples.recurrent_learning` compares trained and disabled
+two-cell networks from the same initial state after a declared 3 ms pause.
+It prints probe synaptic current and efficacy. That short-interval contrast
+does not establish a persistent memory or task performance result.
