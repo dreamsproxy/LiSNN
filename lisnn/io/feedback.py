@@ -1,5 +1,7 @@
 """Experiment-side outcome-to-current policies, separate from plasticity."""
 
+from copy import deepcopy
+
 import numpy as np
 
 from lisnn.io.runtime import StreamRuntime
@@ -33,22 +35,30 @@ class FeedbackPolicy:
             return None
         port = runtime.transducers[self.port_name].port
         count = len(port.neuron_indices)
-        if self.mode == "yoked":
-            if self._cursor >= len(self._yoked):
-                raise ValueError("yoked schedule exhausted")
-            current = self._yoked[self._cursor].copy()
-        else:
-            actual_success = bool(success)
-            if self.mode == "inverted":
-                actual_success = not actual_success
-            if self.mode == "random":
-                actual_success = bool(self._rng.random() < self.random_probability)
-            current = np.full(count, self.success_pA, dtype=np.float32) if actual_success else np.zeros(count, dtype=np.float32)
-            if not actual_success and count:
-                current[self._rng.integers(count)] = self.error_pA
-        delivery_tick = int(observed_tick) + int(delay_ticks)
-        runtime.schedule_feedback(observed_tick, current, port_name=self.port_name,
-                                  delivery_tick=delivery_tick, mode=self.mode)
+        # Failed submissions must not consume an otherwise replayable draw.
+        # The runtime validates/enqueues atomically; commit policy state only
+        # after that succeeds so callers can correct a full queue and retry.
+        rng_state = deepcopy(self._rng.bit_generator.state)
+        try:
+            if self.mode == "yoked":
+                if self._cursor >= len(self._yoked):
+                    raise ValueError("yoked schedule exhausted")
+                current = self._yoked[self._cursor].copy()
+            else:
+                actual_success = bool(success)
+                if self.mode == "inverted":
+                    actual_success = not actual_success
+                if self.mode == "random":
+                    actual_success = bool(self._rng.random() < self.random_probability)
+                current = np.full(count, self.success_pA, dtype=np.float32) if actual_success else np.zeros(count, dtype=np.float32)
+                if not actual_success and count:
+                    current[self._rng.integers(count)] = self.error_pA
+            delivery_tick = int(observed_tick) + int(delay_ticks)
+            runtime.schedule_feedback(observed_tick, current, port_name=self.port_name,
+                                      delivery_tick=delivery_tick, mode=self.mode)
+        except Exception:
+            self._rng.bit_generator.state = rng_state
+            raise
         if self.mode == "yoked":
             self._cursor += 1
         return current.copy()

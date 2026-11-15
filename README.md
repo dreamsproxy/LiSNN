@@ -46,7 +46,7 @@ Live microphone/camera adapters are future work. ASCII input needs no media libr
 | `lisnn.plasticity` | Independent Pair, Triplet and voltage-gated STDP alternatives; bounded optional trace history |
 | `lisnn.io` | Declared ports, current transduction, probes, causal feedback, ACTIVE/SLEEP policies and bounded literal replay |
 | `lisnn.media` | Fixed seeded ASCII character embeddings into bounded pA current patterns |
-| `lisnn.experiments` | Small controlled ACTIVE/SLEEP/ACTIVE engineering example |
+| `lisnn.experiments` | Controlled ACTIVE/SLEEP/ACTIVE example and P1.4 protocol/evidence scaffolding |
 | `lisnn.debugging` | Independently callable smoke suites and aggregate runner |
 | `benchmarks` | Component/scaling profiles, reference comparisons and numerical/memory regression gates |
 
@@ -110,6 +110,7 @@ Run these from the repository root:
 | `python -m examples.active_sleep` | Declared regime transitions and internal perturbations |
 | `python -m examples.internal_replay` | Bounded recorded samples through internal ports |
 | `python -m examples.controlled_cycle --json logs/cycle.json` | Same-snapshot quiet/ordered/shuffled/learning-off arms with raw observations |
+| `python -m examples.adaptation_protocol --output logs/p1.4-plan` | Freeze a P1.4 protocol and planned-run manifest without running adaptation experiments |
 | `python -m examples.character_input` | ASCII synthetic medium and an explicit experiment-side presentation duration |
 
 The character medium accepts ASCII IDs 0..127. It supplies spatial current
@@ -121,6 +122,18 @@ The small state-cycle example verifies engineering controls. Broader adaptation,
 recall, transfer and biological claims need the selected experiments and evidence
 in [#66](https://github.com/dreamsproxy/LiSNN/issues/66). Literal replay records
 stimulation; it does not implement endogenous reconstruction or imagination.
+
+For P1.4, distinguish engineering readiness from experimental completion.
+The protocol and run manifest prepare causal controls, alternative learners,
+state-cycle comparisons, provenance and failure accounting. The default is an
+engineering planning fixture; empirical task adapters and execution remain
+external. Use `--protocol task-protocol.json` for a reviewed declaration or
+`--check` to validate without writing files. Passing tests or
+creating a plan does not provide adaptation, recall, retention or transfer
+evidence. Those measurements remain open under #66. See the
+[P1.4 protocol and evidence policy](docs/P1_4_PROTOCOL.md) before collecting runs.
+Default CI validates the plan and engineering invariants without launching
+the scientific study or requiring a favorable learning outcome.
 
 ## Numerical and performance checks
 

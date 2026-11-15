@@ -32,6 +32,11 @@ if _default_backend not in _VALIDATION_BACKENDS:
 _validation_backend = ContextVar("lisnn_topology_validation", default=_default_backend)
 
 
+def get_topology_validation():
+    """Return the active validation backend in the caller's current context."""
+    return _validation_backend.get()
+
+
 @contextmanager
 def topology_validation(backend):
     """Select the NumPy duplicate-check implementation in this context.
@@ -317,6 +322,7 @@ def create_fixed_out_degree(
 
 
 __all__ = [
+    "get_topology_validation",
     "topology_validation",
     "SynapseEdges",
     "SynapseIndexArray",

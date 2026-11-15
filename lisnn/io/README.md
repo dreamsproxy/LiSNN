@@ -67,7 +67,10 @@ there is no task target/error in the neuron, synapse, or learner. Pass a
 separate internal port even when its neuron membership overlaps an external
 sensory port. A snapshot copies network state, queue and delivery logs;
 for controlled experiments also snapshot the separate feedback policy's RNG
-state (e.g. with `copy.deepcopy`).
+state (e.g. with `copy.deepcopy`). A rejected feedback submission leaves that
+RNG state and the yoked schedule position unchanged. After correcting an
+invalid observation or making queue capacity available, retrying produces
+the same perturbation as if the rejected submission had never occurred.
 
 `python -m examples.stream_routing` demonstrates two-channel microphone
 samples, two-site visual current, binary sparse events, and a subsequent
@@ -83,10 +86,18 @@ and actions enabled; the default SLEEP policy attenuates external current to
 actions disabled. These are declared experiment settings, not neuron classes
 or a biological REM model. `transition(tick, "SLEEP"|"ACTIVE")` takes effect at
 that exact unexecuted simulation tick. Permitted sources can be restricted;
-a forbidden due frame raises rather than vanishing silently. Each result
+a forbidden due frame or nonzero direct EXTERNAL current raises before the
+tick advances, including when the external gain is zero. Zero direct current
+remains valid for an INTERNAL-only interval. Each result
 reports the applied policy. Existing neuron state, weights, traces, queues,
 and clock continue across a transition; `SNN.reset_runtime` remains an
 explicit, separate operation.
+
+Experiments that rely on these policies must route stimulation and feedback
+through the controller's `StreamRuntime` ports and advance with
+`RegimeController.step`. The lower-level `SNN` runtime remains independently
+callable; its direct current and feedback APIs do not enforce an enclosing
+experiment's source restrictions or create routed delivery provenance.
 
 SLEEP can receive a caller-defined internal `pulse` after a completed tick.
 Optional seeded, sparse low-amplitude background perturbations are bounded

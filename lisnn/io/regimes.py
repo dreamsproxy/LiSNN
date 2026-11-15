@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from lisnn.io.runtime import StreamRuntime
-from lisnn.validation import scalar32
+from lisnn.validation import scalar32, vector32
 
 
 @dataclass(frozen=True)
@@ -89,6 +89,11 @@ class RegimeController:
         policy = self.current if choice is None else (self.active if choice == "ACTIVE" else self.sleep)
         if plasticity_override is not None and not isinstance(plasticity_override, bool):
             raise TypeError("plasticity_override must be boolean")
+        if "EXTERNAL" not in policy.permitted_sources:
+            direct = vector32("external_current", external_current,
+                              self.runtime.network.population_size)
+            if np.any(direct):
+                raise ValueError(f"EXTERNAL direct current forbidden under {policy.name}")
         for item in self.runtime.scheduler._frames.get(tick, ()):
             frame = item[0] if isinstance(item, tuple) else item
             if frame.mapping_provenance.startswith("literal_replay:") and policy.name != "SLEEP":

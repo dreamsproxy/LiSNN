@@ -92,3 +92,27 @@ def test_forbidden_source_and_snapshot_restore_rng_queue_policy():
     c.step()
     c.restore(saved)
     assert c.runtime.tick == 0 and c.transitions[0] == "SLEEP"
+
+
+@pytest.mark.parametrize("direct", [1, [10, 0], np.array([0, -10], dtype=np.float32)])
+def test_forbidden_direct_external_current_is_rejected_before_state_changes(direct):
+    # A zero gain does not authorize a forbidden source, just as it does not
+    # authorize queued EXTERNAL frames. Default zero direct input stays valid.
+    sleep = RegimePolicy("SLEEP", 0, 1, False, False, ("INTERNAL",))
+    c = controller(sleep=sleep)
+    c.transition(0, "SLEEP")
+    before = c.snapshot()
+    with pytest.raises(ValueError, match="EXTERNAL direct current forbidden"):
+        c.step(direct)
+    assert c.runtime.tick == before.runtime.tick == 0
+    assert c.current.name == before.current.name == "ACTIVE"
+    assert c.transitions == before.transitions == {0: "SLEEP"}
+    assert c._rng.bit_generator.state == before._rng.bit_generator.state
+    np.testing.assert_array_equal(c.runtime.network.runtime.pool,
+                                  before.runtime.network.runtime.pool)
+    np.testing.assert_array_equal(c.runtime.network.runtime.weights,
+                                  before.runtime.network.runtime.weights)
+    assert not c.runtime.scheduler._frames
+    accepted = c.step([0, 0])
+    assert accepted.regime.name == "SLEEP"
+    np.testing.assert_array_equal(accepted.routed.neural.external_current_pA, [0, 0])
