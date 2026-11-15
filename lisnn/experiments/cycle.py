@@ -13,8 +13,8 @@ from lisnn.synapses import create_synapses
 
 
 def _probe(regime):
-    """Probe from a copy, then restore the complete regime/runtime state."""
-    checkpoint = regime.snapshot()
+    """Probe a disposable full-state branch, including on failed probe ticks."""
+    regime = regime.snapshot()
     source = regime.step([32000, 0], plasticity_override=False).routed.neural
     target = regime.step(plasticity_override=False).routed.neural
     weights = regime.runtime.network.runtime.weights.copy()
@@ -28,7 +28,6 @@ def _probe(regime):
         "probe_ticks": [source.tick, target.tick],
         "readout_spike": bool(target.current_spikes[1]),
     }
-    regime.restore(checkpoint)
     return result
 
 

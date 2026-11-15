@@ -131,3 +131,48 @@ def test_delivery_observation_and_audit_history_have_independent_arrays():
     routed.deliveries[0].channel_current_pA[:] = -1
     np.testing.assert_array_equal(result.deliveries[0].channel_current_pA, [999, 999])
     np.testing.assert_array_equal(snapshot.deliveries[0].channel_current_pA, [10, 20])
+
+
+@pytest.mark.parametrize("mode,success", [("contingent", False), ("random", True),
+                                        ("inverted", True)])
+def test_failed_feedback_submission_preserves_rng_and_retry(mode, success):
+    from copy import deepcopy
+
+    a, b = setup(), setup()
+    for runtime in (a, b):
+        runtime.step()
+    params = dict(mode=mode, port_name="feedback", success_pA=50,
+                  error_pA=100, seed=7, random_probability=0)
+    policy_a, policy_b = FeedbackPolicy(**params), FeedbackPolicy(**params)
+    before = deepcopy(policy_a._rng.bit_generator.state)
+
+    # Reject a draw at the runtime boundary, after policy generation happened.
+    a.scheduler.max_frames = 1
+    a.schedule_frame(frame("EXTERNAL", "CONTINUOUS", "auditory", [1, 2], 1),
+                     "auditory")
+    with pytest.raises(CapacityError):
+        policy_a.schedule(a, observed_tick=0, success=success)
+    assert policy_a._rng.bit_generator.state == before
+    assert len(a.scheduler._frames[1]) == 1
+    a.scheduler.consume(1)
+
+    # A corrected retry and subsequent draws match a policy with no failure.
+    for tick in range(1, 6):
+        np.testing.assert_array_equal(
+            policy_a.schedule(a, observed_tick=tick-1, success=success),
+            policy_b.schedule(b, observed_tick=tick-1, success=success))
+        np.testing.assert_array_equal(a.step().neural.feedback_current_pA,
+                                      b.step().neural.feedback_current_pA)
+
+
+def test_feedback_invalid_observation_does_not_consume_random_state():
+    from copy import deepcopy
+
+    runtime = setup()
+    policy = FeedbackPolicy(mode="random", port_name="feedback", success_pA=50,
+                            error_pA=100, seed=3)
+    before = deepcopy(policy._rng.bit_generator.state)
+    with pytest.raises(ValueError, match="executed observation"):
+        policy.schedule(runtime, observed_tick=0, success=False)
+    assert policy._rng.bit_generator.state == before
+    assert not runtime.scheduler._frames
